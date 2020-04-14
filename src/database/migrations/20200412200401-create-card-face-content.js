@@ -16,11 +16,13 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      face_content: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: 'face_contents', key: 'id'},
-        onUpdate: 'CASCADE',
+      content_path: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      content_type: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       created_at: {
         type: Sequelize.DATE,
