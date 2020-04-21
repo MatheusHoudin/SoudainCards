@@ -6,9 +6,11 @@ const Deck = require('../models/Deck');
 const CardFace = require('../models/CardFace');
 const CardFaceContents = require('../models/CardFaceContents');
 const Card = require('../models/Card');
+const User = require('../models/User');
 
 const connection = new Sequelize(dbConfig);
 
+User.init(connection);
 DeckSubject.init(connection);
 Deck.init(connection);
 CardFace.init(connection);
