@@ -1,20 +1,22 @@
 const express = require('express');
-const DeckSubjectController = require('./controllers/DeckSubjectController');
-const DeckController = require('./controllers/DeckController');
-const CardFaceContentController = require('./controllers/CardFaceContentController');
-const CardFaceController = require('./controllers/CardFaceController');
-const CardController = require('./controllers/CardController');
-const UserController = require('./controllers/UserController');
+const multer = require('multer');
+const multerConfig = require('./config/multer');
 
-const SignUpMiddleware = require('./middlewares/SignUpMiddleware');
+const DeckSubjectController = require('./app/controllers/DeckSubjectController');
+const DeckController = require('./app/controllers/DeckController');
+const CardFaceContentController = require('./app/controllers/CardFaceContentController');
+const CardFaceController = require('./app/controllers/CardFaceController');
+const CardController = require('./app/controllers/CardController');
+const UserController = require('./app/controllers/UserController');
 
-const Multer = require('multer');
-
-const multer = Multer({
-  storage: Multer.memoryStorage(),
-});
+//const authMiddleware = require('./app/middlewares/auth');
+const upload = multer(multerConfig);
 
 const routes = express.Router();
+
+//routes.use(authMiddleware)
+
+routes.post('/signup', upload.single('file'), UserController.store);
 
 routes.post('/deck/subject/:subject', DeckController.store);
 
@@ -28,7 +30,5 @@ routes.get('/cardface/:card_face', CardFaceController.index);
 
 routes.post('/card',CardController.store);
 routes.get('/card/:card',CardController.index);
-
-routes.post('/signup', multer.single('file'), SignUpMiddleware.signup, UserController.store);
 
 module.exports = routes;

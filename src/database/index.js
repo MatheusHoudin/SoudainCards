@@ -1,26 +1,28 @@
 const Sequelize = require('sequelize');
 const dbConfig = require('../config/database');
 
-const DeckSubject = require('../models/DeckSubject');
-const Deck = require('../models/Deck');
-const CardFace = require('../models/CardFace');
-const CardFaceContents = require('../models/CardFaceContents');
-const Card = require('../models/Card');
-const User = require('../models/User');
+const DeckSubject = require('../app/models/DeckSubject');
+const Deck = require('../app/models/Deck');
+const CardFace = require('../app/models/CardFace');
+const CardFaceContents = require('../app/models/CardFaceContents');
+const Card = require('../app/models/Card');
+const User = require('../app/models/User');
 
-const connection = new Sequelize(dbConfig);
+const models = [User, DeckSubject, Deck, CardFaceContents, CardFace, Card];
 
-User.init(connection);
-DeckSubject.init(connection);
-Deck.init(connection);
-CardFace.init(connection);
-CardFaceContents.init(connection);
-Card.init(connection);
+class Database {
+  constructor() {
+    this.init();
+  }
 
-Deck.associate(connection.models);
-CardFaceContents.associate(connection.models);
-CardFace.associate(connection.models);
-Card.associate(connection.models);
+  init() {
+    this.connection = new Sequelize(dbConfig);
 
-module.exports = connection;
+    models.map((model) => model.init(this.connection));
+    models.map(
+      (model) => model.associate && model.associate(this.connection.models)
+    );
+  }
+}
 
+module.exports = new Database();
