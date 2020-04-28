@@ -7,28 +7,22 @@ const DeckController = require('./app/controllers/DeckController');
 const CardFaceContentController = require('./app/controllers/CardFaceContentController');
 const CardFaceController = require('./app/controllers/CardFaceController');
 const CardController = require('./app/controllers/CardController');
+const SessionController = require('./app/controllers/SessionController');
 const UserController = require('./app/controllers/UserController');
+const FileController = require('./app/controllers/FileController');
 
-//const authMiddleware = require('./app/middlewares/auth');
+const authMiddleware = require('./app/middlewares/auth');
 const upload = multer(multerConfig);
 
 const routes = express.Router();
 
-//routes.use(authMiddleware)
+routes.post('/users', UserController.store);
+routes.post('/sessions', SessionController.store);
 
-routes.post('/signup', upload.single('file'), UserController.store);
+routes.use(authMiddleware)
 
-routes.post('/deck/subject/:subject', DeckController.store);
+routes.put('/users', UserController.update);
 
-routes.get('/decksubject', DeckSubjectController.index);
-routes.post('/decksubject', DeckSubjectController.store);
-
-routes.post('/cardfacecontent', CardFaceContentController.store);
-
-routes.post('/cardface', CardFaceController.store);
-routes.get('/cardface/:card_face', CardFaceController.index);
-
-routes.post('/card',CardController.store);
-routes.get('/card/:card',CardController.index);
+routes.post('/files', upload.single('file'), FileController.store);
 
 module.exports = routes;
