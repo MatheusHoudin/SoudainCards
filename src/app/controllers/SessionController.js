@@ -3,7 +3,7 @@ const Yup = require('yup');
 const User = require('../models/User');
 const authConfig = require('../../config/auth');
 const ResponseHandlers = require('../../utils/ResponseHandlers');
-
+const Mail = require('../../lib/Mail');
 class SessionController {
   async store(req, res) {
     const schema = Yup.object().shape({
@@ -58,6 +58,14 @@ class SessionController {
           message: 'The fields you provided are not valid',
         });
       });
+  }
+
+  async update(req, res) {
+    await Mail.sendMail({
+      to: `User name <user email>`,
+      subject: 'Email title',
+      template: 'password_recovery'
+    })
   }
 }
 

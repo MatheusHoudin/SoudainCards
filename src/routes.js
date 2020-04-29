@@ -19,9 +19,11 @@ const routes = express.Router();
 routes.post('/users', UserController.store);
 routes.post('/sessions', SessionController.store);
 
-routes.use(authMiddleware)
+routes.use(authMiddleware);
 
 routes.put('/users', UserController.update);
+
+routes.put('/sessions', SessionController.update);
 
 routes.post('/files', upload.single('file'), FileController.store);
 
