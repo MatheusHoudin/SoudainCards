@@ -10,6 +10,7 @@ const CardController = require('./app/controllers/CardController');
 const SessionController = require('./app/controllers/SessionController');
 const UserController = require('./app/controllers/UserController');
 const FileController = require('./app/controllers/FileController');
+const PasswordResetController = require('./app/controllers/PasswordResetController');
 
 const authMiddleware = require('./app/middlewares/auth');
 const upload = multer(multerConfig);
@@ -18,12 +19,11 @@ const routes = express.Router();
 
 routes.post('/users', UserController.store);
 routes.post('/sessions', SessionController.store);
+routes.post('/passwordreset', PasswordResetController.store);
 
 routes.use(authMiddleware);
 
 routes.put('/users', UserController.update);
-
-routes.put('/sessions', SessionController.update);
 
 routes.post('/files', upload.single('file'), FileController.store);
 

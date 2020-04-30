@@ -8,8 +8,18 @@ const CardFaceContents = require('../app/models/CardFaceContents');
 const Card = require('../app/models/Card');
 const User = require('../app/models/User');
 const File = require('../app/models/File');
+const PasswordReset = require('../app/models/PasswordReset');
 
-const models = [File, User, DeckSubject, Deck, CardFaceContents, CardFace, Card];
+const models = [
+  File,
+  PasswordReset,
+  User,
+  DeckSubject,
+  Deck,
+  CardFaceContents,
+  CardFace,
+  Card,
+];
 
 class Database {
   constructor() {

@@ -3,7 +3,7 @@ const Yup = require('yup');
 const User = require('../models/User');
 const authConfig = require('../../config/auth');
 const ResponseHandlers = require('../../utils/ResponseHandlers');
-const Mail = require('../../lib/Mail');
+
 class SessionController {
   async store(req, res) {
     const schema = Yup.object().shape({
@@ -22,7 +22,7 @@ class SessionController {
           return res.status(401).json({
             code: 401,
             data: { email },
-            message: 'User is not registered'
+            message: 'User is not registered',
           });
         }
 
@@ -30,7 +30,7 @@ class SessionController {
           return res.status(401).json({
             code: 401,
             data: { password },
-            message: 'The provided password does not match'
+            message: 'The provided password does not match',
           });
         }
 
@@ -48,7 +48,7 @@ class SessionController {
               expiresIn: authConfig.expiresIn,
             }),
           },
-          message: 'The user could log in successfully'
+          message: 'The user could log in successfully',
         });
       })
       .catch((err) => {
@@ -58,14 +58,6 @@ class SessionController {
           message: 'The fields you provided are not valid',
         });
       });
-  }
-
-  async update(req, res) {
-    await Mail.sendMail({
-      to: `User name <user email>`,
-      subject: 'Email title',
-      template: 'password_recovery'
-    })
   }
 }
 
