@@ -1,6 +1,6 @@
 const { Model, DataTypes } = require('sequelize');
 
-class DeckSubject extends Model {
+class Subject extends Model {
   static init(connection) {
     super.init({
       subject: DataTypes.STRING
@@ -10,4 +10,4 @@ class DeckSubject extends Model {
   }
 }
 
-module.exports = DeckSubject;
+module.exports = Subject;

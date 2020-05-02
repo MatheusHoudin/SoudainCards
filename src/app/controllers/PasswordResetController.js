@@ -89,6 +89,71 @@ class PasswordResetController {
         });
       });
   }
+
+  async update(req, res) {
+    const schema = Yup.object().shape({
+      password: Yup.string().min(6).required('Password must be provided'),
+      passwordConfirmation: Yup.string()
+        .required()
+        .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    });
+
+    schema
+      .validate(req.body, { abortEarly: false })
+      .then(async (value) => {
+        const { confirmationCode } = req.params;
+        const passwordReset = await PasswordReset.findOne({
+          where: {
+            confirmation_hash: confirmationCode,
+          },
+          include: [
+            {
+              model: User,
+              as: 'user',
+            },
+          ],
+        });
+
+        if (!passwordReset) {
+          return res.status(404).json({
+            code: 404,
+            error: {
+              field: 'confirmationCode',
+              message: 'Confirmation code provided does not exist',
+            },
+            message: 'Sorry, but the confirmation code provided does not exist',
+          });
+        }
+
+        const user = await User.findOne(
+          {
+            where: { id: passwordReset.user.id },
+          }
+        )
+
+        user.set('password', req.body.password);
+        await user.save();
+
+        passwordReset.confirmation_hash = null;
+        await passwordReset.save();
+
+        return res.status(200).json({
+          code: 200,
+          data: {
+            id: passwordReset.user.id,
+            name: passwordReset.user.name,
+            email: passwordReset.user.email,
+          }
+        })
+      })
+      .catch((err) => {
+        return res.status(400).json({
+          code: 401,
+          error: ResponseHandlers.convertYupValidationErrors(err),
+          message: 'The fields you provided are not valid',
+        });
+      });
+  }
 }
 
 module.exports = new PasswordResetController();

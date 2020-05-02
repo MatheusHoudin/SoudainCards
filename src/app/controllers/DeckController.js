@@ -1,5 +1,5 @@
 const Deck = require('../models/Deck');
-const DeckSubject = require('../models/DeckSubject');
+const Subject = require('../models/Subject');
 const User = require('../models/User');
 
 class DeckController {
@@ -9,7 +9,7 @@ class DeckController {
   
     const {image_path,creator} = req.body;
   
-    const subjectValue = await DeckSubject.findByPk(subject);
+    const subjectValue = await Subject.findByPk(subject);
     
     if(!subjectValue) {
       return res.status(400).json({error: "Subject not found"});

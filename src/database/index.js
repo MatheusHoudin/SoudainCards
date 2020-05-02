@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const dbConfig = require('../config/database');
 
-const DeckSubject = require('../app/models/DeckSubject');
+const Subject = require('../app/models/Subject');
 const Deck = require('../app/models/Deck');
 const CardFace = require('../app/models/CardFace');
 const CardFaceContents = require('../app/models/CardFaceContents');
@@ -9,16 +9,20 @@ const Card = require('../app/models/Card');
 const User = require('../app/models/User');
 const File = require('../app/models/File');
 const PasswordReset = require('../app/models/PasswordReset');
+const CollectionDecks = require('../app/models/CollectionDecks');
+const UserCollections = require('../app/models/UserCollections');
 
 const models = [
   File,
   PasswordReset,
   User,
-  DeckSubject,
+  Subject,
   Deck,
   CardFaceContents,
   CardFace,
   Card,
+  CollectionDecks,
+  UserCollections,
 ];
 
 class Database {

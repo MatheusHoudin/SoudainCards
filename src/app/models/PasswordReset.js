@@ -5,7 +5,6 @@ class PasswordReset extends Model {
     super.init(
       {
         confirmation_hash: DataTypes.STRING,
-        used: DataTypes.BOOLEAN,
       },
       {
         sequelize: connection,

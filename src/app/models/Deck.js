@@ -10,7 +10,7 @@ class Deck extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.DeckSubject, { foreignKey: 'subject', as: 'deck_subject'});
+    this.belongsTo(models.Subject, { foreignKey: 'subject', as: 'deck_subject'});
   }
 
 }
