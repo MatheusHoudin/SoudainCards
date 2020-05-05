@@ -3,6 +3,7 @@ const dbConfig = require('../config/database');
 
 const Subject = require('../app/models/Subject');
 const Deck = require('../app/models/Deck');
+const UserCollectionDeck = require('../app/models/UserCollectionDeck');
 const CardFace = require('../app/models/CardFace');
 const CardFaceContents = require('../app/models/CardFaceContents');
 const Card = require('../app/models/Card');
@@ -23,6 +24,7 @@ const models = [
   Card,
   CollectionDecks,
   UserCollections,
+  UserCollectionDeck,
 ];
 
 class Database {

@@ -1,9 +1,84 @@
 const Yup = require('yup');
 const CollectionDecks = require('../models/CollectionDecks');
+const Deck = require('../models/Deck');
+const User = require('../models/User');
+const UserCollectionDeck = require('../models/UserCollectionDeck');
+const UserCollections = require('../models/UserCollections');
 const File = require('../models/File');
 const Subject = require('../models/Subject');
 const ResponseHandlers = require('../../utils/ResponseHandlers');
 class CollectionDecksController {
+  async index(req, res) {
+    const schema = Yup.object().shape({
+      collection: Yup.number('Collection must be a number').required(
+        'Collection is a required field'
+      ),
+    });
+
+    schema
+      .validate(req.params, { abortEarly: false })
+      .then(async (_) => {
+
+        const userHasCollection = await UserCollections.findOne({
+          where: {
+            user: req.userId,
+            collection: req.params.collection,
+          }
+        })
+
+        if (!userHasCollection) {
+          return res.status(401).json({
+            code: 401,
+            error: {
+              fields: 'collection',
+              message:
+                'The collection provided does not belongs to the given user',
+            },
+          });
+        }
+
+        const userCollectionDecks = await UserCollectionDeck.findAll({
+          attributes: [],
+          where: {
+            user: req.userId,
+            collection: req.params.collection,
+          },
+          include: [
+            {
+              model: Deck,
+              attributes: ['id', 'name'],
+              as: 'collection_deck',
+              include: [
+                {
+                  model: File,
+                  attributes: ['id', 'path'],
+                  as: 'file'
+                },
+                {
+                  model: Subject,
+                  attributes: ['id', 'subject'],
+                  as: 'deck_subject'
+                }
+              ]
+            },
+          ]
+        });
+
+        return res.status(200).json({
+          code: 200,
+          data: userCollectionDecks,
+          message: 'Retrieved decks'
+        });
+      })
+      .catch((err) => {
+        console.log(err)
+        return res.status(400).json({
+          code: 400,
+          error: ResponseHandlers.convertYupValidationErrors(err),
+          message: 'The fields you provided are not valid',
+        });
+      });
+  }
   async store(req, res, next) {
     const schema = Yup.object().shape({
       title: Yup.string().required('The collection title is required'),
@@ -11,7 +86,9 @@ class CollectionDecksController {
         'The collection description is required'
       ),
       collection_image: Yup.number('The collection image must be a number'),
-      subject: Yup.number('The collection subject must be a number').required('The collection subject is required'),
+      subject: Yup.number('The collection subject must be a number').required(
+        'The collection subject is required'
+      ),
     });
 
     schema
@@ -24,7 +101,7 @@ class CollectionDecksController {
                 id: req.body.collection_image,
               },
             });
-  
+
             if (!collectionImage) {
               return res.status(404).json({
                 code: 404,
@@ -36,14 +113,14 @@ class CollectionDecksController {
               });
             }
           }
-  
+
           if (req.body.subject) {
             const subject = await Subject.findOne({
               where: {
                 id: req.body.subject,
               },
             });
-  
+
             if (!subject) {
               return res.status(404).json({
                 code: 404,
@@ -55,7 +132,24 @@ class CollectionDecksController {
               });
             }
           }
-  
+
+          const collectionWithNameAlreadyExists = await CollectionDecks.findOne(
+            {
+              where: {
+                creator: req.userId,
+                title: req.body.title,
+              },
+            }
+          );
+
+          if (collectionWithNameAlreadyExists) {
+            return res.status(400).json({
+              code: 400,
+              data: collectionWithNameAlreadyExists,
+              message: `A collection with the name ${req.body.title} already exists`,
+            });
+          }
+
           const collectionDecks = await CollectionDecks.create({
             title: req.body.title,
             description: req.body.description,
@@ -65,23 +159,24 @@ class CollectionDecksController {
             subject: req.body.subject,
             creator: req.userId,
           });
-          
+
           req.body = {
             user: req.userId,
-            collection: collectionDecks.id
-          }
+            collection: collectionDecks.id,
+          };
 
           next();
-        } catch (err){
+        } catch (err) {
+          console.log(err);
           return res.status(500).json({
             code: 500,
             error: err.name,
-            message: 'A server error has ocurred'
-          })
+            message: 'A server error has ocurred',
+          });
         }
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         return res.status(400).json({
           code: 400,
           errors: ResponseHandlers.convertYupValidationErrors(err),

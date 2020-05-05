@@ -17,6 +17,32 @@ class UserCollectionsController {
       .validate(req.body, { abortEarly: false })
       .then(async (value) => {
         try {
+          const user = await User.findByPk(req.body.userId);
+
+          if (!user) {
+            return res.status(404).json({
+              code: 404,
+              errors: {
+                field: 'user',
+                message: 'The user you provided does not exist',
+              },
+              message: 'The user you provided does not exist',
+            });
+          }
+
+          const collection = await User.findByPk(req.body.collection);
+
+          if (!collection) {
+            return res.status(404).json({
+              code: 404,
+              errors: {
+                field: 'collection',
+                message: 'The collection you provided does not exist',
+              },
+              message: 'The collection you provided does not exist',
+            });
+          }
+
           const userCollections = await UserCollections.create(req.body);
 
           return res.status(201).json({
@@ -53,10 +79,11 @@ class UserCollectionsController {
         where: {
           user: req.userId,
         },
-        attributes: ['id','imported'],
+        attributes: ['id','imported', 'title', 'description'],
         include: [
           {
             model: CollectionDecks,
+            as: 'collection_decks',
             attributes: ['title', 'description', 'shared'],
             include: [
               {
@@ -67,7 +94,7 @@ class UserCollectionsController {
               {
                 model: File,
                 as: 'file',
-                attributes: ['id']
+                attributes: ['id', 'path']
               }
             ]
           },

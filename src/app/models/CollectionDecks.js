@@ -18,6 +18,7 @@ class CollectionDecks extends Model {
     this.belongsTo(models.Subject, { foreignKey: 'subject', as: 'collection_subject'});
     this.belongsTo(models.User, { foreignKey: 'creator'});
     this.belongsTo(models.File, { foreignKey: 'collection_image', as: 'file'});
+
   }
 
 }

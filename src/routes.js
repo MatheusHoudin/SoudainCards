@@ -9,6 +9,8 @@ const PasswordResetController = require('./app/controllers/PasswordResetControll
 const SubjectController = require('./app/controllers/SubjectController');
 const CollectionDecksController = require('./app/controllers/CollectionDecksController');
 const UserCollectionsController = require('./app/controllers/UserCollectionsController');
+const DeckController = require('./app/controllers/DeckController');
+const UserDecksController = require('./app/controllers/UserDecksController');
 
 const authMiddleware = require('./app/middlewares/auth');
 const upload = multer(multerConfig);
@@ -29,7 +31,14 @@ routes.post('/files', upload.single('file'), FileController.store);
 
 routes.post('/subject', SubjectController.store);
 
-routes.post('/collection', CollectionDecksController.store,UserCollectionsController.store);
+routes.post(
+  '/collection',
+  CollectionDecksController.store,
+  UserCollectionsController.store
+);
 routes.get('/collection', UserCollectionsController.index);
+routes.get('/collection/:collection/decks', CollectionDecksController.index);
+
+routes.post('/deck', DeckController.store, UserDecksController.store);
 
 module.exports = routes;

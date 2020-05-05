@@ -1,6 +1,6 @@
 const { Model, DataTypes } = require('sequelize');
 
-class UserCollections extends Model {
+class UserCollectionDeck extends Model {
   static init(connection) {
     super.init(
       {
@@ -16,12 +16,10 @@ class UserCollections extends Model {
   }
 
   static associate(models) {
+    this.belongsTo(models.Deck, { foreignKey: 'deck', as: 'collection_deck'});
     this.belongsTo(models.User, { foreignKey: 'user' });
-    this.belongsTo(models.CollectionDecks, {
-      foreignKey: 'collection',
-      as: 'collection_decks'
-    });
+    this.belongsTo(models.CollectionDecks, { foreignKey: 'collection' });
   }
 }
 
-module.exports = UserCollections;
+module.exports = UserCollectionDeck;
