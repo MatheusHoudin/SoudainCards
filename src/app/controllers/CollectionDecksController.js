@@ -10,7 +10,7 @@ const ResponseHandlers = require('../../utils/ResponseHandlers');
 class CollectionDecksController {
   async index(req, res) {
     const schema = Yup.object().shape({
-      collection: Yup.number('Collection must be a number').required(
+      collection: Yup.string().required(
         'Collection is a required field'
       ),
     });
@@ -18,30 +18,33 @@ class CollectionDecksController {
     schema
       .validate(req.params, { abortEarly: false })
       .then(async (_) => {
-
-        const userHasCollection = await UserCollections.findOne({
-          where: {
-            user: req.userId,
-            collection: req.params.collection,
+        const collectionValue = req.params.collection == 'default' ? null : req.params.collection;
+        console.log(collectionValue)
+        if(collectionValue) {
+          const userHasCollection = await UserCollections.findOne({
+            where: {
+              user: req.userId,
+              collection: collectionValue,
+            }
+          })
+  
+          if (!userHasCollection) {
+            return res.status(401).json({
+              code: 401,
+              error: {
+                fields: 'collection',
+                message:
+                  'The collection provided does not belongs to the given user',
+              },
+            });
           }
-        })
-
-        if (!userHasCollection) {
-          return res.status(401).json({
-            code: 401,
-            error: {
-              fields: 'collection',
-              message:
-                'The collection provided does not belongs to the given user',
-            },
-          });
         }
 
         const userCollectionDecks = await UserCollectionDeck.findAll({
           attributes: [],
           where: {
             user: req.userId,
-            collection: req.params.collection,
+            collection: collectionValue,
           },
           include: [
             {
@@ -51,7 +54,7 @@ class CollectionDecksController {
               include: [
                 {
                   model: File,
-                  attributes: ['id', 'path'],
+                  attributes: ['id', 'path', 'url'],
                   as: 'file'
                 },
                 {
@@ -157,7 +160,7 @@ class CollectionDecksController {
               ? req.body.collection_image
               : null,
             subject: req.body.subject,
-            creator: req.userId,
+            creator: req.userId
           });
 
           req.body = {

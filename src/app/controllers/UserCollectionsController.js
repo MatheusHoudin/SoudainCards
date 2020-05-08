@@ -17,7 +17,8 @@ class UserCollectionsController {
       .validate(req.body, { abortEarly: false })
       .then(async (value) => {
         try {
-          const user = await User.findByPk(req.body.userId);
+          console.log(req.body)
+          const user = await User.findByPk(req.body.user);
 
           if (!user) {
             return res.status(404).json({
@@ -30,7 +31,7 @@ class UserCollectionsController {
             });
           }
 
-          const collection = await User.findByPk(req.body.collection);
+          const collection = await CollectionDecks.findByPk(req.body.collection);
 
           if (!collection) {
             return res.status(404).json({
@@ -56,7 +57,7 @@ class UserCollectionsController {
               id: req.body.collection,
             },
           });
-
+          console.log(err)
           return res.status(500).json({
             code: 500,
             error: err.name,
@@ -94,7 +95,7 @@ class UserCollectionsController {
               {
                 model: File,
                 as: 'file',
-                attributes: ['id', 'path']
+                attributes: ['id', 'path', 'url']
               }
             ]
           },

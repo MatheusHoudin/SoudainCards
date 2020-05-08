@@ -21,18 +21,6 @@ class UserDecksController {
       .validate(req.body, { abortEarly: false })
       .then(async (_) => {
         try {
-          const user = await User.findByPk(req.body.user);
-
-          if (!user) {
-            return res.status(404).json({
-              code: 404,
-              errors: {
-                field: 'user',
-                message: 'The user you provided does not exist',
-              },
-              message: 'The user you provided does not exist',
-            });
-          }
 
           const deck = await Deck.findByPk(req.body.deck);
 

@@ -1,4 +1,5 @@
 const Yup = require('yup');
+const CollectionDecks = require('../models/CollectionDecks');
 const User = require('../models/User');
 const ResponseHandlers = require('../../utils/ResponseHandlers');
 
@@ -38,7 +39,7 @@ class UserController {
           email: value.email,
           password: value.password,
         });
-
+        
         return res.status(201).json({
           code: 201,
           data: {

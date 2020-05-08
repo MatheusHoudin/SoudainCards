@@ -7,7 +7,7 @@ class UserCollections extends Model {
         imported: {
           type: DataTypes.BOOLEAN,
           defaultValue: false,
-        },
+        }
       },
       {
         sequelize: connection,
@@ -19,7 +19,7 @@ class UserCollections extends Model {
     this.belongsTo(models.User, { foreignKey: 'user' });
     this.belongsTo(models.CollectionDecks, {
       foreignKey: 'collection',
-      as: 'collection_decks'
+      as: 'collection_decks',
     });
   }
 }

@@ -1,26 +1,123 @@
 const Card = require('../models/Card');
-
+const UserCollectionDeck = require('../models/UserCollectionDeck');
+const CardFace = require('../models/CardFace');
+const DeckCard = require('../models/DeckCard');
+const Yup = require('yup');
+const ResponseHandlers = require('../../utils/ResponseHandlers');
 class CardController {
   async store(req, res) {
-    const { front, back } = req.body;
-
-    const card = await Card.create({
-      front,
-      back,
+    const schema = Yup.object().shape({
+      deck: Yup.number('The deck must be a number').required(
+        'The deck field is required'
+      ),
+      collection: Yup.number('The collection must be a number').required(
+        'The collection field is required'
+      ),
+      starred: Yup.boolean('The starred must be a boolean'),
+      front: Yup.object({
+        text_content: Yup.string('The text content must be a string').required(
+          'The text content is required'
+        ),
+      }),
+      back: Yup.object({
+        text_content: Yup.string('The text content must be a string').required(
+          'The text content is required'
+        ),
+      }),
     });
 
-    return res.json(card);
-  }
+    schema
+      .validate(req.body, { abortEarly: false })
+      .then(async (_) => {
+        try {
+          const { deck, collection, starred, front, back } = req.body;
 
-  async index(req, res) {
-    const { card } = req.params;
+          const userHasDeckAndCollection = await UserCollectionDeck.findOne({
+            where: {
+              user: req.userId,
+              deck: deck,
+              collection: collection,
+            },
+          });
 
-    const cardObject = await Card.findByPk(card, {
-      attributes: ['id'],
-      include: [{ association: 'front_face' }, { association: 'back_face' }],
-    });
+          if (!userHasDeckAndCollection) {
+            return res.status(401).json({
+              code: 401,
+              error: {
+                field: 'collection/deck',
+                message:
+                  'The provided collection/deck does not belong to the user',
+              },
+              message:
+                'You are not allowed to insert cards on the provided collection and deck',
+            });
+          }
 
-    res.json(cardObject);
+          const frontContentAlreadyExists = await Card.findOne({
+            include: [
+              {
+                model: CardFace,
+                as: 'front_face',
+                where: {
+                  text_content: front.text_content,
+                }
+              }
+            ]
+          });
+
+          if (frontContentAlreadyExists) {
+            return res.status(400).json({
+              code: 400,
+              error: {
+                field: 'front',
+                message: 'The front of this card is a duplicate'
+              },
+              message: 'Front card duplicate found'
+            })
+          }
+
+          const [frontData, backData] = await Promise.all([
+            CardFace.create({ text_content: front.text_content }),
+            CardFace.create({ text_content: back.text_content }),
+          ]);
+
+          const card = await Card.create({
+            starred,
+            front: frontData.id,
+            back: backData.id,
+          });
+
+          await DeckCard.create({
+            creator: req.userId,
+            deck,
+            card: card.id,
+          });
+
+          return res.status(201).json({
+            code: 201,
+            data: {
+              card,
+              collection,
+              deck,
+            },
+            message: 'The card was saved successfully',
+          });
+        } catch (err) {
+          console.log(err)
+          return res.status(500).json({
+            code: 500,
+            error: err,
+            message: 'A server error has ocurred',
+          });
+        }
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          code: 500,
+          error: ResponseHandlers.convertYupValidationErrors(err),
+          message: 'The fields you provided are not valid',
+        });
+      });
   }
 }
 
