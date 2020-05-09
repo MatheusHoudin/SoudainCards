@@ -8,6 +8,7 @@ const FileController = require('./app/controllers/FileController');
 //const TagController = require('./app/controllers/TagController');
 const PasswordResetController = require('./app/controllers/PasswordResetController');
 const SubjectController = require('./app/controllers/SubjectController');
+const CardMediaController = require('./app/controllers/CardMediaController');
 const CollectionDecksController = require('./app/controllers/CollectionDecksController');
 const UserCollectionsController = require('./app/controllers/UserCollectionsController');
 const DeckController = require('./app/controllers/DeckController');
@@ -31,10 +32,6 @@ routes.use(authMiddleware);
 routes.put('/users', UserController.update);
 
 routes.post('/files', upload.single('file'), FileController.store);
-routes.post('/multipleFiles', upload.array('file', 4), (req, res) => {
-  console.log(req)
-  return res.json(req.files);
-});
 
 routes.post('/subject', SubjectController.store);
 
@@ -49,5 +46,6 @@ routes.get('/collection/:collection/decks', CollectionDecksController.index);
 routes.post('/deck', DeckController.store, UserDecksController.store);
 
 routes.post('/card', CardController.store);
+routes.post('/card/medias', upload.array('file', 4), CardMediaController.store);
 
 module.exports = routes;

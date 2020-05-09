@@ -24,11 +24,12 @@ class FileController {
           message: 'You must provide an image to save'
         })
       }
-      const { originalname: name, filename: path } = req.file;
+      const { originalname: name, filename: path, mimetype: type } = req.file;
   
       const file = await File.create({
         name,
         path,
+        type
       });
   
       return res.status(201).json({

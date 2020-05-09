@@ -2,6 +2,8 @@ const Card = require('../models/Card');
 const UserCollectionDeck = require('../models/UserCollectionDeck');
 const CardFace = require('../models/CardFace');
 const DeckCard = require('../models/DeckCard');
+const File = require('../models/File');
+const CardFaceContents = require('../models/CardFaceContents');
 const Yup = require('yup');
 const ResponseHandlers = require('../../utils/ResponseHandlers');
 class CardController {
@@ -18,11 +20,13 @@ class CardController {
         text_content: Yup.string('The text content must be a string').required(
           'The text content is required'
         ),
+        medias: Yup.array().of(Yup.number('Medias must be a number')),
       }),
       back: Yup.object({
         text_content: Yup.string('The text content must be a string').required(
           'The text content is required'
         ),
+        medias: Yup.array().of(Yup.number('Medias must be a number')),
       }),
     });
 
@@ -60,9 +64,9 @@ class CardController {
                 as: 'front_face',
                 where: {
                   text_content: front.text_content,
-                }
-              }
-            ]
+                },
+              },
+            ],
           });
 
           if (frontContentAlreadyExists) {
@@ -70,16 +74,46 @@ class CardController {
               code: 400,
               error: {
                 field: 'front',
-                message: 'The front of this card is a duplicate'
+                message: 'The front of this card is a duplicate',
               },
-              message: 'Front card duplicate found'
-            })
+              message: 'Front card duplicate found',
+            });
           }
 
           const [frontData, backData] = await Promise.all([
             CardFace.create({ text_content: front.text_content }),
             CardFace.create({ text_content: back.text_content }),
           ]);
+
+          var frontMedias = null;
+          var backMedias = null;
+          if(typeof front.medias !== 'undefined') {
+            frontMedias = front.medias.map(function (mId) {
+              return {
+                card_face: frontData.id,
+                file: mId,
+              };
+            });
+          }
+
+          if(typeof back.medias !== 'undefined') {
+            backMedias = back.medias.map(function (mId) {
+              return {
+                card_face: backData.id,
+                file: mId,
+              };
+            });
+          }
+
+          if(frontMedias || backMedias) {
+            var medias = [];
+            if(frontMedias) medias = medias.concat(frontMedias)
+            if(backMedias) medias = medias.concat(backMedias);
+
+            if(medias.length >= 0) {
+              await CardFaceContents.bulkCreate(medias);
+            }
+          }
 
           const card = await Card.create({
             starred,
@@ -103,7 +137,7 @@ class CardController {
             message: 'The card was saved successfully',
           });
         } catch (err) {
-          console.log(err)
+          console.log(err);
           return res.status(500).json({
             code: 500,
             error: err,

@@ -2,18 +2,22 @@ const { Model, DataTypes } = require('sequelize');
 
 class CardFaceContents extends Model {
   static init(connection) {
-    super.init({
-      content_path: DataTypes.STRING,
-      content_type: DataTypes.STRING,
-    }, {
-      sequelize: connection
-    });
+    super.init(
+      {},
+      {
+        sequelize: connection,
+      }
+    );
   }
 
   static associate(models) {
-    this.belongsTo(models.CardFace, { foreignKey: 'card_face', as: 'card_face_content'});
+    this.belongsTo(models.CardFace, {
+      foreignKey: 'card_face',
+    });
+    this.belongsTo(models.File, {
+      foreignKey: 'file',
+    });
   }
-
 }
 
 module.exports = CardFaceContents;
