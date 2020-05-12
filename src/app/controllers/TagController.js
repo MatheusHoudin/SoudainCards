@@ -1,6 +1,7 @@
 const Yup = require('yup');
 const Tag = require('../models/Tag');
-const UserDeckCards = require('../models/UserDeckCards');
+const DeckCard = require('../models/DeckCard');
+const UserCollectionDeck = require('../models/UserCollectionDeck');
 const ResponseHandlers = require('../../utils/ResponseHandlers');
 class TagController {
   async store(req, res) {
@@ -20,12 +21,22 @@ class TagController {
       .validate(req.body, { abortEarly: false })
       .then(async (_) => {
         try {
-          const userHasCard = await UserDeckCards.findOne({
+          const { deck, card, tag } = req.body;
+
+          const userHasCard = await UserCollectionDeck.findOne({
             where: {
               user: req.userId,
-              deck: req.body.deck,
-              card: req.body.card,
+              deck: deck,
             },
+            include: [
+              {
+                model: DeckCard,
+                where: {
+                  deck,
+                  card
+                }
+              }
+            ]
           });
 
           if (!userHasCard) {
@@ -39,9 +50,9 @@ class TagController {
             });
           }
 
-          const tag = await Tag.create(req.body.tag);
+          const tagData = await Tag.create(tag);
 
-          const deckTag = await tag.addCard(req.body.card);
+          const deckTag = await tagData.addCard(card);
 
           return res.status(201).json({
             code: 201,
@@ -51,7 +62,7 @@ class TagController {
         } catch (err) {
           return res.status(500).json({
             code: 500,
-            error: err.name,
+            error: err,
             message: 'A server error has ocurred',
           });
         }

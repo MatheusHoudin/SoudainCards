@@ -5,7 +5,7 @@ const multerConfig = require('./config/multer');
 const SessionController = require('./app/controllers/SessionController');
 const UserController = require('./app/controllers/UserController');
 const FileController = require('./app/controllers/FileController');
-//const TagController = require('./app/controllers/TagController');
+const TagController = require('./app/controllers/TagController');
 const PasswordResetController = require('./app/controllers/PasswordResetController');
 const SubjectController = require('./app/controllers/SubjectController');
 const CardMediaController = require('./app/controllers/CardMediaController');
@@ -46,6 +46,7 @@ routes.get('/collection/:collection/decks', CollectionDecksController.index);
 routes.post('/deck', DeckController.store, UserDecksController.store);
 
 routes.post('/card', CardController.store);
+routes.post('/card/tags', TagController.store);
 routes.post('/card/medias', upload.array('file', 4), CardMediaController.store);
 
 module.exports = routes;

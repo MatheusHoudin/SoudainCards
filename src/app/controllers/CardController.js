@@ -64,19 +64,23 @@ class CardController {
                   'You are not allowed to insert cards on the provided collection and deck',
               });
             }
-            console.log(front.text_content)
+            
             const frontContentAlreadyExists = await DeckCard.findOne({
               where: {
                 deck: deck,
                 creator: req.userId,
               },
+              attributes: ['id', 'creator', 'deck', 'card'],
               include: [
                 {
+                  required: true,
                   model: Card,
+                  attributes: ['id'],
                   include: [
                     {
                       model: CardFace,
                       as: 'front_face',
+                      attributes: ['id', 'text_content'],
                       where: {
                         text_content: front.text_content,
                       },
@@ -86,15 +90,11 @@ class CardController {
               ],
             });
 
-            if (frontContentAlreadyExists.dataValues.Card) {
-              return res.status(400).json({
-                code: 400,
-                error: {
-                  field: 'front',
-                  message: 'The front of this card is a duplicate',
-                },
-                message: 'Front card duplicate found',
-              });
+            if (frontContentAlreadyExists) {
+              return {
+                error: 'Front card duplicate found',
+                duplicateFront: frontContentAlreadyExists
+              }
             }
 
             const [frontData, backData] = await Promise.all([
@@ -104,6 +104,7 @@ class CardController {
 
             var frontMedias = null;
             var backMedias = null;
+            var mediaError = null;
             if (typeof front.medias !== 'undefined') {
               frontMedias = front.medias.map(function (mId) {
                 return {
@@ -128,9 +129,27 @@ class CardController {
               if (backMedias) medias = medias.concat(backMedias);
 
               if (medias.length >= 0) {
-                await CardFaceContents.bulkCreate(medias);
+                try {
+                  await CardFaceContents.bulkCreate(
+                    medias
+                  );
+                } catch (err) {
+
+                  await CardFace.destroy({
+                    where: {
+                      id: [frontData.id, backData.id],
+                    },
+                  });
+                  mediaError = {
+                    error: 'The provided medias are not saved on our database',
+                    card: cardData,
+                  };
+                }
+
               }
             }
+
+            if(mediaError) return mediaError;
 
             const card = await Card.create({
               starred,
