@@ -179,10 +179,9 @@ class CardController {
               });
             })
             .catch((err) => {
-              console.log(err);
               return res.status(500).json({
                 code: 500,
-                error: err,
+                error: err.name,
                 message: 'An error ocurred while saving the cards',
               });
             });
