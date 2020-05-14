@@ -3,7 +3,7 @@ module.exports = {
   host: '192.168.99.100',
   username: 'postgres',
   port: 5433,
-  password: 'docker',
+  password: 'soudain',
   database: 'soudain',
   define: {
     timestamps: true,

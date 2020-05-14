@@ -13,7 +13,6 @@ const User = require('../app/models/User');
 const File = require('../app/models/File');
 const PasswordReset = require('../app/models/PasswordReset');
 const CollectionDecks = require('../app/models/CollectionDecks');
-const UserCollections = require('../app/models/UserCollections');
 
 const models = [
   File,
@@ -25,7 +24,6 @@ const models = [
   CardFace,
   Card,
   CollectionDecks,
-  UserCollections,
   UserCollectionDeck,
   Tag,
   DeckCard,

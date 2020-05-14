@@ -2,7 +2,7 @@ const Yup = require('yup');
 const Deck = require('../models/Deck');
 const User = require('../models/User');
 const UserCollectionDeck = require('../models/UserCollectionDeck');
-const UserCollections = require('../models/UserCollections');
+const CollectionDecks = require('../models/CollectionDecks');
 const ResponseHandlers = require('../../utils/ResponseHandlers');
 
 class UserDecksController {
@@ -36,10 +36,10 @@ class UserDecksController {
           }
 
           if (typeof req.body.collection !== 'undefined') {
-            const userHasCollection = await UserCollections.findOne({
+            const userHasCollection = await CollectionDecks.findOne({
               where: {
-                collection: req.body.collection,
-                user: req.body.user,
+                id: req.body.collection,
+                creator: req.body.user,
               },
             });
 
@@ -60,7 +60,7 @@ class UserDecksController {
               });
             }
           }
-
+          
           const userDeck = await UserCollectionDeck.create(req.body);
 
           return res.status(201).json({
@@ -74,6 +74,7 @@ class UserDecksController {
               id: req.body.deck,
             },
           });
+          console.log(err)
           return res.status(500).json({
             code: 500,
             error: err.name,

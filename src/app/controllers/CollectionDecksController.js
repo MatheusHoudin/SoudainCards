@@ -1,9 +1,7 @@
 const Yup = require('yup');
 const CollectionDecks = require('../models/CollectionDecks');
 const Deck = require('../models/Deck');
-const User = require('../models/User');
 const UserCollectionDeck = require('../models/UserCollectionDeck');
-const UserCollections = require('../models/UserCollections');
 const File = require('../models/File');
 const Subject = require('../models/Subject');
 const ResponseHandlers = require('../../utils/ResponseHandlers');
@@ -21,7 +19,7 @@ class CollectionDecksController {
         const collectionValue = req.params.collection == 'default' ? null : req.params.collection;
         console.log(collectionValue)
         if(collectionValue) {
-          const userHasCollection = await UserCollections.findOne({
+          const userHasCollection = await UserCollectionDeck.findOne({
             where: {
               user: req.userId,
               collection: collectionValue,
@@ -82,7 +80,7 @@ class CollectionDecksController {
         });
       });
   }
-  async store(req, res, next) {
+  async store(req, res) {
     const schema = Yup.object().shape({
       title: Yup.string().required('The collection title is required'),
       description: Yup.string().required(
@@ -163,12 +161,11 @@ class CollectionDecksController {
             creator: req.userId
           });
 
-          req.body = {
-            user: req.userId,
-            collection: collectionDecks.id,
-          };
-
-          next();
+          return res.status(201).json({
+            code: 201,
+            data: collectionDecks,
+            message: 'The collection was created successfully'
+          })
         } catch (err) {
           console.log(err);
           return res.status(500).json({
