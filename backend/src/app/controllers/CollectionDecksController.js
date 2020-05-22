@@ -1,4 +1,5 @@
 const Yup = require('yup');
+const sequelize = require('sequelize');
 const CollectionDecks = require('../models/CollectionDecks');
 const Deck = require('../models/Deck');
 const UserCollectionDeck = require('../models/UserCollectionDeck');
@@ -8,24 +9,23 @@ const ResponseHandlers = require('../../utils/ResponseHandlers');
 class CollectionDecksController {
   async index(req, res) {
     const schema = Yup.object().shape({
-      collection: Yup.string().required(
-        'Collection is a required field'
-      ),
+      collection: Yup.string().required('Collection is a required field'),
     });
 
     schema
       .validate(req.params, { abortEarly: false })
       .then(async (_) => {
-        const collectionValue = req.params.collection == 'default' ? null : req.params.collection;
-        console.log(collectionValue)
-        if(collectionValue) {
+        const collectionValue =
+          req.params.collection == 'default' ? null : req.params.collection;
+        console.log(collectionValue);
+        if (collectionValue) {
           const userHasCollection = await UserCollectionDeck.findOne({
             where: {
               user: req.userId,
               collection: collectionValue,
-            }
-          })
-  
+            },
+          });
+
           if (!userHasCollection) {
             return res.status(401).json({
               code: 401,
@@ -38,8 +38,23 @@ class CollectionDecksController {
           }
         }
 
-        const userCollectionDecks = await UserCollectionDeck.findAll({
-          attributes: [],
+        const collectionJoinQuery = `${collectionValue ? `ucd.collection=${collectionValue}` : "ucd.collection is null"}`;
+         
+        const userCollectionDecks = await UserCollectionDeck.findAndCountAll({
+          attributes: {
+            exclude: ['createdAt', 'updatedAt'],
+            include: [
+              [
+                sequelize.literal(`(
+                  select count(*) from deck_cards as dc 
+                  join user_collection_decks as ucd on dc.deck=ucd.deck 
+                  where ucd.user=${req.userId} and ${collectionJoinQuery} 
+                  and ucd.deck=collection_deck.id group by ucd.deck
+                )`),
+                'cards_count'
+              ],
+            ],
+          },
           where: {
             user: req.userId,
             collection: collectionValue,
@@ -47,32 +62,32 @@ class CollectionDecksController {
           include: [
             {
               model: Deck,
-              attributes: ['id', 'name'],
+              attributes: ['id', 'name', 'shared'],
               as: 'collection_deck',
               include: [
                 {
                   model: File,
                   attributes: ['id', 'path', 'url'],
-                  as: 'file'
+                  as: 'file',
                 },
                 {
                   model: Subject,
                   attributes: ['id', 'subject'],
-                  as: 'deck_subject'
-                }
-              ]
-            },
-          ]
+                  as: 'deck_subject',
+                },
+              ],
+            }
+          ],
         });
 
         return res.status(200).json({
           code: 200,
           data: userCollectionDecks,
-          message: 'Retrieved decks'
+          message: 'Retrieved decks',
         });
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         return res.status(400).json({
           code: 400,
           error: ResponseHandlers.convertYupValidationErrors(err),
@@ -158,14 +173,14 @@ class CollectionDecksController {
               ? req.body.collection_image
               : null,
             subject: req.body.subject,
-            creator: req.userId
+            creator: req.userId,
           });
 
           return res.status(201).json({
             code: 201,
             data: collectionDecks,
-            message: 'The collection was created successfully'
-          })
+            message: 'The collection was created successfully',
+          });
         } catch (err) {
           console.log(err);
           return res.status(500).json({
