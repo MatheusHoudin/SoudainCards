@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/features/login/presentation/pages/login_page.dart';
 
 void main() => runApp(MyApp());
@@ -11,6 +12,7 @@ class MyApp extends StatelessWidget {
       title: 'Soudain',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        primaryColor: primaryColor,
         primarySwatch: Colors.blue,
       ),
       home: LoginPage(),
