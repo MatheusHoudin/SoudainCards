@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:soudain/core/constants/colors.dart';
 class CommomButton extends StatelessWidget {
   final String buttonText;
   final Color buttonColor;
@@ -19,6 +20,7 @@ class CommomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return RawMaterialButton(
       fillColor: this.buttonColor,
+      splashColor: primaryColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(6)
       ),

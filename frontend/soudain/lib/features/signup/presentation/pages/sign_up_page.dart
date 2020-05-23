@@ -1,70 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:soudain/core/commom_widgets/commom_buttom.dart';
-import 'package:soudain/core/commom_widgets/header_with_back_arrow_and_text.dart';
+import 'package:soudain/core/commom_widgets/commom_base_form_page.dart';
+import 'package:soudain/core/commom_widgets/commom_button.dart';
+import 'package:soudain/core/commom_widgets/custom_rich_text.dart';
 import 'package:soudain/core/commom_widgets/main_text_field.dart';
 import 'package:soudain/core/constants/colors.dart';
-import 'package:soudain/features/login/presentation/pages/login_page.dart';
 
 class SignUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: primaryColor,
-      body: SafeArea(
-        child: Column(
-          children: [
-            HeaderWithBackArrowAndText(
-              headerText: 'Create your Soudain account',
-              textSize: 20,
-            ),
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.1,
-                    right: MediaQuery.of(context).size.width * 0.1,
-                    top: MediaQuery.of(context).size.width * 0.07
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Name(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Email(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Password(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      PasswordConfirmation(),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      SignUpButton(),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      LogInLink(context)
-                    ],
-                  ),
-                ),
-              ),
-            )
-          ],
+    return CommomBaseFormPage(
+      headerText: 'Create your Soudain account',
+      headerBackArrowFunction: () => Navigator.pop(context),
+      headerTextSize: 20,
+      contentWidgets: [
+        SizedBox(
+          height: 10,
         ),
-      ),
+        Name(),
+        SizedBox(
+          height: 20,
+        ),
+        Email(),
+        SizedBox(
+          height: 20,
+        ),
+        Password(),
+        SizedBox(
+          height: 20,
+        ),
+        PasswordConfirmation(),
+        SizedBox(
+          height: 30,
+        ),
+        SignUpButton(),
+        SizedBox(
+          height: 30,
+        ),
+        LogInLink(context)
+      ],
     );
   }
+
 
   Widget Name(){
     return MainTextField(
@@ -108,32 +86,10 @@ class SignUpPage extends StatelessWidget {
   }
 
   Widget LogInLink(BuildContext context){
-    return InkWell(
+    return CustomRichText(
+      mainText: 'Already have an account? ',
+      featuredText: 'LOG IN',
       onTap: () => Navigator.pop(context),
-      child: RichText(
-        textAlign: TextAlign.center,
-        text: TextSpan(
-            text: 'Already have an account? ',
-            style: GoogleFonts.comfortaa(
-                textStyle: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18
-                )
-            ),
-            children: <TextSpan>[
-              TextSpan(
-                  text: 'LOG IN',
-                  style: GoogleFonts.comfortaa(
-                      textStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold
-                      )
-                  )
-              )
-            ]
-        ),
-      ),
     );
   }
 }
