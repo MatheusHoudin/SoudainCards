@@ -14,44 +14,53 @@ class SessionController {
     schema
       .validate(req.body, { abortEarly: false })
       .then(async (value) => {
-        const { email, password } = req.body;
+        try {
+          const { email, password } = req.body;
 
-        const user = await User.findOne({ where: { email } });
+          const user = await User.findOne({ where: { email } });
 
-        if (!user) {
-          return res.status(401).json({
-            code: 401,
-            data: { email },
-            message: 'User is not registered',
-          });
-        }
+          if (!user) {
+            return res.status(401).json({
+              code: 401,
+              data: { email },
+              message: 'User is not registered',
+            });
+          }
 
-        if (!(await user.checkPassword(password))) {
-          return res.status(401).json({
-            code: 401,
-            data: { password },
-            message: 'The provided password does not match',
-          });
-        }
+          if (!(await user.checkPassword(password))) {
+            return res.status(401).json({
+              code: 401,
+              data: { password },
+              message: 'The provided password does not match',
+            });
+          }
 
-        const { id, name } = user;
+          const { id, name } = user;
 
-        return res.status(201).json({
-          code: 201,
-          data: {
-            user: {
-              id,
-              name,
-              email,
+          return res.status(201).json({
+            code: 201,
+            data: {
+              user: {
+                id,
+                name,
+                email,
+              },
+              token: jwt.sign({ id }, authConfig.secret, {
+                expiresIn: authConfig.expiresIn,
+              }),
             },
-            token: jwt.sign({ id }, authConfig.secret, {
-              expiresIn: authConfig.expiresIn,
-            }),
-          },
-          message: 'The user could log in successfully',
-        });
+            message: 'The user could log in successfully',
+          });
+        } catch (error) {
+          return res.status(500).json({
+            code: 500,
+            error: error.name,
+            message: 'A server error ocurred',
+          });
+        }
       })
       .catch((err) => {
+        console.log(err);
         return res.status(401).json({
           code: 401,
           error: ResponseHandlers.convertYupValidationErrors(err),

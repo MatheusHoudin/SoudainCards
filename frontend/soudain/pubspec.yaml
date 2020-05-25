@@ -14,7 +14,7 @@ description: Soudain is a brand new flashcard app, dessigned with love by a prog
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.5.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -24,13 +24,18 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   google_fonts: ^1.1.0
-  device_preview: ^0.4.5
-  shared_preferences: ^0.5.7+3
+  hive: ^1.4.1+1
   get_it: ^4.0.2
+  dartz: ^0.9.1
+  dio: ^3.0.9
+  mockito: ^4.1.1
+  equatable: ^1.1.1
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner: ^1.10.0
 
 
 # For information on the generic Dart part of this file, see the
