@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:soudain/core/commom_widgets/header_with_back_arrow_and_text.dart';
 import 'package:soudain/core/constants/colors.dart';
-
+import 'package:soudain/core/responsiveness/device_size_adapter.dart';
+import 'package:soudain/injection_container.dart';
 class CommomBaseFormPage extends StatelessWidget {
   final String headerText;
   final double headerTextSize;
@@ -16,6 +17,38 @@ class CommomBaseFormPage extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    double lateralMargin = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+        portraitSizeAdapter: SizeAdapter(
+          isHeight: false,
+          smallPorcentage: 10,
+          mediumPorcentage: 10,
+          largePorcentage: 16
+        ),
+        landscapeSizeAdapter: SizeAdapter(
+          isHeight: true,
+          smallPorcentage: 30,
+          mediumPorcentage: 20,
+          largePorcentage: 40
+        )
+    );
+
+    double topMargin = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: true,
+        smallPorcentage: 10,
+        mediumPorcentage: 1,
+        largePorcentage: 4
+      ),
+      landscapeSizeAdapter: SizeAdapter(
+        isHeight: true,
+        smallPorcentage: 4,
+        mediumPorcentage: 4,
+        largePorcentage: 4
+      )
+    );
+
     return Scaffold(
       backgroundColor: primaryColor,
       body: SafeArea(
@@ -29,15 +62,20 @@ class CommomBaseFormPage extends StatelessWidget {
             Expanded(
               child: Container(
                 margin: EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width * 0.1,
-                  right: MediaQuery.of(context).size.width * 0.1,
-                  top: MediaQuery.of(context).size.width * 0.07
+                  left: lateralMargin,
+                  right: lateralMargin,
+                  top: topMargin
                 ),
                 child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: this.contentWidgets
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).size.height * 0.1
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: this.contentWidgets
+                    ),
                   ),
                 ),
               ),

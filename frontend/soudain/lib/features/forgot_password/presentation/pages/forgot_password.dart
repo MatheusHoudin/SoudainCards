@@ -5,58 +5,105 @@ import 'package:soudain/core/commom_widgets/commom_button.dart';
 import 'package:soudain/core/commom_widgets/custom_rich_text.dart';
 import 'package:soudain/core/commom_widgets/main_text_field.dart';
 import 'package:soudain/core/constants/colors.dart';
+import 'package:soudain/core/responsiveness/device_size_adapter.dart';
+import 'package:soudain/injection_container.dart';
 
 class ForgotPassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double headerTextSize = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: false,
+        smallPorcentage: 5,
+        mediumPorcentage: 5.5,
+        largePorcentage: 4
+      ),
+      landscapeSizeAdapter: SizeAdapter(
+        isHeight: true,
+        smallPorcentage: 6,
+        mediumPorcentage: 6,
+        largePorcentage: 4
+      )
+    );
+    double lockIconSize = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: true,
+        smallPorcentage: 4,
+        mediumPorcentage: 10,
+        largePorcentage: 14
+      ),
+      landscapeSizeAdapter: SizeAdapter(
+        isHeight: true,
+        smallPorcentage: 20,
+        mediumPorcentage: 20,
+        largePorcentage: 18
+      )
+    );
+    double textSize = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: false,
+        smallPorcentage: 4,
+        mediumPorcentage: 4.5,
+        largePorcentage: 4
+      ),
+      landscapeSizeAdapter: SizeAdapter(
+        isHeight: true,
+        smallPorcentage: 4.5,
+        mediumPorcentage: 4.5,
+        largePorcentage: 4
+      )
+    );
     return CommomBaseFormPage(
       headerText: 'Recover password',
-      headerTextSize: 22,
+      headerTextSize: headerTextSize,
       headerBackArrowFunction: () => Navigator.pop(context),
       contentWidgets: [
-        LockIcon(context),
+        LockIcon(context, lockIconSize),
         SizedBox(
           height: 20,
         ),
-        Instructions(),
+        Instructions(textSize),
         SizedBox(
           height: 10,
         ),
-        SoudainTeam(),
+        SoudainTeam(textSize),
         SizedBox(
           height: 30,
         ),
-        Email(),
+        Email(textSize),
         SizedBox(
           height: 20,
         ),
-        ResetPasswordButton(),
+        ResetPasswordButton(textSize),
         SizedBox(
           height: 30,
         ),
-        LogInLink(context)
+        LogInLink(context, textSize)
       ],
     );
   }
   
-  Widget LockIcon(BuildContext context){
+  Widget LockIcon(BuildContext context, double iconSize){
     return Container(
-      height: MediaQuery.of(context).size.height * 0.2,
-      width: MediaQuery.of(context).size.height * 0.2,
+      height: iconSize,
+      width: iconSize,
       child: Image.asset(
         'assets/images/lock.png',
       ),
     );
   }
   
-  Widget Instructions(){
+  Widget Instructions(double textSize){
     return Text(
       'Enter your email and we will send you instructions on how to reset your password',
       textAlign: TextAlign.center,
       style: GoogleFonts.comfortaa(
         textStyle: TextStyle(
-          fontSize: 20,
+          fontSize: textSize,
           color: Colors.black,
 
         )
@@ -64,13 +111,13 @@ class ForgotPassword extends StatelessWidget {
     );
   }
   
-  Widget SoudainTeam(){
+  Widget SoudainTeam(double textSize){
     return Text(
       'By Soudain Team',
       textAlign: TextAlign.center,
       style: GoogleFonts.comfortaa(
         textStyle: TextStyle(
-          fontSize: 22,
+          fontSize: textSize,
           color: Colors.white,
           fontWeight: FontWeight.bold
         )
@@ -78,29 +125,31 @@ class ForgotPassword extends StatelessWidget {
     );
   }
   
-  Widget Email(){
+  Widget Email(double textSize){
     return MainTextField(
       hint: 'Email',
       iconData: Icons.email,
       textInputType: TextInputType.emailAddress,
+      textSize: textSize,
     );
   }
   
-  Widget ResetPasswordButton(){
+  Widget ResetPasswordButton(double textSize){
     return CommomButton(
       buttonText: 'Reset password',
-      buttonTextSize: 20,
+      buttonTextSize: textSize,
       buttonTextColor: Colors.black,
       buttonFunction: () => null,
       buttonColor: lightYellow,
     );
   }
 
-  Widget LogInLink(BuildContext context){
+  Widget LogInLink(BuildContext context, double textSize){
     return CustomRichText(
       mainText: 'Do you remember it? ',
       featuredText: 'LOG IN',
       onTap: () => Navigator.pop(context),
+      textSize: textSize,
     );
   }
 }

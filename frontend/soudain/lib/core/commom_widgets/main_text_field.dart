@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:soudain/core/constants/colors.dart';
+import 'package:soudain/core/responsiveness/device_size_adapter.dart';
+import 'package:soudain/injection_container.dart';
 
 class MainTextField extends StatelessWidget {
   final String hint;
   final IconData iconData;
   final bool obscure;
   final TextInputType textInputType;
+  final double textSize;
 
   MainTextField({
     this.hint,
     this.iconData,
     this.obscure = false,
-    this.textInputType = TextInputType.text
+    this.textInputType = TextInputType.text,
+    this.textSize
   });
 
   @override
@@ -25,7 +29,7 @@ class MainTextField extends StatelessWidget {
       child: TextField(
         obscureText: obscure,
         keyboardType: textInputType,
-        style: CustomTextStyle(),
+        style: CustomTextStyle(textSize),
 
         decoration: InputDecoration(
 
@@ -38,17 +42,17 @@ class MainTextField extends StatelessWidget {
           ),
           fillColor: Colors.white,
           hintText: hint,
-          hintStyle: CustomTextStyle(),
+          hintStyle: CustomTextStyle(textSize),
         ),
       ),
     );
   }
 
-  TextStyle CustomTextStyle() {
+  TextStyle CustomTextStyle(double textSize) {
     return GoogleFonts.comfortaa(
         textStyle: TextStyle(
           color: textFieldHintColor,
-          fontSize: 20,
+          fontSize: textSize,
           fontWeight: FontWeight.bold,
         )
     );

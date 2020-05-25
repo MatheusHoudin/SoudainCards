@@ -5,11 +5,13 @@ class CustomRichText extends StatelessWidget {
   final String mainText;
   final String featuredText;
   final Function onTap;
+  final double textSize;
 
   CustomRichText({
     this.mainText,
     this.featuredText,
-    this.onTap
+    this.onTap,
+    this.textSize
   });
 
   @override
@@ -23,16 +25,16 @@ class CustomRichText extends StatelessWidget {
           style: GoogleFonts.comfortaa(
             textStyle: TextStyle(
               color: Colors.black,
-                fontSize: 18
+                fontSize: textSize
               )
             ),
             children: <TextSpan>[
               TextSpan(
-                text: this.featuredText,
+                text: '\n${this.featuredText}',
                 style: GoogleFonts.comfortaa(
                   textStyle: TextStyle(
                     color: Colors.white,
-                    fontSize: 20,
+                    fontSize: textSize,
                     fontWeight: FontWeight.bold
                   )
                 )
