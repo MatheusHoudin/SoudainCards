@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 
-@HiveType(typeId: 1)
+@HiveType()
 class UserModel extends Equatable{
   @HiveField(0)
   final int id;

@@ -1,4 +1,3 @@
-
 import 'package:hive/hive.dart';
 import 'package:soudain/features/login/data/model/user/user_model.dart';
 

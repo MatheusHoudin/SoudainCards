@@ -30,7 +30,10 @@ dependencies:
   dio: ^3.0.9
   mockito: ^4.1.1
   equatable: ^1.1.1
-
+  matcher: ^0.12.6
+  flutter_bloc: ^4.0.0
+  bloc: ^4.0.0
+  path_provider: ^1.6.9
 
 dev_dependencies:
   flutter_test:

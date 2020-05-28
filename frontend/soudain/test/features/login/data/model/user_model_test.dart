@@ -1,7 +1,6 @@
 import 'dart:convert';
-
-import 'file:///C:/Users/mathe/OneDrive/Documentos/GitHub/SoudainCards/frontend/soudain/lib/features/login/data/model/user/user_model.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soudain/features/login/data/model/user/user_model.dart';
 
 import '../../../../fixtures/fixture_reader.dart';
 void main() {
@@ -12,7 +11,7 @@ void main() {
   );
 
   test(
-    'should convert JSON data to UserModel by fromJson method',
+    'hould convert JSON data to UserModel by fromJson methods',
     () {
       final Map<String, dynamic> jsonMap = json.decode(convertJsonToString('user.json'));
 
