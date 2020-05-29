@@ -5,21 +5,30 @@ abstract class SessionState extends Equatable {
 }
 
 class FormState extends SessionState {
-  final String loginFieldError;
+  final String emailFieldError;
   final String passwordFieldError;
 
   FormState({
-    this.loginFieldError,
+    this.emailFieldError,
     this.passwordFieldError
   });
 
   @override
-  List<Object> get props => [this.passwordFieldError,this.loginFieldError];
+  List<Object> get props => [this.passwordFieldError,this.emailFieldError];
 }
 
 class CreatingSessionState extends SessionState {
   @override
   List<Object> get props => [];
+}
+
+class SessionCreatedState extends SessionState{
+  final SessionModel model;
+
+  SessionCreatedState({this.model});
+
+  @override
+  List<Object> get props => [model];
 }
 
 class ErrorState extends SessionState {
