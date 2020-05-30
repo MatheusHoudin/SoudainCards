@@ -5,7 +5,7 @@ void main(){
   test(
     'Should return true on a valid email',
     () async {
-      expect(validateEmail('a@g.c'), true);
+      expect(validateEmail('matheusdin04@gmail.com'), true);
     }
   );
 

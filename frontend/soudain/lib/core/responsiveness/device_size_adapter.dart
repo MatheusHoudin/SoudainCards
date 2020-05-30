@@ -11,15 +11,11 @@ class DeviceSizeAdapter {
     SizeAdapter landscapeSizeAdapter,
     SizeAdapter portraitSizeAdapter
   }){
-    print('IS LANDSCAPE: ${MediaQuery.of(context).orientation == Orientation.landscape}');
     final SizeAdapter choosenSizeAdatper = MediaQuery.of(context).orientation == Orientation.landscape
         ?
     landscapeSizeAdapter
         :
     portraitSizeAdapter;
-
-    print('height ${MediaQuery.of(context).size.height}');
-    print('width ${MediaQuery.of(context).size.width}');
 
     double screenSize = choosenSizeAdatper.isHeight
         ?
@@ -27,7 +23,6 @@ class DeviceSizeAdapter {
         :
     MediaQuery.of(context).size.width;
 
-    print('SIZE: ${screenSize}');
     double porcentage;
 
     if (screenSize <= smallDeviceBreakpoint) {

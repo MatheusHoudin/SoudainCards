@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:soudain/core/commom_widgets/header_with_back_arrow_and_text.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
+import 'package:soudain/features/login/presentation/bloc/session_bloc.dart';
 import 'package:soudain/injection_container.dart';
 class CommomBaseFormPage extends StatelessWidget {
   final String headerText;
@@ -71,10 +73,13 @@ class CommomBaseFormPage extends StatelessWidget {
                     padding: EdgeInsets.only(
                       bottom: MediaQuery.of(context).size.height * 0.1
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: this.contentWidgets
+                    child: BlocProvider<SessionBloc>(
+                      create: (context) => sl<SessionBloc>(),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: this.contentWidgets
+                      ),
                     ),
                   ),
                 ),

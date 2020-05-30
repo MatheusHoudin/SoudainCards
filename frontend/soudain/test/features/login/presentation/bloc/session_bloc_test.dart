@@ -26,7 +26,7 @@ void main(){
   test(
     'State should be FormState with null fields',
     () async {
-      expect(bloc.initialState, FormState(passwordFieldError: null, emailFieldError: null));
+      expect(bloc.initialState, SessionFormState(passwordFieldError: null, emailFieldError: null));
     }
   );
 
@@ -36,8 +36,8 @@ void main(){
       'Should yield a FormState with email error when the email provided is not valid',
       () async {
         final expected = [
-          FormState(emailFieldError: null, passwordFieldError: null),
-          FormState(emailFieldError: emailIsNotValid, passwordFieldError: null)
+          SessionFormState(emailFieldError: null, passwordFieldError: null),
+          SessionFormState(emailFieldError: emailIsNotValid, passwordFieldError: null)
         ];
         
         expectLater(bloc.cast(), emitsInOrder(expected));
@@ -52,8 +52,8 @@ void main(){
       'Should yield a FormState with password error when the password provided is not valid',
       () async {
         final expected = [
-          FormState(emailFieldError: null, passwordFieldError: null),
-          FormState(emailFieldError: null, passwordFieldError: passwordIsNotValid)
+          SessionFormState(emailFieldError: null, passwordFieldError: null),
+          SessionFormState(emailFieldError: null, passwordFieldError: passwordIsNotValid)
         ];
 
         expectLater(bloc.cast(), emitsInOrder(expected));
@@ -71,8 +71,7 @@ void main(){
             .thenAnswer((_) async => Right(model));
 
         final expected = [
-          FormState(emailFieldError: null, passwordFieldError: null),
-          CreatingSessionState()
+          SessionFormState(emailFieldError: null, passwordFieldError: null),
         ];
 
         expectLater(bloc.cast(), emitsInAnyOrder(expected));
@@ -92,9 +91,9 @@ void main(){
         .thenAnswer((_) async => Left(EmailNotRegisteredFailure()));
 
         final expected = [
-          FormState(passwordFieldError: null,emailFieldError: null),
-          CreatingSessionState(),
-          FormState(passwordFieldError: null,emailFieldError: emailIsNotRegistered),
+          SessionFormState(passwordFieldError: null,emailFieldError: null),
+          SessionFormState(passwordFieldError: null,emailFieldError: null, isCreatingSession: true),
+          SessionFormState(passwordFieldError: null,emailFieldError: emailIsNotRegistered, isCreatingSession: false),
         ];
 
         expectLater(bloc.cast(), emitsInOrder(expected));
@@ -114,9 +113,9 @@ void main(){
             .thenAnswer((_) async => Left(PasswordDoesNotMatchFailure()));
 
         final expected = [
-          FormState(passwordFieldError: null,emailFieldError: null),
-          CreatingSessionState(),
-          FormState(passwordFieldError: passwordDoesNotMatchWithEmail,emailFieldError: null),
+          SessionFormState(passwordFieldError: null,emailFieldError: null),
+          SessionFormState(passwordFieldError: null,emailFieldError: null, isCreatingSession: true),
+          SessionFormState(passwordFieldError: passwordDoesNotMatchWithEmail,emailFieldError: null, isCreatingSession: false),
         ];
 
         expectLater(bloc.cast(), emitsInOrder(expected));
@@ -136,9 +135,9 @@ void main(){
             .thenAnswer((_) async => Left(ServerFailure()));
 
         final expected = [
-          FormState(passwordFieldError: null,emailFieldError: null),
-          CreatingSessionState(),
-          ErrorState(message: unexpectedServerError),
+          SessionFormState(passwordFieldError: null,emailFieldError: null),
+          SessionFormState(passwordFieldError: null,emailFieldError: null, isCreatingSession: true),
+          SessionFormState(passwordFieldError: null,emailFieldError: null, isCreatingSession: false, error: unexpectedServerError),
         ];
 
         expectLater(bloc.cast(), emitsInOrder(expected));
@@ -159,8 +158,8 @@ void main(){
             .thenAnswer((_) async => Right(model));
 
         final expected = [
-          FormState(passwordFieldError: null,emailFieldError: null),
-          CreatingSessionState(),
+          SessionFormState(passwordFieldError: null,emailFieldError: null),
+          SessionFormState(passwordFieldError: null,emailFieldError: null, isCreatingSession: true),
           SessionCreatedState(model: model)
         ];
 

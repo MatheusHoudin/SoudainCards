@@ -25,10 +25,12 @@ class PasswordFieldChangeEvent extends SessionEvent {
 class CreateSessionEvent extends SessionEvent {
   final String emailValue;
   final String passwordValue;
+  final GlobalKey<FormState> loginFormKey;
 
   CreateSessionEvent({
     this.emailValue,
-    this.passwordValue
+    this.passwordValue,
+    this.loginFormKey
   });
 
   @override

@@ -4,22 +4,26 @@ abstract class SessionState extends Equatable {
   const SessionState();
 }
 
-class FormState extends SessionState {
+class SessionFormState extends SessionState {
   final String emailFieldError;
   final String passwordFieldError;
+  final String error;
+  final bool isCreatingSession;
 
-  FormState({
+  SessionFormState({
     this.emailFieldError,
-    this.passwordFieldError
+    this.passwordFieldError,
+    this.isCreatingSession,
+    this.error
   });
 
   @override
-  List<Object> get props => [this.passwordFieldError,this.emailFieldError];
-}
-
-class CreatingSessionState extends SessionState {
-  @override
-  List<Object> get props => [];
+  List<Object> get props => [
+    this.passwordFieldError,
+    this.emailFieldError,
+    this.isCreatingSession,
+    this.error
+  ];
 }
 
 class SessionCreatedState extends SessionState{
@@ -29,14 +33,4 @@ class SessionCreatedState extends SessionState{
 
   @override
   List<Object> get props => [model];
-}
-
-class ErrorState extends SessionState {
-  final String message;
-
-  ErrorState({this.message});
-
-  @override
-  List<Object> get props => [this.message];
-
 }

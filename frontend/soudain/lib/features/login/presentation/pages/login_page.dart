@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:soudain/core/commom_widgets/commom_base_form_page.dart';
 import 'package:soudain/core/commom_widgets/custom_rich_text.dart';
-import 'package:soudain/core/commom_widgets/main_text_field.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:soudain/core/commom_widgets/commom_button.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
-import 'package:soudain/features/forgot_password/presentation/pages/forgot_password.dart';
+import 'package:soudain/features/login/presentation/bloc/session_bloc.dart';
+import 'package:soudain/features/login/presentation/widgets/login_form.dart';
 import 'package:soudain/features/signup/presentation/pages/sign_up_page.dart';
 import 'package:soudain/injection_container.dart';
 class LoginPage extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     double headerTextSize = sl<DeviceSizeAdapter>().getResponsiveSize(
@@ -62,24 +64,30 @@ class LoginPage extends StatelessWidget {
         SizedBox(
           height: 20,
         ),
-        Email(textSize),
-        SizedBox(
-          height: 20,
-        ),
-        Password(textSize),
-        SizedBox(
-          height: 20,
-        ),
-        ForgotPasswordLink(context, textSize),
-        SizedBox(
-          height: 20,
-        ),
-        LogInButton(textSize),
+        LoginFormWidget(textSize),
         SizedBox(
           height: 20,
         ),
         CreateAccountLink(context, textSize)
       ],
+    );
+  }
+
+  Widget LoginFormWidget(double textSize) {
+    return BlocBuilder<SessionBloc, SessionState>(
+      builder: (blocContext, state) {
+        if (state is SessionFormState) {
+
+          return LoginForm(
+            textSize: textSize,
+            emailFieldError: state.emailFieldError,
+            passowordFieldError: state.passwordFieldError,
+            isCreatingSession: state.isCreatingSession,
+          );
+        }else{
+          return Container();
+        }
+      },
     );
   }
 
@@ -117,50 +125,6 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget Email(double textSize){
-    return MainTextField(
-      hint: 'Email',
-      iconData: Icons.email,
-      textInputType: TextInputType.emailAddress,
-      textSize: textSize,
-    );
-  }
-
-  Widget Password(double textSize){
-    return MainTextField(
-      hint: 'Password',
-      obscure: true,
-      iconData: Icons.lock,
-      textSize: textSize,
-    );
-  }
-
-  Widget ForgotPasswordLink(BuildContext context, double textSize){
-    return InkWell(
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPassword())),
-      child: Text(
-        'Forgot your password?',
-        textAlign: TextAlign.center,
-        style: GoogleFonts.comfortaa(
-          textStyle: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: textSize
-          )
-        ),
-      ),
-    );
-  }
-
-  Widget LogInButton(double textSize){
-    return CommomButton(
-      buttonText: 'Log In',
-      buttonColor: positiveButtonColor,
-      buttonTextColor: Colors.white,
-      buttonFunction: () => null,
-      buttonTextSize: textSize
-    );
-  }
 
   Widget CreateAccountLink(BuildContext context, double textSize){
     return CustomRichText(

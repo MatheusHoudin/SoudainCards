@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:soudain/core/constants/texts.dart';
 import 'package:soudain/core/error/failures.dart';
 import 'package:soudain/core/validation/validation.dart';
@@ -18,18 +19,23 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
     this.createSessionUseCase
   });
   @override
-  SessionState get initialState => FormState(emailFieldError: null, passwordFieldError: null);
+  SessionState get initialState => SessionFormState(emailFieldError: null, passwordFieldError: null, isCreatingSession: false);
 
   @override
   Stream<SessionState> mapEventToState(
     SessionEvent event,
   ) async* {
     if( event is CreateSessionEvent ) {
+      print('CREATE SESSION');
       final emailIsValid = validateEmail(event.emailValue);
       final passwordIsValid = validatePassword(event.passwordValue);
 
       if(emailIsValid && passwordIsValid) {
-        yield CreatingSessionState();
+        yield SessionFormState(
+          passwordFieldError: null,
+          emailFieldError: null,
+          isCreatingSession: true
+        );
 
         final failureOrSession = await createSessionUseCase(CreateSessionParams(
           email: event.emailValue,
@@ -38,33 +44,46 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
 
         yield* failureOrSession.fold(
           (failure) async*{
+            print(failure);
             if (failure is EmailNotRegisteredFailure) {
-              yield FormState(
+
+              yield SessionFormState(
                 passwordFieldError: null,
-                emailFieldError: emailIsNotRegistered
+                emailFieldError: emailIsNotRegistered,
+                isCreatingSession: false
               );
             } else if (failure is PasswordDoesNotMatchFailure) {
-              yield FormState(
+              yield SessionFormState(
                 passwordFieldError: passwordDoesNotMatchWithEmail,
-                emailFieldError: null
+                emailFieldError: null,
+                isCreatingSession: false
               );
             } else {
-              yield ErrorState(
-                message: unexpectedServerError
+              yield SessionFormState(
+                passwordFieldError: null,
+                emailFieldError: null,
+                isCreatingSession: false,
+                error: unexpectedServerError
               );
             }
+            event.loginFormKey.currentState.validate();
           },
           (session) async* {
             yield SessionCreatedState(
-              model: session
+              model: session,
             );
           }
         );
       }else{
-        yield FormState(
+        print('ERROR STATE');
+        print(emailIsValid);
+        print(passwordIsValid);
+        yield SessionFormState(
           emailFieldError: !emailIsValid ? emailIsNotValid : null,
-          passwordFieldError: !passwordIsValid ? passwordIsNotValid : null
+          passwordFieldError: !passwordIsValid ? passwordIsNotValid : null,
+          isCreatingSession: false
         );
+        event.loginFormKey.currentState.validate();
       }
     }
   }
