@@ -63,15 +63,14 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
                 passwordFieldError: null,
                 emailFieldError: null,
                 isCreatingSession: false,
-                error: unexpectedServerError
               );
+              String message = failure is ServerFailure ? unexpectedServerError : noInternetConnection;
+              event.onServerError(message);
             }
             event.loginFormKey.currentState.validate();
           },
           (session) async* {
-            yield SessionCreatedState(
-              model: session,
-            );
+            event.onSuccess();
           }
         );
       }else{

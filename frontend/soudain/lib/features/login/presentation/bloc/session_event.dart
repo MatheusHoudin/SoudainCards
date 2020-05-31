@@ -26,11 +26,15 @@ class CreateSessionEvent extends SessionEvent {
   final String emailValue;
   final String passwordValue;
   final GlobalKey<FormState> loginFormKey;
+  final Function onSuccess;
+  final Function onServerError;
 
   CreateSessionEvent({
     this.emailValue,
     this.passwordValue,
-    this.loginFormKey
+    this.loginFormKey,
+    this.onSuccess,
+    this.onServerError
   });
 
   @override

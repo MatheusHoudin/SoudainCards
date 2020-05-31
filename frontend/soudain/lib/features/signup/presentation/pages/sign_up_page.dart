@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:soudain/core/commom_widgets/commom_base_form_page.dart';
 import 'package:soudain/core/commom_widgets/commom_button.dart';
@@ -7,6 +8,7 @@ import 'package:soudain/core/commom_widgets/main_text_field.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/injection_container.dart';
+import 'package:soudain/navigation/bloc/navigation_bloc.dart';
 
 class SignUpPage extends StatelessWidget {
 
@@ -44,7 +46,7 @@ class SignUpPage extends StatelessWidget {
     );
     return CommomBaseFormPage(
       headerText: 'Create your Soudain account',
-      headerBackArrowFunction: () => Navigator.pop(context),
+      headerBackArrowFunction: () => BlocProvider.of<NavigationBloc>(context).add(PopEvent()),
       headerTextSize: headerTextSize,
       contentWidgets: [
         SizedBox(
@@ -125,7 +127,7 @@ class SignUpPage extends StatelessWidget {
     return CustomRichText(
       mainText: 'Already have an account? ',
       featuredText: 'LOG IN',
-      onTap: () => Navigator.pop(context),
+      onTap: () => BlocProvider.of<NavigationBloc>(context).add(PopEvent()),
       textSize: textSize,
     );
   }

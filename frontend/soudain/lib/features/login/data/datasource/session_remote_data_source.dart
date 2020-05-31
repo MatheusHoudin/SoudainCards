@@ -28,22 +28,29 @@ class SessionRemoteDataSourceImpl extends SessionRemoteDataSource {
         return SessionModel.fromJson(response.data['data']);
       }
     } on DioError catch(e) {
-      if(e.response.statusCode == 401){
+      print('response');
+      print(e.response);
+      if(e.response != null) {
+        if(e.response.statusCode == 401){
 
-        if(e.response.data['data']['email'] != null) {
+          if(e.response.data['data']['email'] != null) {
 
-          throw EmailNotRegisteredException();
-        }else if(e.response.data['data']['password'] != null){
+            throw EmailNotRegisteredException();
+          }else if(e.response.data['data']['password'] != null){
 
-          throw PasswordDoesNotMatchException();
+            throw PasswordDoesNotMatchException();
+          }
+        }else if(e.response.statusCode == 400){
+          throw SessionRequestMalformedException(
+              parameterErrorList: (e.response.data['error'] as List).map((e) => FieldError.fromJson(e)).toList()
+          );
+        }else if(e.response.statusCode == 500){
+          throw ServerException();
         }
-      }else if(e.response.statusCode == 400){
-        throw SessionRequestMalformedException(
-            parameterErrorList: (e.response.data['error'] as List).map((e) => FieldError.fromJson(e)).toList()
-        );
-      }else if(e.response.statusCode == 500){
+      }else{
         throw ServerException();
       }
+
     }
   }
 }

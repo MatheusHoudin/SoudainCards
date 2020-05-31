@@ -4,8 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:soudain/core/commom_widgets/commom_button.dart';
 import 'package:soudain/core/commom_widgets/main_text_field.dart';
 import 'package:soudain/core/constants/colors.dart';
+import 'package:soudain/core/constants/texts.dart';
 import 'package:soudain/features/forgot_password/presentation/pages/forgot_password.dart';
+import 'package:soudain/features/home/presentation/pages/home.dart';
 import 'package:soudain/features/login/presentation/bloc/session_bloc.dart';
+import 'package:soudain/navigation/bloc/navigation_bloc.dart';
 
 class LoginForm extends StatefulWidget {
   final double textSize;
@@ -17,7 +20,7 @@ class LoginForm extends StatefulWidget {
     this.textSize,
     this.passowordFieldError,
     this.emailFieldError,
-    this.isCreatingSession
+    this.isCreatingSession,
   });
 
   @override
@@ -69,9 +72,37 @@ class _LoginFormState extends State<LoginForm> {
             textSize: widget.textSize,
             loginFunction: () {
               BlocProvider.of<SessionBloc>(context).add(CreateSessionEvent(
-                  emailValue: emailController.text,
-                  passwordValue: passwordController.text,
-                  loginFormKey: formKey
+                emailValue: emailController.text,
+                passwordValue: passwordController.text,
+                loginFormKey: formKey,
+                onSuccess: () => BlocProvider.of<NavigationBloc>(context).add(LoginToHomeNavigationEvent()),
+                onServerError: (message) => showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.sentiment_dissatisfied,
+                              color: primaryColor,
+                              size: 60,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 10),
+                              child: Text(
+                                message,
+                                textAlign: TextAlign.justify,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    }
+                )
               ));
             }
           ),

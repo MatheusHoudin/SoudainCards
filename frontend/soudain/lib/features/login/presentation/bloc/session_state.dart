@@ -7,14 +7,12 @@ abstract class SessionState extends Equatable {
 class SessionFormState extends SessionState {
   final String emailFieldError;
   final String passwordFieldError;
-  final String error;
   final bool isCreatingSession;
 
   SessionFormState({
     this.emailFieldError,
     this.passwordFieldError,
     this.isCreatingSession,
-    this.error
   });
 
   @override
@@ -22,7 +20,6 @@ class SessionFormState extends SessionState {
     this.passwordFieldError,
     this.emailFieldError,
     this.isCreatingSession,
-    this.error
   ];
 }
 

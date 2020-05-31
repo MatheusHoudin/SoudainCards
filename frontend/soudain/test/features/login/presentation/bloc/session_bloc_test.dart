@@ -137,7 +137,7 @@ void main(){
         final expected = [
           SessionFormState(passwordFieldError: null,emailFieldError: null),
           SessionFormState(passwordFieldError: null,emailFieldError: null, isCreatingSession: true),
-          SessionFormState(passwordFieldError: null,emailFieldError: null, isCreatingSession: false, error: unexpectedServerError),
+          SessionFormState(passwordFieldError: null,emailFieldError: null, isCreatingSession: false),
         ];
 
         expectLater(bloc.cast(), emitsInOrder(expected));

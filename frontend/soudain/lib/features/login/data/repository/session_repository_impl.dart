@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:soudain/core/error/exceptions.dart';
 import 'package:soudain/core/error/failures.dart';
+import 'package:soudain/core/network/network_info.dart';
 import 'package:soudain/features/login/data/datasource/session_local_data_source.dart';
 import 'package:soudain/features/login/data/datasource/session_remote_data_source.dart';
 import 'package:soudain/features/login/data/model/session/session_model.dart';
@@ -9,29 +10,35 @@ import 'package:soudain/features/login/domain/repository/session_repository.dart
 class SessionRepositoryImpl extends SessionRepository {
   final SessionLocalDataSource sessionLocalDataSource;
   final SessionRemoteDataSource sessionRemoteDataSource;
+  final NetworkInfo networkInfo;
 
   SessionRepositoryImpl({
     this.sessionRemoteDataSource,
-    this.sessionLocalDataSource
+    this.sessionLocalDataSource,
+    this.networkInfo
   });
 
   @override
   Future<Either<Failure, SessionModel>> createSession({String email, String password}) async {
-    try {
-      SessionModel sessionModel = await sessionRemoteDataSource.createSession(
-          email: email, password: password);
-      await sessionLocalDataSource.cacheSession(sessionModel);
-      return Right(sessionModel);
-    } on EmailNotRegisteredException {
-      return Left(EmailNotRegisteredFailure());
-    } on PasswordDoesNotMatchException {
-      return Left(PasswordDoesNotMatchFailure());
-    } on SessionRequestMalformedException catch(e) {
-      return Left(SessionRequestMalformedFailure(
-        parameterErrorList: e.parameterErrorList
-      ));
-    } on ServerException {
-      return Left(ServerFailure());
+    if (await networkInfo.isConnected) {
+      try {
+        SessionModel sessionModel = await sessionRemoteDataSource.createSession(
+            email: email, password: password);
+        await sessionLocalDataSource.cacheSession(sessionModel);
+        return Right(sessionModel);
+      } on EmailNotRegisteredException {
+        return Left(EmailNotRegisteredFailure());
+      } on PasswordDoesNotMatchException {
+        return Left(PasswordDoesNotMatchFailure());
+      } on SessionRequestMalformedException catch(e) {
+        return Left(SessionRequestMalformedFailure(
+            parameterErrorList: e.parameterErrorList
+        ));
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    }else{
+      return Left(NoInternetConnectionFailure());
     }
   }
 

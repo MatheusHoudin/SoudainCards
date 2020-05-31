@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/features/login/presentation/pages/login_page.dart';
+import 'package:soudain/navigation/bloc/navigation_bloc.dart';
 import 'injection_container.dart' as sl;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -9,17 +11,23 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Soudain',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: primaryColor,
-        primarySwatch: Colors.blue,
+    return BlocProvider<NavigationBloc>(
+      create: (context) => NavigationBloc(navigatorKey: _navigatorKey),
+      child: MaterialApp(
+        title: 'Soudain',
+        navigatorKey: _navigatorKey,
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: primaryColor,
+          primarySwatch: Colors.blue,
+        ),
+        home: LoginPage(),
       ),
-      home: LoginPage(),
     );
   }
 }

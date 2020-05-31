@@ -10,6 +10,7 @@ import 'package:soudain/features/login/presentation/bloc/session_bloc.dart';
 import 'package:soudain/features/login/presentation/widgets/login_form.dart';
 import 'package:soudain/features/signup/presentation/pages/sign_up_page.dart';
 import 'package:soudain/injection_container.dart';
+import 'package:soudain/navigation/bloc/navigation_bloc.dart';
 class LoginPage extends StatelessWidget {
 
   @override
@@ -77,7 +78,6 @@ class LoginPage extends StatelessWidget {
     return BlocBuilder<SessionBloc, SessionState>(
       builder: (blocContext, state) {
         if (state is SessionFormState) {
-
           return LoginForm(
             textSize: textSize,
             emailFieldError: state.emailFieldError,
@@ -130,7 +130,7 @@ class LoginPage extends StatelessWidget {
     return CustomRichText(
       mainText: 'Don\'t have an account? ',
       featuredText: 'SIGN UP',
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage())),
+      onTap: () => BlocProvider.of<NavigationBloc>(context).add(NavigateToSignUpPageEvent()),
       textSize: textSize,
     );
   }

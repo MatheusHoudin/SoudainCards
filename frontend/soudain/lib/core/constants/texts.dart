@@ -5,3 +5,4 @@ const String passwordIsNotValid = 'The password must have at least 6 characters'
 const String passwordDoesNotMatchWithEmail = 'Password does not match with email, please review it.';
 
 const String unexpectedServerError = 'An unexpected error has ocurred on the communication with our server, please, bear with us';
+const String noInternetConnection = 'Dear, we are supposing your internet connection is not so good by now, may you check it out?';

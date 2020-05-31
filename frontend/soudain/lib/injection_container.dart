@@ -1,9 +1,11 @@
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:soudain/core/constants/api.dart';
 import 'package:soudain/core/hive/session_box.dart';
+import 'package:soudain/core/network/network_info.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/features/login/data/datasource/session_local_data_source.dart';
 import 'package:soudain/features/login/data/datasource/session_remote_data_source.dart';
@@ -25,7 +27,8 @@ Future<void> setup()async {
 
   sl.registerLazySingleton<SessionRepository>(() => SessionRepositoryImpl(
     sessionRemoteDataSource: sl(),
-    sessionLocalDataSource: sl()
+    sessionLocalDataSource: sl(),
+    networkInfo: sl()
   ));
 
   sl.registerLazySingleton<SessionRemoteDataSource>(() => SessionRemoteDataSourceImpl(
@@ -33,6 +36,10 @@ Future<void> setup()async {
   ));
   sl.registerLazySingleton<SessionLocalDataSource>(() => SessionLocalDataSourceImpl(
     sessionBox: sl()
+  ));
+
+  sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(
+    DataConnectionChecker()
   ));
 
   BaseOptions baseOptions = BaseOptions(
