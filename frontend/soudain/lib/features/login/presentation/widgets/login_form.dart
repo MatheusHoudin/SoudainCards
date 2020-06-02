@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:soudain/core/commom_widgets/commom_button.dart';
+import 'package:soudain/core/commom_widgets/loading_card.dart';
 import 'package:soudain/core/commom_widgets/main_text_field.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/core/constants/texts.dart';
+import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/features/forgot_password/presentation/pages/forgot_password.dart';
 import 'package:soudain/features/home/presentation/pages/home.dart';
 import 'package:soudain/features/login/presentation/bloc/session_bloc.dart';
-import 'package:soudain/navigation/bloc/navigation_bloc.dart';
+import 'package:soudain/features/navigation/bloc/navigation_bloc.dart';
+import 'package:soudain/injection_container.dart';
 
 class LoginForm extends StatefulWidget {
   final double textSize;
@@ -36,6 +39,36 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    double loadingCardHorizontalMargin = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: false,
+        smallPorcentage: 32,
+        mediumPorcentage: 32,
+        largePorcentage: 30
+      ),
+      landscapeSizeAdapter: SizeAdapter(
+        isHeight: false,
+        smallPorcentage: 25,
+        mediumPorcentage: 28,
+        largePorcentage: 24
+      )
+    );
+    double loadingCardHeight = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: true,
+        smallPorcentage: 6,
+        mediumPorcentage: 8,
+        largePorcentage: 8
+      ),
+      landscapeSizeAdapter: SizeAdapter(
+        isHeight: true,
+        smallPorcentage: 16,
+        mediumPorcentage: 8,
+        largePorcentage: 8
+      )
+    );
     return Form(
       key: formKey,
       child: Column(
@@ -51,17 +84,9 @@ class _LoginFormState extends State<LoginForm> {
           ),
           ForgotPasswordLink(context, widget.textSize),
           widget.isCreatingSession ?
-              Container(
-                margin: EdgeInsets.only(
-                  top: 20,
-                  left: MediaQuery.of(context).size.width * 0.3,
-                  right: MediaQuery.of(context).size.width * 0.3
-                ),
-                height: 60,
-                width: 20,
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
+              LoadingCard(
+                horizontalMargin: loadingCardHorizontalMargin,
+                height: loadingCardHeight,
               )
           :
               Container(),

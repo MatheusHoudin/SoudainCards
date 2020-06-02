@@ -19,7 +19,7 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
     this.createSessionUseCase
   });
   @override
-  SessionState get initialState => SessionFormState(emailFieldError: null, passwordFieldError: null, isCreatingSession: false);
+  SessionState get initialState => SessionFormState(emailFieldError: null, passwordFieldError: null, isCreatingSession: true);
 
   @override
   Stream<SessionState> mapEventToState(

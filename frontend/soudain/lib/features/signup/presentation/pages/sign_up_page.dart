@@ -8,7 +8,7 @@ import 'package:soudain/core/commom_widgets/main_text_field.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/injection_container.dart';
-import 'package:soudain/navigation/bloc/navigation_bloc.dart';
+import 'package:soudain/features/navigation/bloc/navigation_bloc.dart';
 
 class SignUpPage extends StatelessWidget {
 

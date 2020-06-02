@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/features/login/presentation/pages/login_page.dart';
-import 'package:soudain/navigation/bloc/navigation_bloc.dart';
+import 'package:soudain/features/navigation/bloc/navigation_bloc.dart';
 import 'injection_container.dart' as sl;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -8,9 +8,8 @@ import 'package:soudain/core/commom_widgets/commom_button.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/features/login/presentation/bloc/session_bloc.dart';
 import 'package:soudain/features/login/presentation/widgets/login_form.dart';
-import 'package:soudain/features/signup/presentation/pages/sign_up_page.dart';
 import 'package:soudain/injection_container.dart';
-import 'package:soudain/navigation/bloc/navigation_bloc.dart';
+import 'package:soudain/features/navigation/bloc/navigation_bloc.dart';
 class LoginPage extends StatelessWidget {
 
   @override
