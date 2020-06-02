@@ -19,36 +19,46 @@ class UserController {
     schema
       .validate(req.body, { abortEarly: false })
       .then(async (value) => {
-        const userAlreadyExists = await User.findOne({
-          where: { email: value.email },
-        });
-
-        if (userAlreadyExists) {
-          return res.status(400).json({
-            code: 400,
-            error: {
-              field: 'email',
-              message: 'Email already exists',
+        try {
+          const userAlreadyExists = await User.findOne({
+            where: { email: value.email },
+          });
+  
+          if (userAlreadyExists) {
+            return res.status(400).json({
+              code: 400,
+              error: {
+                field: 'email',
+                message: 'Email already exists',
+              },
+              message: 'Unfortunately there is an user with this email',
+            });
+          }
+  
+          const { id, name, email } = await User.create({
+            name: value.name,
+            email: value.email,
+            password: value.password,
+          });
+          
+          return res.status(201).json({
+            code: 201,
+            data: {
+              id,
+              name,
+              email,
             },
-            message: 'Unfortunately there is an user with this email',
+            message: 'User created successfully',
+          });
+        } catch (err) {
+          console.log(err);
+          return res.status(500).json({
+            code: 500,
+            error: err.name,
+            message: 'A server error has ocurred',
           });
         }
 
-        const { id, name, email } = await User.create({
-          name: value.name,
-          email: value.email,
-          password: value.password,
-        });
-        
-        return res.status(201).json({
-          code: 201,
-          data: {
-            id,
-            name,
-            email,
-          },
-          message: 'User created successfully',
-        });
       })
       .catch((err) => {
         console.log(err);

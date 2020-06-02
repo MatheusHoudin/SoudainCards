@@ -16,7 +16,6 @@ class User extends Model {
     );
 
     this.addHook('beforeSave', async (user) => {
-      console.log('before save');
       if (user.password) {
         user.password_hash = await bcrypt.hash(user.password, 8);
       }
@@ -24,9 +23,7 @@ class User extends Model {
 
     this.addHook('beforeBulkUpdate', async (user) => {
       if (user.attributes.password) {
-        console.log('BEFORE BULK UPDATE');
         user.password_hash = await bcrypt.hash(user.attributes.password, 8);
-        console.log(user.password_hash);
       }
     });
 
