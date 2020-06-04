@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:soudain/core/constants/texts.dart';
@@ -26,7 +27,7 @@ void main(){
   test(
     'State should be FormState with null fields',
     () async {
-      expect(bloc.initialState, SessionFormState(passwordFieldError: null, emailFieldError: null));
+      expect(bloc.initialState, SessionFormState(passwordFieldError: null, emailFieldError: null, isCreatingSession: false));
     }
   );
 
@@ -35,15 +36,17 @@ void main(){
     test(
       'Should yield a FormState with email error when the email provided is not valid',
       () async {
+
         final expected = [
-          SessionFormState(emailFieldError: null, passwordFieldError: null),
-          SessionFormState(emailFieldError: emailIsNotValid, passwordFieldError: null)
+          SessionFormState(emailFieldError: null, passwordFieldError: null, isCreatingSession: false),
+          SessionFormState(emailFieldError: emailIsNotValid, passwordFieldError: null, isCreatingSession: false)
         ];
         
         expectLater(bloc.cast(), emitsInOrder(expected));
         bloc.add(CreateSessionEvent(
           emailValue: 'email',
-          passwordValue: 'password'
+          passwordValue: 'password',
+          loginFormKey: GlobalKey<FormState>()
         ));
       }
     );
@@ -52,7 +55,7 @@ void main(){
       'Should yield a FormState with password error when the password provided is not valid',
       () async {
         final expected = [
-          SessionFormState(emailFieldError: null, passwordFieldError: null),
+          SessionFormState(emailFieldError: null, passwordFieldError: null, isCreatingSession: false),
           SessionFormState(emailFieldError: null, passwordFieldError: passwordIsNotValid)
         ];
 
@@ -160,7 +163,6 @@ void main(){
         final expected = [
           SessionFormState(passwordFieldError: null,emailFieldError: null),
           SessionFormState(passwordFieldError: null,emailFieldError: null, isCreatingSession: true),
-          SessionCreatedState(model: model)
         ];
 
         expectLater(bloc.cast(), emitsInOrder(expected));

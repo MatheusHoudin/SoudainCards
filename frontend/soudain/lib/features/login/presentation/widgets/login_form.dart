@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:soudain/core/commom_widgets/commom_button.dart';
+import 'package:soudain/core/commom_widgets/error_dialog.dart';
 import 'package:soudain/core/commom_widgets/loading_card.dart';
 import 'package:soudain/core/commom_widgets/main_text_field.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/core/constants/texts.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/features/forgot_password/presentation/pages/forgot_password.dart';
-import 'package:soudain/features/home/presentation/pages/home.dart';
 import 'package:soudain/features/login/presentation/bloc/session_bloc.dart';
 import 'package:soudain/features/navigation/bloc/navigation_bloc.dart';
 import 'package:soudain/injection_container.dart';
@@ -104,28 +104,7 @@ class _LoginFormState extends State<LoginForm> {
                 onServerError: (message) => showDialog(
                     context: context,
                     builder: (context) {
-                      return AlertDialog(
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.sentiment_dissatisfied,
-                              color: primaryColor,
-                              size: 60,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 10),
-                              child: Text(
-                                message,
-                                textAlign: TextAlign.justify,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      );
+                      return ErrorDialog(message: message,);
                     }
                 )
               ));

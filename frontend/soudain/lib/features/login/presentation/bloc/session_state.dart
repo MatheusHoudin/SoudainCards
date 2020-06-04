@@ -22,12 +22,3 @@ class SessionFormState extends SessionState {
     this.isCreatingSession,
   ];
 }
-
-class SessionCreatedState extends SessionState{
-  final SessionModel model;
-
-  SessionCreatedState({this.model});
-
-  @override
-  List<Object> get props => [model];
-}

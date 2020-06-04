@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:matcher/matcher.dart';
 import 'package:mockito/mockito.dart';
 import 'package:soudain/core/constants/api.dart';
+import 'package:soudain/core/error/exceptions.dart';
 import 'package:soudain/features/login/data/model/user/user_model.dart';
 import 'package:soudain/features/signup/data/datasource/signup_remote_datasource.dart';
 
@@ -75,5 +77,97 @@ void main() {
         expect(result, userModel);
       }
     );
+
+    test(
+      'Should throw EmailAlreadyExistsException when the provided email is already registered',
+      () async {
+        when(mockDio.post(any, data: request))
+            .thenAnswer((_) async => Response(
+              statusCode: 401,
+              data: {
+                "code": 401,
+                "error": {
+                  "field": "email",
+                  "message": "message"
+                },
+                "message": "message"
+              }
+        ));
+
+        final call = dataSource.signUp;
+
+        expect(() => call(
+            name: 'name',
+            passwordConfirmation: 'password',
+            email: 'email',
+            password: 'password'
+        ), throwsA(TypeMatcher<EmailAlreadyRegisteredException>()));
+      }
+    );
   });
+
+  test(
+    'Should throw a SignUpMalformedException when some of the provided fields is wrong',
+    () {
+      when(mockDio.post(any, data: request))
+          .thenAnswer((_) async => Response(
+          statusCode: 400,
+          data: {
+            "code": 400,
+            "error": [
+              {
+                "field": "email",
+                "message": "message"
+              },
+              {
+                "field": "name",
+                "message": "message"
+              },
+              {
+                "field": "passwordConfirmation",
+                "message": "message"
+              },
+              {
+                "field": "password",
+                "message": "message"
+              }
+            ],
+            "message": "error"
+          }
+      ));
+
+      final call = dataSource.signUp;
+
+      expect(() => call(
+          name: 'name',
+          passwordConfirmation: 'password',
+          email: 'email',
+          password: 'password'
+      ), throwsA(TypeMatcher<SignUpRequestMalformedException>()));
+    }
+  );
+
+  test(
+    'Should return a ServerException when an error occurs on the server',
+    () async {
+      when(mockDio.post(any, data: request))
+          .thenAnswer((_) async => Response(
+          statusCode: 500,
+          data: {
+            "code": 500,
+            "error": "error",
+            "message": "error"
+          }
+      ));
+
+      final call = dataSource.signUp;
+
+      expect(() => call(
+          name: 'name',
+          email: 'email',
+          password: 'password',
+          passwordConfirmation: 'password',
+      ), throwsA(TypeMatcher<ServerException>()));
+    }
+  );
 }

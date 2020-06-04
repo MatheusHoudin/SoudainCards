@@ -26,6 +26,8 @@ class SessionRemoteDataSourceImpl extends SessionRemoteDataSource {
       if (response.statusCode == 201) {
 
         return SessionModel.fromJson(response.data['data']);
+      }else if(response.statusCode == 500) {
+        throw ServerException();
       }
     } on DioError catch(e) {
       print('response');

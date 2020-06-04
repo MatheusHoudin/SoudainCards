@@ -15,6 +15,11 @@ import 'package:soudain/features/login/data/repository/session_repository_impl.d
 import 'package:soudain/features/login/domain/repository/session_repository.dart';
 import 'package:soudain/features/login/domain/usecases/create_session_use_case.dart';
 import 'package:soudain/features/login/presentation/bloc/session_bloc.dart';
+import 'package:soudain/features/signup/data/datasource/signup_remote_datasource.dart';
+import 'package:soudain/features/signup/data/repository/signup_repository_impl.dart';
+import 'package:soudain/features/signup/domain/repository/signup_repository.dart';
+import 'package:soudain/features/signup/domain/usecase/sign_up_usecase.dart';
+import 'package:soudain/features/signup/presentation/bloc/sign_up_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -22,13 +27,19 @@ Future<void> setup()async {
   sl.registerSingleton<DeviceSizeAdapter>(DeviceSizeAdapter());
 
   sl.registerFactory<SessionBloc>(() => SessionBloc(createSessionUseCase: sl()));
+  sl.registerFactory<SignUpBloc>(() => SignUpBloc(useCase: sl()));
 
   sl.registerLazySingleton<CreateSessionUseCase>(() => CreateSessionUseCase(sessionRepository: sl()));
+  sl.registerLazySingleton<SignUpUseCase>(() => SignUpUseCase(signUpRepository: sl()));
 
   sl.registerLazySingleton<SessionRepository>(() => SessionRepositoryImpl(
     sessionRemoteDataSource: sl(),
     sessionLocalDataSource: sl(),
     networkInfo: sl()
+  ));
+  sl.registerLazySingleton<SignUpRepository>(() => SignUpRepositoryImpl(
+    signUpRemoteDataSource: sl(),
+    networkInfo: sl(),
   ));
 
   sl.registerLazySingleton<SessionRemoteDataSource>(() => SessionRemoteDataSourceImpl(
@@ -36,6 +47,9 @@ Future<void> setup()async {
   ));
   sl.registerLazySingleton<SessionLocalDataSource>(() => SessionLocalDataSourceImpl(
     sessionBox: sl()
+  ));
+  sl.registerLazySingleton<SignUpRemoteDataSource>(() => SignUpRemoteDataSourceImpl(
+    dio: sl()
   ));
 
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(

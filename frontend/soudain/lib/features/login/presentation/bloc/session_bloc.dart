@@ -19,7 +19,7 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
     this.createSessionUseCase
   });
   @override
-  SessionState get initialState => SessionFormState(emailFieldError: null, passwordFieldError: null, isCreatingSession: true);
+  SessionState get initialState => SessionFormState(emailFieldError: null, passwordFieldError: null, isCreatingSession: false);
 
   @override
   Stream<SessionState> mapEventToState(
@@ -74,9 +74,6 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
           }
         );
       }else{
-        print('ERROR STATE');
-        print(emailIsValid);
-        print(passwordIsValid);
         yield SessionFormState(
           emailFieldError: !emailIsValid ? emailIsNotValid : null,
           passwordFieldError: !passwordIsValid ? passwordIsNotValid : null,

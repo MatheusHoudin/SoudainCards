@@ -7,6 +7,8 @@ import 'package:soudain/core/commom_widgets/custom_rich_text.dart';
 import 'package:soudain/core/commom_widgets/main_text_field.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
+import 'package:soudain/features/signup/presentation/bloc/sign_up_bloc.dart';
+import 'package:soudain/features/signup/presentation/widgets/sign_up_form.dart';
 import 'package:soudain/injection_container.dart';
 import 'package:soudain/features/navigation/bloc/navigation_bloc.dart';
 
@@ -52,23 +54,7 @@ class SignUpPage extends StatelessWidget {
         SizedBox(
           height: 10,
         ),
-        Name(textSize),
-        SizedBox(
-          height: 20,
-        ),
-        Email(textSize),
-        SizedBox(
-          height: 20,
-        ),
-        Password(textSize),
-        SizedBox(
-          height: 20,
-        ),
-        PasswordConfirmation(textSize),
-        SizedBox(
-          height: 30,
-        ),
-        SignUpButton(textSize),
+        SignUpWidget(),
         SizedBox(
           height: 30,
         ),
@@ -77,51 +63,20 @@ class SignUpPage extends StatelessWidget {
     );
   }
 
+  Widget SignUpWidget() {
+    return BlocBuilder<SignUpBloc,SignUpState>(
+      builder: (context, state) {
+        if(state is SignUpState) {
+          return SignUpForm(
 
-  Widget Name(double textSize){
-    return MainTextField(
-      hint: 'Name',
-      iconData: Icons.person,
-      textSize: textSize,
+          );
+        }else{
+          return Container();
+        }
+      },
     );
   }
 
-  Widget Email(double textSize){
-    return MainTextField(
-      hint: 'Email',
-      iconData: Icons.email,
-      textInputType: TextInputType.emailAddress,
-      textSize: textSize,
-    );
-  }
-
-  Widget Password(double textSize){
-    return MainTextField(
-      hint: 'Password',
-      iconData: Icons.lock,
-      obscure: true,
-      textSize: textSize,
-    );
-  }
-
-  Widget PasswordConfirmation(double textSize){
-    return MainTextField(
-      hint: 'Password Confirmation',
-      iconData: Icons.lock,
-      obscure: true,
-      textSize: textSize,
-    );
-  }
-
-  Widget SignUpButton(double textSize){
-    return CommomButton(
-      buttonText: 'Sign Up',
-      buttonColor: secondaryColor,
-      buttonTextColor: Colors.white,
-      buttonFunction: () => null,
-      buttonTextSize: textSize,
-    );
-  }
 
   Widget LogInLink(BuildContext context, double textSize){
     return CustomRichText(

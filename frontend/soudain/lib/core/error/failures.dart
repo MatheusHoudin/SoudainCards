@@ -8,6 +8,11 @@ class EmailNotRegisteredFailure extends Failure {
   List<Object> get props => [];
 }
 
+class EmailAlreadyRegisteredFailure extends Failure {
+  @override
+  List<Object> get props => [];
+}
+
 class PasswordDoesNotMatchFailure extends Failure {
   @override
   List<Object> get props => [];
@@ -17,6 +22,17 @@ class SessionRequestMalformedFailure extends Failure {
   final List<FieldError> parameterErrorList;
 
   SessionRequestMalformedFailure({
+    this.parameterErrorList
+  });
+
+  @override
+  List<Object> get props => [parameterErrorList];
+}
+
+class SignUpRequestMalformedFailure extends Failure {
+  final List<FieldError> parameterErrorList;
+
+  SignUpRequestMalformedFailure({
     this.parameterErrorList
   });
 

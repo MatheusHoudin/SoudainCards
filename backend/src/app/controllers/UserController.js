@@ -62,8 +62,8 @@ class UserController {
       })
       .catch((err) => {
         console.log(err);
-        return res.status(401).json({
-          code: 401,
+        return res.status(400).json({
+          code: 400,
           error: ResponseHandlers.convertYupValidationErrors(err),
           message: 'The fields you provided are not valid',
         });

@@ -128,12 +128,9 @@ void main(){
           }
       ));
 
-        final call = dataSourceImpl.createSession;
+        final call = () => dataSourceImpl.createSession(email: 'email', password: 'pass');
 
-        expect(() => call(
-          email: 'email',
-          password: 'pass'
-        ), throwsA(TypeMatcher<PasswordDoesNotMatchException>()));
+        expect(() => call(), throwsA(TypeMatcher<PasswordDoesNotMatchException>()));
       }
   );
 
