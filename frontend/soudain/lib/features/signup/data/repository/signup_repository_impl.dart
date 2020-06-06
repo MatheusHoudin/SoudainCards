@@ -37,18 +37,5 @@ class SignUpRepositoryImpl extends SignUpRepository {
       return Left(NoInternetConnectionFailure());
     }
   }
-
-  @override
-  Future<Either<Failure, UserModel>> signUpWithFacebook() {
-    // TODO: implement signUpWithFacebook
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, UserModel>> signUpWithGoogle() {
-    // TODO: implement signUpWithGoogle
-    throw UnimplementedError();
-  }
-
   
 }

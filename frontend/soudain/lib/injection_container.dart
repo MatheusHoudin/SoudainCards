@@ -13,6 +13,7 @@ import 'package:soudain/features/login/data/model/session/session_model_hive_ada
 import 'package:soudain/features/login/data/model/user/user_model_hive_adapter.dart';
 import 'package:soudain/features/login/data/repository/session_repository_impl.dart';
 import 'package:soudain/features/login/domain/repository/session_repository.dart';
+import 'package:soudain/features/login/domain/usecases/create_facebook_session_use_case.dart';
 import 'package:soudain/features/login/domain/usecases/create_session_use_case.dart';
 import 'package:soudain/features/login/presentation/bloc/session_bloc.dart';
 import 'package:soudain/features/signup/data/datasource/signup_remote_datasource.dart';
@@ -26,10 +27,11 @@ final sl = GetIt.instance;
 Future<void> setup()async {
   sl.registerSingleton<DeviceSizeAdapter>(DeviceSizeAdapter());
 
-  sl.registerFactory<SessionBloc>(() => SessionBloc(createSessionUseCase: sl()));
+  sl.registerFactory<SessionBloc>(() => SessionBloc(createSessionUseCase: sl(), createFacebookSessionUseCase: sl()));
   sl.registerFactory<SignUpBloc>(() => SignUpBloc(useCase: sl()));
 
   sl.registerLazySingleton<CreateSessionUseCase>(() => CreateSessionUseCase(sessionRepository: sl()));
+  sl.registerLazySingleton<CreateFacebookSessionUseCase>(() => CreateFacebookSessionUseCase(sessionRepository: sl()));
   sl.registerLazySingleton<SignUpUseCase>(() => SignUpUseCase(signUpRepository: sl()));
 
   sl.registerLazySingleton<SessionRepository>(() => SessionRepositoryImpl(

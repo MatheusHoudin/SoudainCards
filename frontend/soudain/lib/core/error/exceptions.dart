@@ -25,3 +25,5 @@ class SignUpRequestMalformedException implements Exception {
 class SessionDoesNotExistException implements Exception {}
 
 class ServerException implements Exception {}
+
+class FacebookLoginCancelledByUserException implements Exception {}

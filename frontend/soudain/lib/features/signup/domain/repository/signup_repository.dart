@@ -4,6 +4,4 @@ import 'package:soudain/features/login/data/model/session/session_model.dart';
 import 'package:dartz/dartz.dart';
 abstract class SignUpRepository {
   Future<Either<Failure,UserModel>> signUp({String name, String email, String password, String passwordConfirmation});
-  Future<Either<Failure,UserModel>> signUpWithFacebook();
-  Future<Either<Failure,UserModel>> signUpWithGoogle();
 }

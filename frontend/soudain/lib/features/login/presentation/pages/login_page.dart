@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:soudain/core/commom_widgets/commom_base_form_page.dart';
 import 'package:soudain/core/commom_widgets/custom_rich_text.dart';
 import 'package:soudain/core/constants/colors.dart';
@@ -91,18 +92,22 @@ class LoginPage extends StatelessWidget {
   }
 
   Widget FacebookButton(double textSize){
-    return CommomButton(
-      buttonText: 'Log In with Facebook',
-      buttonColor: secondaryColor,
-      buttonTextColor: Colors.white,
-      buttonFunction: () => null,
-      buttonTextSize: textSize,
+    return Builder(
+      builder: (context) {
+        return CommomButton(
+          buttonText: 'Sign In with Facebook',
+          buttonColor: secondaryColor,
+          buttonTextColor: Colors.white,
+          buttonFunction: () => BlocProvider.of<SessionBloc>(context).add(CreateFacebookSessionEvent()),
+          buttonTextSize: textSize,
+        );
+      },
     );
   }
 
   Widget GoogleButton(double textSize){
     return CommomButton(
-      buttonText: 'Log In with Google',
+      buttonText: 'Sign In with Google',
       buttonColor: Colors.white,
       buttonTextColor: Colors.black,
       buttonFunction: () => null,

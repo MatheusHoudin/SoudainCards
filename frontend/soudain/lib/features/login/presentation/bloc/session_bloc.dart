@@ -7,6 +7,7 @@ import 'package:soudain/core/constants/texts.dart';
 import 'package:soudain/core/error/failures.dart';
 import 'package:soudain/core/validation/validation.dart';
 import 'package:soudain/features/login/data/model/session/session_model.dart';
+import 'package:soudain/features/login/domain/usecases/create_facebook_session_use_case.dart';
 import 'package:soudain/features/login/domain/usecases/create_session_use_case.dart';
 
 part 'session_event.dart';
@@ -14,10 +15,13 @@ part 'session_state.dart';
 
 class SessionBloc extends Bloc<SessionEvent, SessionState> {
   final CreateSessionUseCase createSessionUseCase;
+  final CreateFacebookSessionUseCase createFacebookSessionUseCase;
 
   SessionBloc({
-    this.createSessionUseCase
+    this.createSessionUseCase,
+    this.createFacebookSessionUseCase
   });
+
   @override
   SessionState get initialState => SessionFormState(emailFieldError: null, passwordFieldError: null, isCreatingSession: false);
 
@@ -81,6 +85,25 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
         );
         event.loginFormKey.currentState.validate();
       }
+    }else if(event is ValidateFieldsOnFocusLostEvent) {
+      final emailIsValid = validateEmail(event.email);
+      final passwordIsValid = validatePassword(event.password);
+
+      yield SessionFormState(
+        emailFieldError: !emailIsValid ? emailIsNotValid : null,
+        passwordFieldError: !passwordIsValid ? passwordIsNotValid : null,
+        isCreatingSession: false
+      );
+      event.signInFormKey.currentState.validate();
+    }else if(event is CreateFacebookSessionEvent) {
+      yield SessionFormState(
+        passwordFieldError: null,
+        emailFieldError: null,
+        isCreatingSession: true
+      );
+
+      final result = await createFacebookSessionUseCase(FacebookParams());
+
     }
   }
 }

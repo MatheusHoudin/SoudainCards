@@ -85,10 +85,26 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
           nameError: nameIsValid ? null : nameIsNotValid,
           passwordError: passwordIsValid ? null : passwordIsNotValid,
           emailError: emailIsValid ? null : emailIsNotValid,
-          passwordConfirmationError: passwordMatches ? null : passwordDoesNotMatchConfirmationPassword
+          passwordConfirmationError: passwordMatches ? null : passwordDoesNotMatchConfirmationPassword,
+          isCreatingAccount: false
         );
         event.signUpFormKey.currentState.validate();
       }
+    }else if(event is ValidateFieldsOnFocusLostEvent) {
+      bool nameIsValid = validateName(event.name);
+      bool emailIsValid = validateEmail(event.email);
+      bool passwordIsValid = validatePassword(event.password);
+      bool passwordMatches = comparePasswords(event.password,event.passwordConfirmation);
+
+      print(event.email);
+      yield SignUpFormState(
+        nameError: nameIsValid ? null : nameIsNotValid,
+        passwordError: passwordIsValid ? null : passwordIsNotValid,
+        emailError: emailIsValid ? null : emailIsNotValid,
+        passwordConfirmationError: passwordMatches ? null : passwordDoesNotMatchConfirmationPassword,
+        isCreatingAccount: false
+      );
+      event.signUpFormKey.currentState.validate();
     }
   }
 }

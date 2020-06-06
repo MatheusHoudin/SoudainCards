@@ -37,6 +37,7 @@ dependencies:
   path_provider: ^1.6.9
   data_connection_checker: ^0.3.4
   flip_card: ^0.4.4
+  flutter_facebook_login: ^3.0.0
 
 dev_dependencies:
   flutter_test:

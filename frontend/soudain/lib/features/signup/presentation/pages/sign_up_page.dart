@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:soudain/core/commom_widgets/commom_base_form_page.dart';
-import 'package:soudain/core/commom_widgets/commom_button.dart';
 import 'package:soudain/core/commom_widgets/custom_rich_text.dart';
-import 'package:soudain/core/commom_widgets/main_text_field.dart';
-import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/features/signup/presentation/bloc/sign_up_bloc.dart';
 import 'package:soudain/features/signup/presentation/widgets/sign_up_form.dart';
@@ -16,6 +12,7 @@ class SignUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     double headerTextSize = sl<DeviceSizeAdapter>().getResponsiveSize(
       context: context,
       portraitSizeAdapter: SizeAdapter(
@@ -54,7 +51,7 @@ class SignUpPage extends StatelessWidget {
         SizedBox(
           height: 10,
         ),
-        SignUpWidget(),
+        SignUpWidget(textSize),
         SizedBox(
           height: 30,
         ),
@@ -63,12 +60,17 @@ class SignUpPage extends StatelessWidget {
     );
   }
 
-  Widget SignUpWidget() {
+  Widget SignUpWidget(double textSize) {
     return BlocBuilder<SignUpBloc,SignUpState>(
       builder: (context, state) {
-        if(state is SignUpState) {
+        if(state is SignUpFormState) {
           return SignUpForm(
-
+            emailFieldError: state.emailError,
+            nameFieldError: state.nameError,
+            passwordFieldError: state.passwordError,
+            passwordConfirmationFieldError: state.passwordConfirmationError,
+            isCreatingAccount: state.isCreatingAccount,
+            textSize: textSize,
           );
         }else{
           return Container();
@@ -81,7 +83,7 @@ class SignUpPage extends StatelessWidget {
   Widget LogInLink(BuildContext context, double textSize){
     return CustomRichText(
       mainText: 'Already have an account? ',
-      featuredText: 'LOG IN',
+      featuredText: 'SIGN IN',
       onTap: () => BlocProvider.of<NavigationBloc>(context).add(PopEvent()),
       textSize: textSize,
     );

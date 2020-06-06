@@ -39,6 +39,41 @@ class _SignUpFormState extends State<SignUpForm> {
   final TextEditingController passwordController = new TextEditingController();
   final TextEditingController passwordConfirmationController = new TextEditingController();
 
+  FocusNode nameFocusNode = FocusNode();
+  FocusNode emailFocusNode = FocusNode();
+  FocusNode passwordFocusNode = FocusNode();
+  FocusNode passwordConfirmationFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    Function focusFunction = (FocusNode focusNode) {
+
+      if(!focusNode.hasFocus) {
+        BlocProvider.of<SignUpBloc>(context).add(ValidateFieldsOnFocusLostEvent(
+          email: emailController.text,
+          password: passwordController.text,
+          name: nameController.text,
+          passwordConfirmation: passwordConfirmationController.text,
+          signUpFormKey: formKey,
+        ));
+      }
+    };
+    nameFocusNode.addListener(() => focusFunction(nameFocusNode));
+    emailFocusNode.addListener(() => focusFunction(emailFocusNode));
+    passwordFocusNode.addListener(() => focusFunction(passwordFocusNode));
+    passwordConfirmationFocusNode.addListener(() => focusFunction(passwordConfirmationFocusNode));
+  }
+
+  @override
+  void dispose() {
+    nameFocusNode.dispose();
+    emailFocusNode.dispose();
+    passwordFocusNode.dispose();
+    passwordConfirmationFocusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     double loadingCardHorizontalMargin = sl<DeviceSizeAdapter>().getResponsiveSize(
@@ -90,7 +125,7 @@ class _SignUpFormState extends State<SignUpForm> {
           ),
           PasswordConfirmation(widget.textSize,widget.passwordConfirmationFieldError),
           SizedBox(
-            height: 30,
+            height: 20,
           ),
           widget.isCreatingAccount ?
           LoadingCard(
@@ -99,6 +134,9 @@ class _SignUpFormState extends State<SignUpForm> {
           )
               :
           Container(),
+          SizedBox(
+            height: 20,
+          ),
           SignUpButton(
             textSize: widget.textSize,
             function: () {
@@ -130,6 +168,7 @@ class _SignUpFormState extends State<SignUpForm> {
       textSize: textSize,
       controller: nameController,
       errorMessage: error,
+      focusNode: nameFocusNode,
     );
   }
 
@@ -141,6 +180,7 @@ class _SignUpFormState extends State<SignUpForm> {
       textSize: textSize,
       controller: emailController,
       errorMessage: error,
+      focusNode: emailFocusNode,
     );
   }
 
@@ -152,6 +192,7 @@ class _SignUpFormState extends State<SignUpForm> {
       textSize: textSize,
       controller: passwordController,
       errorMessage: error,
+      focusNode: passwordFocusNode,
     );
   }
 
@@ -163,6 +204,7 @@ class _SignUpFormState extends State<SignUpForm> {
       textSize: textSize,
       controller: passwordConfirmationController,
       errorMessage: error,
+      focusNode: passwordConfirmationFocusNode,
     );
   }
 

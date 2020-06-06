@@ -36,7 +36,24 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController emailController = new TextEditingController();
 
   final TextEditingController passwordController = new TextEditingController();
+  final FocusNode emailFocusNode = FocusNode();
+  final FocusNode passwordFocusNode = FocusNode();
+  @override
+  void initState() {
+    super.initState();
+    Function focusFunction = (FocusNode focusNode) {
+      if(!focusNode.hasFocus) {
+        BlocProvider.of<SessionBloc>(context).add(ValidateFieldsOnFocusLostEvent(
+          email: emailController.text,
+          password: passwordController.text,
+          signInFormKey: formKey,
+        ));
+      }
+    };
 
+    emailFocusNode.addListener(() => focusFunction(emailFocusNode));
+    passwordFocusNode.addListener(() => focusFunction(passwordFocusNode));
+  }
   @override
   Widget build(BuildContext context) {
     double loadingCardHorizontalMargin = sl<DeviceSizeAdapter>().getResponsiveSize(
@@ -80,9 +97,12 @@ class _LoginFormState extends State<LoginForm> {
           ),
           Password(widget.textSize,widget.passowordFieldError),
           SizedBox(
-            height: 20,
+            height: 50,
           ),
           ForgotPasswordLink(context, widget.textSize),
+          SizedBox(
+            height: 20,
+          ),
           widget.isCreatingSession ?
               LoadingCard(
                 horizontalMargin: loadingCardHorizontalMargin,
@@ -123,6 +143,7 @@ class _LoginFormState extends State<LoginForm> {
       textSize: textSize,
       errorMessage: error,
       controller: this.emailController,
+      focusNode: emailFocusNode,
     );
   }
 
@@ -134,12 +155,13 @@ class _LoginFormState extends State<LoginForm> {
       textSize: textSize,
       errorMessage: error,
       controller: this.passwordController,
+      focusNode: passwordFocusNode,
     );
   }
 
   Widget ForgotPasswordLink(BuildContext context, double textSize){
     return InkWell(
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPassword())),
+      onTap: () => BlocProvider.of<NavigationBloc>(context).add(NavigateToForgotPasswordPageEvent()),
       child: Text(
         'Forgot your password?',
         textAlign: TextAlign.center,
@@ -156,7 +178,7 @@ class _LoginFormState extends State<LoginForm> {
 
   Widget LogInButton({double textSize, Function loginFunction}){
     return CommomButton(
-        buttonText: 'Log In',
+        buttonText: 'Sign In',
         buttonColor: positiveButtonColor,
         buttonTextColor: Colors.white,
         buttonFunction: () => loginFunction(),

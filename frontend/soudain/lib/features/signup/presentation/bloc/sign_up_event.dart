@@ -4,6 +4,30 @@ abstract class SignUpEvent extends Equatable {
   const SignUpEvent();
 }
 
+class ValidateFieldsOnFocusLostEvent extends SignUpEvent {
+  final String name;
+  final String email;
+  final String password;
+  final String passwordConfirmation;
+  final GlobalKey<FormState> signUpFormKey;
+
+  ValidateFieldsOnFocusLostEvent({
+    this.passwordConfirmation,
+    this.name,
+    this.password,
+    this.email,
+    this.signUpFormKey
+  });
+
+  @override
+  List<Object> get props => [
+    name,
+    email,
+    password,
+    passwordConfirmation
+  ];
+}
+
 class CreateAccountEvent extends SignUpEvent {
   final String name;
   final String email;

@@ -4,6 +4,30 @@ abstract class SessionEvent extends Equatable {
   const SessionEvent();
 }
 
+class ValidateFieldsOnFocusLostEvent extends SessionEvent {
+  final String email;
+  final String password;
+
+  final GlobalKey<FormState> signInFormKey;
+
+  ValidateFieldsOnFocusLostEvent({
+    this.password,
+    this.email,
+    this.signInFormKey
+  });
+
+  @override
+  List<Object> get props => [
+    email,
+    password,
+  ];
+}
+
+class CreateFacebookSessionEvent extends SessionEvent {
+  @override
+  List<Object> get props => [];
+}
+
 class CreateSessionEvent extends SessionEvent {
   final String emailValue;
   final String passwordValue;

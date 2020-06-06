@@ -10,6 +10,8 @@ class MainTextField extends StatelessWidget {
   final TextInputType textInputType;
   final double textSize;
 
+  final FocusNode focusNode;
+
   final TextEditingController controller;
 
   MainTextField({
@@ -19,7 +21,8 @@ class MainTextField extends StatelessWidget {
     this.textInputType = TextInputType.text,
     this.textSize,
     this.errorMessage,
-    this.controller
+    this.controller,
+    this.focusNode
   });
 
   @override
@@ -30,6 +33,7 @@ class MainTextField extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(6))
       ),
       child: TextField(
+        focusNode: focusNode,
         controller: controller,
         obscureText: obscure,
         keyboardType: textInputType,

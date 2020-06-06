@@ -44,7 +44,6 @@ class _LoadingCardState extends State<LoadingCard> {
   Widget Side(Color color){
     return Container(
       margin: EdgeInsets.only(
-        top: 20,
         left: widget.horizontalMargin,
         right: widget.horizontalMargin
       ),
