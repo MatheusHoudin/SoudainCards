@@ -61,8 +61,9 @@ class SessionRepositoryImpl extends SessionRepository {
   @override
   Future<Either<Failure, SessionModel>> createFacebookSession() async {
     try {
-      await sessionRemoteDataSource.createFacebookSession();
-      return Right(null);
+      final sessionModel = await sessionRemoteDataSource.createFacebookSession();
+      await sessionLocalDataSource.cacheSession(sessionModel);
+      return Right(sessionModel);
     } on ServerException {
       return Left(ServerFailure());
     } on FacebookLoginCancelledByUserException {

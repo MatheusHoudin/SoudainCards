@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:soudain/core/commom_widgets/commom_base_form_page.dart';
 import 'package:soudain/core/commom_widgets/custom_rich_text.dart';
+import 'package:soudain/core/commom_widgets/error_dialog.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:soudain/core/commom_widgets/commom_button.dart';
@@ -98,7 +99,15 @@ class LoginPage extends StatelessWidget {
           buttonText: 'Sign In with Facebook',
           buttonColor: secondaryColor,
           buttonTextColor: Colors.white,
-          buttonFunction: () => BlocProvider.of<SessionBloc>(context).add(CreateFacebookSessionEvent()),
+          buttonFunction: () => BlocProvider.of<SessionBloc>(context).add(CreateFacebookSessionEvent(
+            onSuccess: () => BlocProvider.of<NavigationBloc>(context).add(LoginToHomeNavigationEvent()),
+            onServerError: (message) => showDialog(
+              context: context,
+              builder: (context) {
+                return ErrorDialog(message: message,);
+              }
+            )
+          )),
           buttonTextSize: textSize,
         );
       },

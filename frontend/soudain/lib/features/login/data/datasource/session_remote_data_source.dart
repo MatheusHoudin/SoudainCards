@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -22,41 +21,35 @@ class SessionRemoteDataSourceImpl extends SessionRemoteDataSource {
   @override
   Future<SessionModel> createSession({String email, String password}) async {
     try {
-      final response = await dio.post('sessions', data: {
-        'email': email,
-        'password': password
-      });
+      final response = await dio
+          .post('sessions', data: {'email': email, 'password': password});
 
       if (response.statusCode == 201) {
-
         return SessionModel.fromJson(response.data['data']);
-      }else if(response.statusCode == 500) {
+      } else if (response.statusCode == 500) {
         throw ServerException();
       }
-    } on DioError catch(e) {
+    } on DioError catch (e) {
       print('response');
       print(e.response);
-      if(e.response != null) {
-        if(e.response.statusCode == 401){
-
-          if(e.response.data['data']['email'] != null) {
-
+      if (e.response != null) {
+        if (e.response.statusCode == 401) {
+          if (e.response.data['data']['email'] != null) {
             throw EmailNotRegisteredException();
-          }else if(e.response.data['data']['password'] != null){
-
+          } else if (e.response.data['data']['password'] != null) {
             throw PasswordDoesNotMatchException();
           }
-        }else if(e.response.statusCode == 400){
+        } else if (e.response.statusCode == 400) {
           throw SessionRequestMalformedException(
-              parameterErrorList: (e.response.data['error'] as List).map((e) => FieldError.fromJson(e)).toList()
-          );
-        }else if(e.response.statusCode == 500){
+              parameterErrorList: (e.response.data['error'] as List)
+                  .map((e) => FieldError.fromJson(e))
+                  .toList());
+        } else if (e.response.statusCode == 500) {
           throw ServerException();
         }
-      }else{
+      } else {
         throw ServerException();
       }
-
     }
   }
 
@@ -67,20 +60,43 @@ class SessionRemoteDataSourceImpl extends SessionRemoteDataSource {
 
     switch (result.status) {
       case FacebookLoginStatus.loggedIn:
-        final token = result.accessToken.token;
-      print(token);
-        final facebookResponse = await dio.get(
-            'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=$token');
-        final jsonResponse = json.decode(facebookResponse.data);
-        print(jsonResponse['email']);
-        break;
-      case FacebookLoginStatus.cancelledByUser:
-        throw FacebookLoginCancelledByUserException();
+        try {
+          final token = result.accessToken.token;
+          final facebookResponse = await dio.get(
+              'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email,picture.width(800).height(800)&access_token=$token');
+
+          final Map<String, dynamic> jsonMap = json.decode(facebookResponse.data);
+          final response = await dio.post('sessions/facebook', data: {
+            'id': jsonMap['id'],
+            'email': jsonMap['email'],
+            'name': jsonMap['name'],
+            'picture': jsonMap['picture']['data']['url']
+          });
+
+          return SessionModel.fromJson(response.data['data']);
+        } on DioError catch (e) {
+          if (e.response != null) {
+            if (e.response.statusCode == 400) {
+              throw SessionRequestMalformedException(
+                  parameterErrorList: (e.response.data['error'] as List)
+                      .map((e) => FieldError.fromJson(e))
+                      .toList());
+            } else if (e.response.statusCode == 500) {
+              throw ServerException();
+            }
+          } else {
+            throw ServerException();
+          }
+        } on Exception {
+          throw ServerException();
+        }
+
         break;
       case FacebookLoginStatus.error:
         throw ServerException();
+      case FacebookLoginStatus.cancelledByUser:
+        throw FacebookLoginCancelledByUserException();
         break;
     }
   }
 }
-

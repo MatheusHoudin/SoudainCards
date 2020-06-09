@@ -3,6 +3,7 @@ const multer = require('multer');
 const multerConfig = require('./config/multer');
 
 const SessionController = require('./app/controllers/SessionController');
+const FacebookSessionController = require('./app/controllers/FacebookSessionController');
 const UserController = require('./app/controllers/UserController');
 const FileController = require('./app/controllers/FileController');
 const TagController = require('./app/controllers/TagController');
@@ -23,8 +24,11 @@ const routes = express.Router();
 routes.post('/users', UserController.store);
 
 routes.post('/sessions', SessionController.store);
+routes.post('/sessions/facebook', FacebookSessionController.store);
+
 routes.post('/passwordreset', PasswordResetController.store);
 routes.put('/passwordreset/:confirmationCode', PasswordResetController.update);
+
 routes.get('/subjects', SubjectController.index);
 
 routes.use(authMiddleware);

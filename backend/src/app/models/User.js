@@ -7,6 +7,7 @@ class User extends Model {
       {
         name: DataTypes.STRING,
         email: DataTypes.STRING,
+        facebook_id: DataTypes.STRING,
         password: DataTypes.VIRTUAL,
         password_hash: DataTypes.STRING,
       },

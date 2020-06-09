@@ -104,6 +104,28 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
 
       final result = await createFacebookSessionUseCase(FacebookParams());
 
+      yield* result.fold(
+        (failure) async* {
+          if(failure is FacebookLoginCancelledByUserFailure) {
+            yield SessionFormState(
+              passwordFieldError: null,
+              emailFieldError: null,
+              isCreatingSession: false,
+            );
+          }else{
+            yield SessionFormState(
+              passwordFieldError: null,
+              emailFieldError: null,
+              isCreatingSession: false,
+            );
+            String message = failure is ServerFailure ? unexpectedServerError : noInternetConnection;
+            event.onServerError(message);
+          }
+        },
+        (session) async* {
+          event.onSuccess();
+        }
+      );
     }
   }
 }
