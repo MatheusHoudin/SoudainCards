@@ -56,9 +56,10 @@ void main(){
     test(
         'Should call the box get method to retrieve the current session with the session key',
             () async {
+          when(mockBox.get(any)).thenAnswer((_) => model);
           await sessionLocalDataSource.getCachedSession();
 
-          verify(mockBox.get('session'));
+          verify(sessionBox.box.get('session'));
         }
     );
 

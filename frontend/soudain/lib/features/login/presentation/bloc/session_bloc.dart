@@ -8,6 +8,7 @@ import 'package:soudain/core/error/failures.dart';
 import 'package:soudain/core/validation/validation.dart';
 import 'package:soudain/features/login/data/model/session/session_model.dart';
 import 'package:soudain/features/login/domain/usecases/create_facebook_session_use_case.dart';
+import 'package:soudain/features/login/domain/usecases/create_google_session_use_case.dart';
 import 'package:soudain/features/login/domain/usecases/create_session_use_case.dart';
 
 part 'session_event.dart';
@@ -16,10 +17,12 @@ part 'session_state.dart';
 class SessionBloc extends Bloc<SessionEvent, SessionState> {
   final CreateSessionUseCase createSessionUseCase;
   final CreateFacebookSessionUseCase createFacebookSessionUseCase;
+  final CreateGoogleSessionUseCase createGoogleSessionUseCase;
 
   SessionBloc({
     this.createSessionUseCase,
-    this.createFacebookSessionUseCase
+    this.createFacebookSessionUseCase,
+    this.createGoogleSessionUseCase
   });
 
   @override
@@ -125,6 +128,36 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
         (session) async* {
           event.onSuccess();
         }
+      );
+    }else if(event is CreateGoogleSessionEvent) {
+      yield SessionFormState(
+        passwordFieldError: null,
+        emailFieldError: null,
+        isCreatingSession: true
+      );
+
+      final result = await createGoogleSessionUseCase(GoogleParams());
+      yield* result.fold(
+         (failure) async* {
+            if(failure is GoogleLoginCancelledByUserFailure) {
+              yield SessionFormState(
+                passwordFieldError: null,
+                emailFieldError: null,
+                isCreatingSession: false,
+              );
+            }else{
+              yield SessionFormState(
+                passwordFieldError: null,
+                emailFieldError: null,
+                isCreatingSession: false,
+              );
+              String message = failure is ServerFailure ? unexpectedServerError : noInternetConnection;
+              event.onServerError(message);
+            }
+         },
+         (session) async* {
+            event.onSuccess();
+         }
       );
     }
   }

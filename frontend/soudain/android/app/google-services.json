@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "535065752728",
+    "firebase_url": "https://soudain-53828.firebaseio.com",
+    "project_id": "soudain-53828",
+    "storage_bucket": "soudain-53828.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:535065752728:android:942b09fe8a563f113bcced",
+        "android_client_info": {
+          "package_name": "br.com.soudain.soudain"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "535065752728-ql83g2f11sod0bdo050kj3bo2lfh0u2q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.soudain.soudain",
+            "certificate_hash": "050add62a4675a4e82a1fd4997875113f609229c"
+          }
+        },
+        {
+          "client_id": "535065752728-27jldhv1i5ulq2heqfrvl42o6m2j9sba.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVI5Ic8kNJe6i0ncqmGHTQrKyp2TjcEzE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "535065752728-27jldhv1i5ulq2heqfrvl42o6m2j9sba.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

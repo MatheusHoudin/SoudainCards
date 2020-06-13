@@ -54,7 +54,7 @@ class LoginPage extends StatelessWidget {
         SizedBox(
           height: 10,
         ),
-        GoogleButton(textSize),
+        GoogleButton(textSize,context),
         SizedBox(
           height: 30,
         ),
@@ -114,13 +114,25 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget GoogleButton(double textSize){
-    return CommomButton(
-      buttonText: 'Sign In with Google',
-      buttonColor: Colors.white,
-      buttonTextColor: Colors.black,
-      buttonFunction: () => null,
-      buttonTextSize: textSize,
+  Widget GoogleButton(double textSize, BuildContext context){
+    return Builder(
+      builder: (context) {
+        return CommomButton(
+          buttonText: 'Sign In with Google',
+          buttonColor: Colors.white,
+          buttonTextColor: Colors.black,
+          buttonFunction: () => BlocProvider.of<SessionBloc>(context).add(CreateGoogleSessionEvent(
+            onSuccess: () => BlocProvider.of<NavigationBloc>(context).add(LoginToHomeNavigationEvent()),
+            onServerError: (message) => showDialog(
+              context: context,
+              builder: (context) {
+                return ErrorDialog(message: message,);
+              }
+            )
+          )),
+          buttonTextSize: textSize,
+        );
+      },
     );
   }
 

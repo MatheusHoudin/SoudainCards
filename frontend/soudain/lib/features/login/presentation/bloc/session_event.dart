@@ -33,6 +33,16 @@ class CreateFacebookSessionEvent extends SessionEvent {
   List<Object> get props => [];
 }
 
+class CreateGoogleSessionEvent extends SessionEvent {
+  final Function onSuccess;
+  final Function onServerError;
+
+  CreateGoogleSessionEvent({this.onSuccess,this.onServerError});
+
+  @override
+  List<Object> get props => [];
+}
+
 class CreateSessionEvent extends SessionEvent {
   final String emailValue;
   final String passwordValue;

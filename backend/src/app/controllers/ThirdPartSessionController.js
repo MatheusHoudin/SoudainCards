@@ -5,7 +5,7 @@ const File = require('../models/File');
 const authConfig = require('../../config/auth');
 const ResponseHandlers = require('../../utils/ResponseHandlers');
 
-class FacebookSessionController {
+class ThirdPartSessionController {
   async store(req, res) {
     const schema = Yup.object().shape({
       id: Yup.number('id must be a number').required('id is a required field'),
@@ -15,21 +15,30 @@ class FacebookSessionController {
       email: Yup.string('Email must be a string')
         .email('Email format is not valid')
         .required('The email field is required'),
-      picture: Yup.string('Picture must be a string')  
+      picture: Yup.string('Picture must be a string'),
+      isFacebook: Yup.boolean('isFacebook must be a boolean').required('isFacebook is a required field'),   
     });
 
     schema
       .validate(req.body, { abortEarly: false })
       .then(async (value) => {
         try {
-          const { id, email, name, picture} = req.body;
+          const { id, email, name, picture, isFacebook} = req.body;
+          console.log(req.body)
+          const whereObject = isFacebook ? {
+            name: name,
+            email: email,
+            facebook_id: id.toString()
+          } : {
+            name: name,
+            email: email,
+            google_id: id.toString()
+          }
+
+          console.log(whereObject)
 
           const user = await User.findOrCreate({
-            where: {
-              name: name,
-              email: email,
-              facebook_id: id.toString()
-            },
+            where: whereObject,
             defaults: {
               password: jwt.sign({ id }, authConfig.secret, {
                 expiresIn: authConfig.expiresIn,
@@ -39,10 +48,10 @@ class FacebookSessionController {
 
           const file = await File.findOrCreate({
             where: {
-              name: name,
-              path: picture,
+              name: id,
             },
             defaults: {
+              path: picture,
               type: 'image/jpeg'
             }
           });
@@ -85,4 +94,4 @@ class FacebookSessionController {
   }
 }
 
-module.exports = new FacebookSessionController();
+module.exports = new ThirdPartSessionController();

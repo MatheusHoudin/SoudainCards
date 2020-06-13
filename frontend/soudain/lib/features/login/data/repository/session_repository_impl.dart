@@ -60,15 +60,38 @@ class SessionRepositoryImpl extends SessionRepository {
 
   @override
   Future<Either<Failure, SessionModel>> createFacebookSession() async {
-    try {
-      final sessionModel = await sessionRemoteDataSource.createFacebookSession();
-      await sessionLocalDataSource.cacheSession(sessionModel);
-      return Right(sessionModel);
-    } on ServerException {
-      return Left(ServerFailure());
-    } on FacebookLoginCancelledByUserException {
-      return Left(FacebookLoginCancelledByUserFailure());
+    if(await networkInfo.isConnected) {
+      try {
+        final sessionModel = await sessionRemoteDataSource.createFacebookSession();
+        await sessionLocalDataSource.cacheSession(sessionModel);
+        return Right(sessionModel);
+      } on ServerException {
+        return Left(ServerFailure());
+      } on FacebookLoginCancelledByUserException {
+        return Left(FacebookLoginCancelledByUserFailure());
+      }
+    }else{
+      return Left(NoInternetConnectionFailure());
     }
+
+  }
+
+  @override
+  Future<Either<Failure, SessionModel>> createGoogleSession() async {
+    if (await networkInfo.isConnected) {
+      try {
+        final sessionModel = await sessionRemoteDataSource.createGoogleSession();
+        await sessionLocalDataSource.cacheSession(sessionModel);
+        return Right(sessionModel);
+      } on ServerException {
+        return Left(ServerFailure());
+      } on FacebookLoginCancelledByUserException {
+        return Left(GoogleLoginCancelledByUserFailure());
+      }
+    } else {
+      return Left(NoInternetConnectionFailure());
+    }
+
   }
 
 }

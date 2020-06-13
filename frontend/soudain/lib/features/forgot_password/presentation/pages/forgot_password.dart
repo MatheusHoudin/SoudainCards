@@ -7,6 +7,8 @@ import 'package:soudain/core/commom_widgets/custom_rich_text.dart';
 import 'package:soudain/core/commom_widgets/main_text_field.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
+import 'package:soudain/features/forgot_password/presentation/bloc/forgot_password_bloc.dart';
+import 'package:soudain/features/forgot_password/presentation/widgets/forgot_password_form.dart';
 import 'package:soudain/features/navigation/bloc/navigation_bloc.dart';
 import 'package:soudain/injection_container.dart';
 
@@ -76,16 +78,27 @@ class ForgotPassword extends StatelessWidget {
         SizedBox(
           height: 30,
         ),
-        Email(textSize),
-        SizedBox(
-          height: 20,
-        ),
-        ResetPasswordButton(textSize),
+        ForgotPasswordFormWidget(),
         SizedBox(
           height: 30,
         ),
         LogInLink(context, textSize)
       ],
+    );
+  }
+
+  Widget ForgotPasswordFormWidget() {
+    return BlocBuilder<ForgotPasswordBloc, ForgotPasswordState>(
+      builder: (buildContext, state) {
+        if (state is ForgotPasswordFormState) {
+          return ForgotPasswordForm(
+            emailError: state.emailError,
+            isRequestingPasswordReset: state.isRequestingPasswordReset,
+          );
+        }else{
+          return Container();
+        }
+      },
     );
   }
   
@@ -127,29 +140,12 @@ class ForgotPassword extends StatelessWidget {
     );
   }
   
-  Widget Email(double textSize){
-    return MainTextField(
-      hint: 'Email',
-      iconData: Icons.email,
-      textInputType: TextInputType.emailAddress,
-      textSize: textSize,
-    );
-  }
-  
-  Widget ResetPasswordButton(double textSize){
-    return CommomButton(
-      buttonText: 'Reset password',
-      buttonTextSize: textSize,
-      buttonTextColor: Colors.black,
-      buttonFunction: () => null,
-      buttonColor: lightYellow,
-    );
-  }
+
 
   Widget LogInLink(BuildContext context, double textSize){
     return CustomRichText(
       mainText: 'Do you remember it? ',
-      featuredText: 'LOG IN',
+      featuredText: 'SIGN IN',
       onTap: () => BlocProvider.of<NavigationBloc>(context).add(PopEvent()),
       textSize: textSize,
     );

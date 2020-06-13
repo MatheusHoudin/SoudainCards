@@ -40,6 +40,17 @@ class SignUpRequestMalformedFailure extends Failure {
   List<Object> get props => [parameterErrorList];
 }
 
+class PasswordResetRequestMalformedFailure extends Failure {
+  final List<FieldError> parameterErrorList;
+
+  PasswordResetRequestMalformedFailure({
+    this.parameterErrorList
+  });
+
+  @override
+  List<Object> get props => [parameterErrorList];
+}
+
 class SessionDoesNotExistFailure extends Failure {
   @override
   List<Object> get props => [];
@@ -56,6 +67,11 @@ class NoInternetConnectionFailure extends Failure {
 }
 
 class FacebookLoginCancelledByUserFailure extends Failure {
+  @override
+  List<Object> get props => [];
+}
+
+class GoogleLoginCancelledByUserFailure extends Failure {
   @override
   List<Object> get props => [];
 }

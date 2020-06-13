@@ -11,4 +11,6 @@ abstract class SessionRepository {
   Future<Either<Failure, void>> deleteCachedSession();
 
   Future<Either<Failure, SessionModel>> createFacebookSession();
+
+  Future<Either<Failure, SessionModel>> createGoogleSession();
 }

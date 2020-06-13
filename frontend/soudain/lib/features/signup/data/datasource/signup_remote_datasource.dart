@@ -5,8 +5,6 @@ import 'package:soudain/features/login/data/model/user/user_model.dart';
 
 abstract class SignUpRemoteDataSource {
   Future<UserModel> signUp({String name, String email, String password, String passwordConfirmation});
-  Future<UserModel> signUpWithFacebook();
-  Future<UserModel> signUpWithGoogle();
 }
 
 class SignUpRemoteDataSourceImpl extends SignUpRemoteDataSource {
@@ -31,7 +29,7 @@ class SignUpRemoteDataSourceImpl extends SignUpRemoteDataSource {
           throw EmailAlreadyRegisteredException();
         }else if(e.response.statusCode == 400) {
           print(e.response.data);
-          throw SessionRequestMalformedException(
+          throw SignUpRequestMalformedException(
               parameterErrorList: (e.response.data['error'] as List).map((e) => FieldError.fromJson(e)).toList()
           );
         }else if(e.response.statusCode == 500) {
@@ -41,18 +39,6 @@ class SignUpRemoteDataSourceImpl extends SignUpRemoteDataSource {
         throw ServerException();
       }
     }
-  }
-
-  @override
-  Future<UserModel> signUpWithFacebook() {
-    // TODO: implement signUpWithFacebook
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<UserModel> signUpWithGoogle() {
-    // TODO: implement signUpWithGoogle
-    throw UnimplementedError();
   }
 
 }

@@ -59,6 +59,7 @@ void main(){
         }
     ));
   }
+
   
   group('signin', () {
     test(
@@ -99,15 +100,17 @@ void main(){
         'should return a EmailNotRegisteredException when provided email does not exist',
             () async {
           when(dioMock.post(any, data: request))
-              .thenAnswer((_) async => Response(
-              statusCode: 401,
-              data: {
-                "code": 401,
-                "data": {
-                  "email": "email"
-                },
-                "message": "message"
-              }
+              .thenThrow(DioError(
+            response: Response(
+                statusCode: 401,
+                data: {
+                  "code": 401,
+                  "data": {
+                    "email": "email"
+                  },
+                  "message": "message"
+                }
+            )
           ));
 
           final call = dataSourceImpl.createSession;
@@ -123,20 +126,22 @@ void main(){
         'should return a PasswordDoesNotMatchException when provided password does not match with the provided email',
             () async {
           when(dioMock.post(any, data: request))
-              .thenAnswer((_) async => Response(
-              statusCode: 401,
-              data: {
-                "code": 401,
-                "data": {
-                  "password": "pass"
-                },
-                "message": "message"
-              }
+              .thenThrow(DioError(
+            response: Response(
+                statusCode: 401,
+                data: {
+                  "code": 401,
+                  "data": {
+                    "password": "pass"
+                  },
+                  "message": "message"
+                }
+            )
           ));
 
-          final call = () => dataSourceImpl.createSession(email: 'email', password: 'pass');
+          final call = dataSourceImpl.createSession;
 
-          expect(() => call(), throwsA(TypeMatcher<PasswordDoesNotMatchException>()));
+          expect(() => call(email: 'email', password: 'pass'), throwsA(TypeMatcher<PasswordDoesNotMatchException>()));
         }
     );
 
@@ -144,13 +149,15 @@ void main(){
         'should throw a ServerException when call to the api fails',
             () async {
           when(dioMock.post(any, data: request))
-              .thenAnswer((_) async => Response(
-              statusCode: 500,
-              data: {
-                "code": 500,
-                "error": "error",
-                "message": "error"
-              }
+              .thenThrow(DioError(
+            response: Response(
+                statusCode: 500,
+                data: {
+                  "code": 500,
+                  "error": "error",
+                  "message": "error"
+                }
+            )
           ));
 
           final call = dataSourceImpl.createSession;
@@ -166,22 +173,24 @@ void main(){
         'should throw a SessionMalformedException when email or password is wrong',
             () async {
           when(dioMock.post(any, data: request))
-              .thenAnswer((_) async => Response(
-              statusCode: 400,
-              data: {
-                "code": 400,
-                "error": [
-                  {
-                    "field": "email",
-                    "message": "message"
-                  },
-                  {
-                    "field": "password",
-                    "message": "message"
-                  }
-                ],
-                "message": "error"
-              }
+              .thenThrow(DioError(
+            response: Response(
+                statusCode: 400,
+                data: {
+                  "code": 400,
+                  "error": [
+                    {
+                      "field": "email",
+                      "message": "message"
+                    },
+                    {
+                      "field": "password",
+                      "message": "message"
+                    }
+                  ],
+                  "message": "error"
+                }
+            )
           ));
 
           final call = dataSourceImpl.createSession;
@@ -193,6 +202,4 @@ void main(){
         }
     );
   });
-
-
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:soudain/core/error/exceptions.dart';
 import 'package:soudain/core/error/field_error.dart';
 import 'package:soudain/features/login/data/model/session/session_model.dart';
@@ -9,13 +10,16 @@ import 'package:soudain/features/login/data/model/session/session_model.dart';
 abstract class SessionRemoteDataSource {
   Future<SessionModel> createSession({String email, String password});
   Future<SessionModel> createFacebookSession();
+  Future<SessionModel> createGoogleSession();
 }
 
 class SessionRemoteDataSourceImpl extends SessionRemoteDataSource {
   final Dio dio;
+  final FacebookLogin facebookLogin;
 
   SessionRemoteDataSourceImpl({
     this.dio,
+    this.facebookLogin
   });
 
   @override
@@ -66,11 +70,12 @@ class SessionRemoteDataSourceImpl extends SessionRemoteDataSource {
               'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email,picture.width(800).height(800)&access_token=$token');
 
           final Map<String, dynamic> jsonMap = json.decode(facebookResponse.data);
-          final response = await dio.post('sessions/facebook', data: {
+          final response = await dio.post('sessions/thirdpart', data: {
             'id': jsonMap['id'],
             'email': jsonMap['email'],
             'name': jsonMap['name'],
-            'picture': jsonMap['picture']['data']['url']
+            'picture': jsonMap['picture']['data']['url'],
+            'isFacebook': true
           });
 
           return SessionModel.fromJson(response.data['data']);
@@ -97,6 +102,49 @@ class SessionRemoteDataSourceImpl extends SessionRemoteDataSource {
       case FacebookLoginStatus.cancelledByUser:
         throw FacebookLoginCancelledByUserException();
         break;
+    }
+  }
+
+  @override
+  Future<SessionModel> createGoogleSession() async {
+    GoogleSignIn googleSignIn = GoogleSignIn(
+      scopes: [
+        'profile',
+        'https://www.googleapis.com/auth/userinfo.profile'
+      ],
+    );
+
+    GoogleSignInAccount account = await googleSignIn.signIn();
+    if(account != null) {
+      try {
+        final resizedProfileImageUrl = account.photoUrl.replaceFirst('s96-c', 's800-c');
+        final response = await dio.post('sessions/thirdpart', data: {
+          'id': account.id,
+          'email': account.email,
+          'name': account.displayName,
+          'picture': resizedProfileImageUrl,
+          'isFacebook': false
+        });
+
+        return SessionModel.fromJson(response.data['data']);
+      } on DioError catch (e) {
+        if (e.response != null) {
+          if (e.response.statusCode == 400) {
+            throw SessionRequestMalformedException(
+                parameterErrorList: (e.response.data['error'] as List)
+                    .map((e) => FieldError.fromJson(e))
+                    .toList());
+          } else if (e.response.statusCode == 500) {
+            throw ServerException();
+          }
+        } else {
+          throw ServerException();
+        }
+      } on Exception {
+        throw ServerException();
+      }
+    }else{
+      throw GoogleLoginCancelledByUserException();
     }
   }
 }

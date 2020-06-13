@@ -7,6 +7,7 @@ const ResponseHandlers = require('../../utils/ResponseHandlers');
 
 class PasswordResetController {
   async store(req, res) {
+    console.log(req.body)
     const schema = Yup.object().shape({
       email: Yup.string()
         .email('The provided email is not valid')
@@ -42,7 +43,6 @@ class PasswordResetController {
           user_id: user.id,
         })
           .then(async (passwordReset) => {
-            console.log(passwordReset);
             const expireDate = new Date(passwordReset.createdAt);
             expireDate.setDate(expireDate.getDate() + 4);
 

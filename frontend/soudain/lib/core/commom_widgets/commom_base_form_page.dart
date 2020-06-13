@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:soudain/core/commom_widgets/header_with_back_arrow_and_text.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
+import 'package:soudain/features/forgot_password/presentation/bloc/forgot_password_bloc.dart';
 import 'package:soudain/features/login/presentation/bloc/session_bloc.dart';
 import 'package:soudain/features/signup/presentation/bloc/sign_up_bloc.dart';
 import 'package:soudain/injection_container.dart';
@@ -81,6 +82,9 @@ class CommomBaseFormPage extends StatelessWidget {
                         ),
                         BlocProvider<SignUpBloc>(
                           create: (context) => sl<SignUpBloc>(),
+                        ),
+                        BlocProvider<ForgotPasswordBloc>(
+                          create: (context) => sl<ForgotPasswordBloc>(),
                         )
                       ],
                       child: Column(

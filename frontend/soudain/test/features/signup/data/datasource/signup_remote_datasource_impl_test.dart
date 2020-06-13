@@ -82,7 +82,8 @@ void main() {
       'Should throw EmailAlreadyExistsException when the provided email is already registered',
       () async {
         when(mockDio.post(any, data: request))
-            .thenAnswer((_) async => Response(
+            .thenThrow(DioError(
+          response: Response(
               statusCode: 401,
               data: {
                 "code": 401,
@@ -92,6 +93,7 @@ void main() {
                 },
                 "message": "message"
               }
+          )
         ));
 
         final call = dataSource.signUp;
@@ -110,30 +112,32 @@ void main() {
     'Should throw a SignUpMalformedException when some of the provided fields is wrong',
     () {
       when(mockDio.post(any, data: request))
-          .thenAnswer((_) async => Response(
-          statusCode: 400,
-          data: {
-            "code": 400,
-            "error": [
-              {
-                "field": "email",
-                "message": "message"
-              },
-              {
-                "field": "name",
-                "message": "message"
-              },
-              {
-                "field": "passwordConfirmation",
-                "message": "message"
-              },
-              {
-                "field": "password",
-                "message": "message"
-              }
-            ],
-            "message": "error"
-          }
+          .thenThrow(DioError(
+        response: Response(
+            statusCode: 400,
+            data: {
+              "code": 400,
+              "error": [
+                {
+                  "field": "email",
+                  "message": "message"
+                },
+                {
+                  "field": "name",
+                  "message": "message"
+                },
+                {
+                  "field": "passwordConfirmation",
+                  "message": "message"
+                },
+                {
+                  "field": "password",
+                  "message": "message"
+                }
+              ],
+              "message": "error"
+            }
+        )
       ));
 
       final call = dataSource.signUp;
@@ -151,13 +155,15 @@ void main() {
     'Should return a ServerException when an error occurs on the server',
     () async {
       when(mockDio.post(any, data: request))
-          .thenAnswer((_) async => Response(
-          statusCode: 500,
-          data: {
-            "code": 500,
-            "error": "error",
-            "message": "error"
-          }
+          .thenThrow(DioError(
+        response: Response(
+            statusCode: 500,
+            data: {
+              "code": 500,
+              "error": "error",
+              "message": "error"
+            }
+        )
       ));
 
       final call = dataSource.signUp;

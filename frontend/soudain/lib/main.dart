@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/features/login/presentation/pages/login_page.dart';
 import 'package:soudain/features/navigation/bloc/navigation_bloc.dart';
@@ -18,15 +19,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<NavigationBloc>(
       create: (context) => NavigationBloc(navigatorKey: _navigatorKey),
-      child: MaterialApp(
-        title: 'Soudain',
-        navigatorKey: _navigatorKey,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primaryColor: primaryColor,
-          primarySwatch: Colors.blue,
+      child: OKToast(
+        child: MaterialApp(
+          title: 'Soudain',
+          navigatorKey: _navigatorKey,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primaryColor: primaryColor,
+            primarySwatch: Colors.blue,
+          ),
+          home: LoginPage(),
         ),
-        home: LoginPage(),
       ),
     );
   }
