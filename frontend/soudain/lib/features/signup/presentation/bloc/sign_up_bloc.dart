@@ -6,15 +6,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:soudain/core/constants/texts.dart';
 import 'package:soudain/core/error/failures.dart';
 import 'package:soudain/core/validation/validation.dart';
+import 'package:soudain/features/login/domain/usecases/create_session_use_case.dart';
 import 'package:soudain/features/signup/domain/usecase/sign_up_usecase.dart';
 
 part 'sign_up_event.dart';
 part 'sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
-  final SignUpUseCase useCase;
+  final SignUpUseCase signUpUseCase;
+  final CreateSessionUseCase createSessionUseCase;
 
-  SignUpBloc({this.useCase});
+  SignUpBloc({this.signUpUseCase,this.createSessionUseCase});
 
   @override
   SignUpState get initialState => SignUpFormState(
@@ -46,7 +48,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
           isCreatingAccount: true
         );
 
-        final result = await useCase(SignUpParams(
+        final result = await signUpUseCase(SignUpParams(
           email: event.email,
           password: event.password,
           name: event.name,
@@ -77,6 +79,10 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
             event.signUpFormKey.currentState.validate();
           },
           (userModel) async* {
+            await createSessionUseCase(CreateSessionParams(
+              email: event.email,
+              password: event.password
+            ));
             event.onSuccess();
           }
         );

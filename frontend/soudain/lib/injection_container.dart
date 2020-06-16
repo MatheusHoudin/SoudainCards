@@ -38,7 +38,7 @@ Future<void> setup()async {
     createFacebookSessionUseCase: sl(),
     createGoogleSessionUseCase: sl()
   ));
-  sl.registerFactory<SignUpBloc>(() => SignUpBloc(useCase: sl()));
+  sl.registerFactory<SignUpBloc>(() => SignUpBloc(signUpUseCase: sl(), createSessionUseCase: sl()));
   sl.registerFactory<ForgotPasswordBloc>(() => ForgotPasswordBloc(useCase: sl()));
 
   sl.registerLazySingleton<CreateSessionUseCase>(() => CreateSessionUseCase(sessionRepository: sl()));

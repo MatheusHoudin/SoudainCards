@@ -4,6 +4,7 @@ import 'package:oktoast/oktoast.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/features/login/presentation/pages/login_page.dart';
 import 'package:soudain/features/navigation/bloc/navigation_bloc.dart';
+import 'package:soudain/main_page.dart';
 import 'injection_container.dart' as sl;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
             primaryColor: primaryColor,
             primarySwatch: Colors.blue,
           ),
-          home: LoginPage(),
+          home: MainPage(),
         ),
       ),
     );

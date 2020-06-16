@@ -32,7 +32,6 @@ class SessionLocalDataSourceImpl extends SessionLocalDataSource {
     }else{
       throw SessionDoesNotExistException();
     }
-
   }
 
 }
