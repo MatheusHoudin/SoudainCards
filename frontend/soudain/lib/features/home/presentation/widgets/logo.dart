@@ -1,40 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:soudain/core/constants/colors.dart';
 
 class Logo extends StatelessWidget {
+  final Widget centerWidget;
+  final double cardsMargin;
+  final double cardBorderRadius;
+  final bool isLeftMargin;
+  final Color cardColor;
+  final Color secondaryColor;
+  final Function onPressed;
+
+  Logo({
+    this.centerWidget,
+    this.cardsMargin,
+    this.cardBorderRadius,
+    this.isLeftMargin,
+    this.cardColor,
+    this.secondaryColor,
+    this.onPressed
+  });
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        LogoCard(0,0,false),
-        LogoCard(10,10,false),
-        LogoCard(20,10,true)
+        LogoCard(0,0,false,secondaryColor,null),
+        LogoCard(cardsMargin,cardsMargin,false,secondaryColor,null),
+        LogoCard(cardsMargin*2,cardsMargin,true,cardColor,onPressed)
       ],
     );
   }
 
-  Widget LogoCard(double leftMargin,double elevation, bool showCenterWidget) {
+  Widget LogoCard(double margin,double elevation, bool showCenterWidget,Color color, Function onPressed) {
+    EdgeInsets cardMargin = this.isLeftMargin ? EdgeInsets.only(left: margin) : EdgeInsets.only(right: margin);
     return Card(
-      margin: EdgeInsets.only(left: leftMargin),
+      margin: cardMargin,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(20))
+        borderRadius: BorderRadius.all(Radius.circular(this.cardBorderRadius))
       ),
-      color: Colors.white,
+      color: color,
       elevation: elevation,
-      shadowColor: Colors.grey,
-      child: Center(
-        child: showCenterWidget ? CenterWidget() : Container(),
-      ),
-    );
-  }
-  
-  Widget CenterWidget() {
-    return Padding(
-      padding: EdgeInsets.all(30),
-      child: ClipOval(
-        child: Container(
-          color: primaryColor,
+
+      child: onPressed != null ? RawMaterialButton(
+        splashColor: Colors.white,
+        onPressed: () => onPressed,
+        child: Center(
+          child: showCenterWidget ? centerWidget : Container(),
         ),
+      ) : Center(
+        child: showCenterWidget ? centerWidget : Container(),
       ),
     );
   }

@@ -10,9 +10,9 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: secondaryColor,
-        body: Padding(
+      child: Container(
+        color: secondaryColor,
+        child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
