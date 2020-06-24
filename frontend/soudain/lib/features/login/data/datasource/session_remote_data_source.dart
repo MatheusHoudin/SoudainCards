@@ -78,8 +78,11 @@ class SessionRemoteDataSourceImpl extends SessionRemoteDataSource {
             'isFacebook': true
           });
 
+          print(response.data['data']);
+
           return SessionModel.fromJson(response.data['data']);
         } on DioError catch (e) {
+          print('DIO ERROR');
           if (e.response != null) {
             if (e.response.statusCode == 400) {
               throw SessionRequestMalformedException(
@@ -88,6 +91,8 @@ class SessionRemoteDataSourceImpl extends SessionRemoteDataSource {
                       .toList());
             } else if (e.response.statusCode == 500) {
               throw ServerException();
+            } else if (e.response.statusCode == 409) {
+              throw EmailAlreadyRegisteredException();
             }
           } else {
             throw ServerException();
@@ -126,6 +131,8 @@ class SessionRemoteDataSourceImpl extends SessionRemoteDataSource {
           'isFacebook': false
         });
 
+
+        print(response.data['data']);
         return SessionModel.fromJson(response.data['data']);
       } on DioError catch (e) {
         if (e.response != null) {
@@ -136,6 +143,8 @@ class SessionRemoteDataSourceImpl extends SessionRemoteDataSource {
                     .toList());
           } else if (e.response.statusCode == 500) {
             throw ServerException();
+          } else if (e.response.statusCode == 409) {
+            throw EmailAlreadyRegisteredException();
           }
         } else {
           throw ServerException();

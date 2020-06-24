@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:soudain/core/commom_widgets/commom_base_form_page.dart';
 import 'package:soudain/core/commom_widgets/custom_rich_text.dart';
 import 'package:soudain/core/commom_widgets/error_dialog.dart';
@@ -56,7 +57,7 @@ class LoginPage extends StatelessWidget {
         ),
         GoogleButton(textSize,context),
         SizedBox(
-          height: 30,
+          height: 20,
         ),
         FacebookButton(textSize),
         SizedBox(
@@ -106,7 +107,8 @@ class LoginPage extends StatelessWidget {
               builder: (context) {
                 return ErrorDialog(message: message,);
               }
-            )
+            ),
+            onFailure: (message) => showToast(message, context: context)
           )),
           buttonTextSize: textSize,
         );
@@ -128,7 +130,8 @@ class LoginPage extends StatelessWidget {
               builder: (context) {
                 return ErrorDialog(message: message,);
               }
-            )
+            ),
+            onFailure: (message) => showToast(message, context: context)
           )),
           buttonTextSize: textSize,
         );

@@ -1,9 +1,58 @@
 const Yup = require('yup');
 const CollectionDecks = require('../models/CollectionDecks');
 const User = require('../models/User');
+const File = require('../models/File');
 const ResponseHandlers = require('../../utils/ResponseHandlers');
 
 class UserController {
+  async index(req, res) {
+    const schema = Yup.object().shape({
+      email: Yup.string('The email field must be a string')
+        .email('The email field is not valid')
+        .required('The email field is required'),
+    });
+
+    schema.validate(req.body, {abortEarly: false})
+    .then(async values => {
+      try {
+        const user = await User.findOne({
+          where: {
+            email: values.email
+          },
+          include: [File]
+        });
+
+        if (user) {
+          return res.status(200).json({
+            code: 200,
+            data: user,
+            message: 'The user was retrieved successfully'
+          });
+        }else{
+          return res.status(404).json({
+            code: 404,
+            data: null,
+            message: 'The user was retrieved successfully'
+          });
+        }
+
+      } catch (e) {
+        return res.status(500).json({
+          code: 500,
+          error: e.name,
+          message: 'A server error has ocurred'
+        });
+      }
+    })
+    .catch(err => {
+      return res.status(400).json({
+        code: 400,
+        error: ResponseHandlers.convertYupValidationErrors(err),
+        message: 'The fields you provided are not valid'
+      });
+    });
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required('Name must be provided'),
@@ -23,7 +72,7 @@ class UserController {
           const userAlreadyExists = await User.findOne({
             where: { email: value.email },
           });
-  
+
           if (userAlreadyExists) {
             return res.status(401).json({
               code: 400,
@@ -34,13 +83,13 @@ class UserController {
               message: 'Unfortunately there is an user with this email',
             });
           }
-  
+
           const { id, name, email } = await User.create({
             name: value.name,
             email: value.email,
             password: value.password,
           });
-          
+
           return res.status(201).json({
             code: 201,
             data: {
@@ -58,7 +107,6 @@ class UserController {
             message: 'A server error has ocurred',
           });
         }
-
       })
       .catch((err) => {
         console.log(err);
@@ -136,7 +184,7 @@ class UserController {
         });
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         return res.status(401).json({
           code: 401,
           error: ResponseHandlers.convertYupValidationErrors(err),

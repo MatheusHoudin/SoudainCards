@@ -97,11 +97,11 @@ class _LoginFormState extends State<LoginForm> {
           ),
           Password(widget.textSize,widget.passowordFieldError),
           SizedBox(
-            height: 50,
+            height: 20,
           ),
           ForgotPasswordLink(context, widget.textSize),
           SizedBox(
-            height: 20,
+            height: 10,
           ),
           widget.isCreatingSession ?
               LoadingCard(

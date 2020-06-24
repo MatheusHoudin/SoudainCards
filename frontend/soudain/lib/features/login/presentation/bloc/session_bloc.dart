@@ -115,6 +115,13 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
               emailFieldError: null,
               isCreatingSession: false,
             );
+          }else if(failure is EmailAlreadyRegisteredFailure){
+            yield SessionFormState(
+              passwordFieldError: null,
+              emailFieldError: null,
+              isCreatingSession: false,
+            );
+            event.onFailure(emailAlreadyRegistered);
           }else{
             yield SessionFormState(
               passwordFieldError: null,
@@ -145,6 +152,13 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
                 emailFieldError: null,
                 isCreatingSession: false,
               );
+            }else if(failure is EmailAlreadyRegisteredFailure){
+              yield SessionFormState(
+                passwordFieldError: null,
+                emailFieldError: null,
+                isCreatingSession: false,
+              );
+              event.onFailure(emailAlreadyRegistered);
             }else{
               yield SessionFormState(
                 passwordFieldError: null,

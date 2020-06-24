@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:soudain/core/constants/colors.dart';
+import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/features/home/presentation/pages/home.dart';
 import 'package:soudain/features/main_page_view/presentation/widgets/cards_floating_button.dart';
+import 'package:soudain/injection_container.dart';
 
 class MainPageView extends StatefulWidget {
   @override
@@ -20,6 +22,35 @@ class _MainPageViewState extends State<MainPageView> {
   }
   @override
   Widget build(BuildContext context) {
+    double floatingCardHeight = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: true,
+        smallPorcentage: 80,
+        mediumPorcentage: 18,
+        largePorcentage: 16
+      )
+    );
+    double floatingCardWidth = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: false,
+        smallPorcentage: 20,
+        mediumPorcentage: 20,
+        largePorcentage: 18
+      )
+    );
+    double closeButtonPadding = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: false,
+        smallPorcentage: 0.5,
+        mediumPorcentage: 1,
+        largePorcentage: 2
+      )
+    );
+
+    print(floatingCardHeight);
     Curve pageViewAnimationCurve = Curves.easeIn;
     return Scaffold(
       backgroundColor: secondaryColor,
@@ -32,20 +63,21 @@ class _MainPageViewState extends State<MainPageView> {
         ],
       ),
       floatingActionButton: Container(
-        height: 100,
+        alignment: Alignment.center,
+        height: floatingCardHeight,
         margin: EdgeInsets.only(left: 36),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Expanded(
               child: AnimatedContainer(
+                alignment: Alignment.center,
                 duration: Duration(seconds: 1),
-                width: isFloatingButtonOpen ? 500 : 80,
+                width: isFloatingButtonOpen ? 800 : floatingCardWidth,
                 child: CardsFloatingButton(
                   icon: Icons.home,
                   isDeckStackOpen: this.isFloatingButtonOpen,
                   onDeckTap: () {
-                    print('ONTAOP');
                     setState(() {
                       this.isFloatingButtonOpen = true;
                     });
@@ -72,7 +104,7 @@ class _MainPageViewState extends State<MainPageView> {
             AnimatedOpacity(
               opacity: this.isFloatingButtonOpen ? 1.0 : 0.0,
               duration: Duration(milliseconds: 500),
-              child: CloseButton(),
+              child: CloseButton(closeButtonPadding),
             )
           ],
         ),
@@ -80,7 +112,7 @@ class _MainPageViewState extends State<MainPageView> {
     );
   }
 
-  Widget CloseButton() {
+  Widget CloseButton(double buttonPadding) {
     return Container(
       alignment: Alignment.center,
       decoration: BoxDecoration(
@@ -96,7 +128,7 @@ class _MainPageViewState extends State<MainPageView> {
             });
           },
           child: Padding(
-            padding: EdgeInsets.all(4),
+            padding: EdgeInsets.all(buttonPadding),
             child: Icon(
               Icons.close,
               color: primaryColor,

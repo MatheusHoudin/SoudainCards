@@ -22,6 +22,7 @@ const upload = multer(multerConfig);
 const routes = express.Router();
 
 routes.post('/users', UserController.store);
+routes.get('/users', UserController.index);
 
 routes.post('/sessions', SessionController.store);
 routes.post('/sessions/thirdpart', ThirdPartSessionController.store);

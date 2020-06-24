@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:soudain/core/constants/colors.dart';
-import 'package:soudain/features/home/presentation/widgets/logo.dart';
+import 'package:soudain/core/responsiveness/device_size_adapter.dart';
+import 'package:soudain/injection_container.dart';
 
 class CardsFloatingButton extends StatelessWidget {
   final IconData icon;
@@ -21,25 +22,43 @@ class CardsFloatingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double iconSize = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: false,
+        smallPorcentage: 6.5,
+        mediumPorcentage: 6,
+        largePorcentage: 5
+      ),
+    );
+    double cardRightMargin = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: false,
+        smallPorcentage: 2,
+        mediumPorcentage: 2,
+        largePorcentage: 0
+      ),
+    );
     return Stack(
       children: [
         Align(
           alignment: Alignment.centerRight,
-          child: DeckCard(0,8,() => isDeckStackOpen ? nagivateToProgressFunction() : onDeckTap(),Icons.email),
+          child: DeckCard(0,8,iconSize,() => isDeckStackOpen ? nagivateToProgressFunction() : onDeckTap(),Icons.email),
         ),
         Align(
           alignment: Alignment.center,
-          child: DeckCard(8,8,() => isDeckStackOpen ? nagivateToPlayFunction() : onDeckTap(),Icons.cast),
+          child: DeckCard(isDeckStackOpen ? 0 : cardRightMargin,8,iconSize,() => isDeckStackOpen ? nagivateToPlayFunction() : onDeckTap(),Icons.cast),
         ),
         Align(
           alignment: Alignment.centerLeft,
-          child: DeckCard(16,8,() => isDeckStackOpen ? nagivateToHomeFunction() : onDeckTap(),Icons.home),
+          child: DeckCard(isDeckStackOpen ? 0 : cardRightMargin*2,8,iconSize,() => isDeckStackOpen ? nagivateToHomeFunction() : onDeckTap(),Icons.home),
         ),
       ],
     );
   }
 
-  Widget DeckCard(double margin,double elevation, Function onPressed, IconData icon) {
+  Widget DeckCard(double margin,double elevation, double iconSize, Function onPressed, IconData icon) {
     return Card(
       margin: EdgeInsets.only(right: margin),
       shape: RoundedRectangleBorder(
@@ -56,6 +75,7 @@ class CardsFloatingButton extends StatelessWidget {
           child: Center(
             child: Icon(
               icon,
+              size: iconSize,
               color: Colors.white,
             ),
           ),
