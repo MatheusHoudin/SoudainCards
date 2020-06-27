@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const Op = require('sequelize').Op;
 const Yup = require('yup');
 const User = require('../models/User');
 const authConfig = require('../../config/auth');
@@ -17,7 +18,17 @@ class SessionController {
         try {
           const { email, password } = req.body;
 
-          const user = await User.findOne({ where: { email } });
+          const user = await User.findOne({
+            where: {
+              email,
+              facebook_id: {
+                [Op.is]: null
+              },
+              google_id: {
+                [Op.is]: null
+              },
+            }
+          });
 
           if (!user) {
             return res.status(401).json({
@@ -52,6 +63,7 @@ class SessionController {
             message: 'The user could log in successfully',
           });
         } catch (error) {
+          console.log(error)
           return res.status(500).json({
             code: 500,
             error: error.name,

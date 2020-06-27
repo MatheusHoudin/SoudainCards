@@ -56,6 +56,11 @@ class SessionDoesNotExistFailure extends Failure {
   List<Object> get props => [];
 }
 
+class UserDataDoesNotExistFailure extends Failure {
+  @override
+  List<Object> get props => [];
+}
+
 class ServerFailure extends Failure {
   @override
   List<Object> get props => [];

@@ -25,10 +25,9 @@ class ValidateFieldsOnFocusLostEvent extends SessionEvent {
 
 class CreateFacebookSessionEvent extends SessionEvent {
   final Function onSuccess;
-  final Function onFailure;
   final Function onServerError;
 
-  CreateFacebookSessionEvent({this.onSuccess,this.onServerError,this.onFailure});
+  CreateFacebookSessionEvent({this.onSuccess,this.onServerError});
 
   @override
   List<Object> get props => [];
@@ -36,10 +35,9 @@ class CreateFacebookSessionEvent extends SessionEvent {
 
 class CreateGoogleSessionEvent extends SessionEvent {
   final Function onSuccess;
-  final Function onFailure;
   final Function onServerError;
 
-  CreateGoogleSessionEvent({this.onSuccess,this.onServerError,this.onFailure});
+  CreateGoogleSessionEvent({this.onSuccess,this.onServerError});
 
   @override
   List<Object> get props => [];

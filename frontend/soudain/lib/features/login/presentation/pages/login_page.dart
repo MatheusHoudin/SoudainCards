@@ -108,7 +108,6 @@ class LoginPage extends StatelessWidget {
                 return ErrorDialog(message: message,);
               }
             ),
-            onFailure: (message) => showToast(message, context: context)
           )),
           buttonTextSize: textSize,
         );
@@ -131,7 +130,6 @@ class LoginPage extends StatelessWidget {
                 return ErrorDialog(message: message,);
               }
             ),
-            onFailure: (message) => showToast(message, context: context)
           )),
           buttonTextSize: textSize,
         );

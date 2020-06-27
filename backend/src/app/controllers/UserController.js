@@ -7,50 +7,55 @@ const ResponseHandlers = require('../../utils/ResponseHandlers');
 class UserController {
   async index(req, res) {
     const schema = Yup.object().shape({
-      email: Yup.string('The email field must be a string')
-        .email('The email field is not valid')
-        .required('The email field is required'),
+      id: Yup.number('The id field must be a number').required(
+        'The id field is required'
+      ),
     });
 
-    schema.validate(req.body, {abortEarly: false})
-    .then(async values => {
-      try {
-        const user = await User.findOne({
-          where: {
-            email: values.email
-          },
-          include: [File]
-        });
-
-        if (user) {
-          return res.status(200).json({
-            code: 200,
-            data: user,
-            message: 'The user was retrieved successfully'
+    schema
+      .validate(req.params, { abortEarly: false })
+      .then(async (values) => {
+        try {
+          const user = await User.findByPk(values.id, {
+            include: [
+              {
+                model: File,
+                as: 'avatar',
+                attributes: ['url','path']
+              }
+            ],
+            attributes: ['id','name','email','avatar_id']
           });
-        }else{
-          return res.status(404).json({
-            code: 404,
-            data: null,
-            message: 'The user was retrieved successfully'
+
+          if (user) {
+            return res.status(200).json({
+              code: 200,
+              data: user,
+              message: 'The user was retrieved successfully',
+            });
+          } else {
+            return res.status(404).json({
+              code: 404,
+              data: null,
+              message: 'The user was retrieved successfully',
+            });
+          }
+        } catch (e) {
+          console.log(e)
+          return res.status(500).json({
+            code: 500,
+            error: e.name,
+            message: 'A server error has ocurred',
           });
         }
-
-      } catch (e) {
-        return res.status(500).json({
-          code: 500,
-          error: e.name,
-          message: 'A server error has ocurred'
+      })
+      .catch((err) => {
+        return res.status(400).json({
+          code: 400,
+          error: ResponseHandlers.convertYupValidationErrors(err),
+          message: 'The fields you provided are not valid',
         });
-      }
-    })
-    .catch(err => {
-      return res.status(400).json({
-        code: 400,
-        error: ResponseHandlers.convertYupValidationErrors(err),
-        message: 'The fields you provided are not valid'
       });
-    });
   }
 
   async store(req, res) {

@@ -78,7 +78,6 @@ class SessionRemoteDataSourceImpl extends SessionRemoteDataSource {
             'isFacebook': true
           });
 
-          print(response.data['data']);
 
           return SessionModel.fromJson(response.data['data']);
         } on DioError catch (e) {
@@ -91,8 +90,6 @@ class SessionRemoteDataSourceImpl extends SessionRemoteDataSource {
                       .toList());
             } else if (e.response.statusCode == 500) {
               throw ServerException();
-            } else if (e.response.statusCode == 409) {
-              throw EmailAlreadyRegisteredException();
             }
           } else {
             throw ServerException();

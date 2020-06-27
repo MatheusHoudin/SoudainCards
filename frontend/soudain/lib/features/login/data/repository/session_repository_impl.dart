@@ -69,8 +69,6 @@ class SessionRepositoryImpl extends SessionRepository {
         return Left(ServerFailure());
       } on FacebookLoginCancelledByUserException {
         return Left(FacebookLoginCancelledByUserFailure());
-      } on EmailAlreadyRegisteredException {
-        return Left(EmailAlreadyRegisteredFailure());
       }
     }else{
       return Left(NoInternetConnectionFailure());
@@ -89,8 +87,6 @@ class SessionRepositoryImpl extends SessionRepository {
         return Left(ServerFailure());
       } on FacebookLoginCancelledByUserException {
         return Left(GoogleLoginCancelledByUserFailure());
-      } on EmailAlreadyRegisteredException {
-        return Left(EmailAlreadyRegisteredFailure());
       }
     } else {
       return Left(NoInternetConnectionFailure());

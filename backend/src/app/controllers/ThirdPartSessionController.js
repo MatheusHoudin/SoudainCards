@@ -45,11 +45,22 @@ class ThirdPartSessionController {
                 }),
               };
 
-          const userAlreadyExists = await User.findOne({
-            where: {
-              email,
-            },
-          });
+          var userAlreadyExists;    
+          if (isFacebook) {
+            userAlreadyExists = await User.findOne({
+              where: {
+                email,
+                facebook_id: id.toString()
+              },
+            });
+          }else{
+            userAlreadyExists = await User.findOne({
+              where: {
+                email,
+                google_id: id.toString()
+              },
+            });
+          }
 
           if (userAlreadyExists) {
             if (
@@ -69,8 +80,8 @@ class ThirdPartSessionController {
                 message: 'The provided email was already taken by another user',
               });
             } else if (
-              (userAlreadyExists.facebook_id && isFacebook) ||
-              (userAlreadyExists.google_id && !isFacebook)
+              (isFacebook && userAlreadyExists.facebook_id === id.toString()) ||
+              (!isFacebook && userAlreadyExists.google_id === id.toString())
             ) {
               return res.status(201).json({
                 code: 201,
@@ -90,19 +101,6 @@ class ThirdPartSessionController {
                 },
                 message: 'The user could log in successfully',
               });
-            } else {
-              return res.status(401).json({
-                code: 401,
-                error: [
-                  {
-                    field: 'email',
-                    message:
-                      'The provided account does not match up with any of the registered ones',
-                  },
-                ],
-                message:
-                  'The provided account does not match up with any of the registered ones',
-              });
             }
           } else {
             const user = await User.create(data);
@@ -110,16 +108,17 @@ class ThirdPartSessionController {
             const file = await File.findOrCreate({
               where: {
                 name: id.toString(),
+                path: picture,
               },
               defaults: {
-                path: picture,
                 type: 'image/jpeg',
               },
             });
 
-            await user.update({
-              avatar_id: file.id,
-            });
+            await User.update(
+              { avatar_id: file[0].id },
+              { where: { id: user.id } }
+            );
 
             return res.status(201).json({
               code: 201,
