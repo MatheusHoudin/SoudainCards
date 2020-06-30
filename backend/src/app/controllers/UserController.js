@@ -26,11 +26,21 @@ class UserController {
             ],
             attributes: ['id','name','email','avatar_id']
           });
-
+          
           if (user) {
+
             return res.status(200).json({
               code: 200,
-              data: user,
+              data: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                avatar_id: user.avatar_id,
+                avatar: user.avatar_id ? {
+                  url: user.avatar.path.includes('http') ? user.avatar.path : user.avatar.url,
+                  path: user.avatar.path
+                } : null
+              },
               message: 'The user was retrieved successfully',
             });
           } else {

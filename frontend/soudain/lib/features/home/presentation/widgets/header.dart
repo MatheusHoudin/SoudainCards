@@ -1,11 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:soudain/core/constants/colors.dart';
+import 'package:soudain/features/home/presentation/bloc/user_data_bloc.dart';
 import 'package:soudain/features/home/presentation/widgets/logo.dart';
 import 'package:soudain/features/home/presentation/widgets/oval_red_ball.dart';
+import 'package:soudain/features/navigation/bloc/navigation_bloc.dart';
 
-class Header extends StatelessWidget {
+class Header extends StatefulWidget {
+  @override
+  _HeaderState createState() => _HeaderState();
+}
+
+class _HeaderState extends State<Header> {
+
+  @override
+  void initState() {
+    BlocProvider.of<UserDataBloc>(context).add(GetUserDataEvent());
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -38,28 +52,30 @@ class Header extends StatelessWidget {
                     Welcome(),
                     SizedBox(height: 6,),
                     Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: ClipOval(
-                              child: Image.network('https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
-                            ),
-                          ),
-                          SizedBox(height: 6,),
-                          Text(
-                            'Mary Hellen',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.comfortaa(
-                              fontSize: 18,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold
-                            ),
-                          )
-                        ],
+                      child: BlocBuilder<UserDataBloc, UserDataState>(
+                        builder: (context, state) {
+                          if (state is UserDataInitialState) {
+                            return Container();
+                          }else if(state is LoadingUserDataState) {
+                            return Text('loading');
+                          }else if(state is LoadedUserDataState) {
+                            return UserInfo(state.userDataModel.avatar, state.userDataModel.name);
+                          }else if(state is UserDataDoesNotExistState){
+                            return Text('User does not exist');
+                          }else if(state is SessionDoesNotExistState){
+                            return GestureDetector(
+                              onTap: () => BlocProvider.of<NavigationBloc>(context).add(HomeToLoginNavigationEvent()),
+                              child: Container(
+                                color: Colors.black,
+                                height: 30,
+                                width: 50,
+
+                              ),
+                            );
+                          }else{
+                            return Container();
+                          }
+                        },
                       ),
                     )
                   ],
@@ -92,6 +108,40 @@ class Header extends StatelessWidget {
           )
         ]
       ),
+    );
+  }
+
+  Widget UserInfo(String image, String name){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Container(
+            width: 66,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                fit: BoxFit.fill,
+                image: image != null ? NetworkImage(image) : AssetImage('assets/images/person.png')
+              )
+            ),
+
+          ),
+        ),
+        SizedBox(height: 6,),
+        Text(
+          name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.comfortaa(
+            fontSize: 18,
+            color: Colors.white,
+            fontWeight: FontWeight.bold
+          ),
+        )
+      ],
     );
   }
 }

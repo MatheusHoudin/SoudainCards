@@ -29,6 +29,7 @@ class UserDataRepositoryImpl extends UserDataRepository {
     try {
       if (isConnected) {
         final sessionModel = await sessionLocalDataSource.getCachedSession();
+
         final userData = await remoteDataSource.getUserData(sessionModel.userModel.id);
         await localDataSource.cacheUserData(userData);
 
@@ -41,6 +42,8 @@ class UserDataRepositoryImpl extends UserDataRepository {
       return Left(UserDataDoesNotExistFailure());
     } on ServerException {
       return Left(ServerFailure());
+    } on SessionDoesNotExistException {
+      return Left(SessionDoesNotExistFailure());
     }
   }
 

@@ -32,6 +32,8 @@ class UserDataBloc extends Bloc<UserDataEvent, UserDataState> {
             yield UserDataDoesNotExistState();
           }else if(failure is ServerFailure) {
             yield ErrorState();
+          }else if(failure is SessionDoesNotExistFailure) {
+            yield SessionDoesNotExistState();
           }
         },
         (userDataModel) async* {

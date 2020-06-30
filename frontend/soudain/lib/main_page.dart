@@ -10,9 +10,7 @@ import 'package:soudain/injection_container.dart';
 class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SessionModel sessionModel = sl<SessionBox>().box.get(session);
-
-    return sessionModel == null ? LoginPage() : MainPageView();
+    return MainPageView();
   }
 
 }

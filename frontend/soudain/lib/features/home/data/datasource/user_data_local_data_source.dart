@@ -5,7 +5,7 @@ import 'package:soudain/features/home/data/model/user_data_model.dart';
 
 abstract class UserDataLocalDataSource {
   Future<UserDataModel> getCachedUserData();
-  Future<int> cacheUserData(UserDataModel userDataModel);
+  Future<void> cacheUserData(UserDataModel userDataModel);
 }
 
 class UserDataLocalDataSourceImpl extends UserDataLocalDataSource {
@@ -14,7 +14,7 @@ class UserDataLocalDataSourceImpl extends UserDataLocalDataSource {
   UserDataLocalDataSourceImpl({this.userDataBox});
 
   @override
-  Future<int> cacheUserData(UserDataModel userDataModel) {
+  Future<void> cacheUserData(UserDataModel userDataModel) {
     return userDataBox.box.put(userData, userDataModel);
   }
 

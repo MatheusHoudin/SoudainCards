@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
+import 'package:soudain/features/home/presentation/bloc/user_data_bloc.dart';
 import 'package:soudain/features/home/presentation/pages/home.dart';
 import 'package:soudain/features/main_page_view/presentation/widgets/cards_floating_button.dart';
 import 'package:soudain/injection_container.dart';
@@ -57,7 +59,10 @@ class _MainPageViewState extends State<MainPageView> {
       body: PageView(
         controller: pageController,
         children: [
-          Home(),
+          BlocProvider(
+            create: (BuildContext context) => sl<UserDataBloc>(),
+            child: Home(),
+          ),
           Scaffold(body: Center(child: Text('PLAY'),),),
           Scaffold(body: Center(child: Text('PROGRESS'),),),
         ],

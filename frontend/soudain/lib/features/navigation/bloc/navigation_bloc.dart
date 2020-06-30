@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:soudain/features/forgot_password/presentation/pages/forgot_password.dart';
 import 'package:soudain/features/home/presentation/pages/home.dart';
+import 'package:soudain/features/login/presentation/pages/login_page.dart';
 import 'package:soudain/features/signup/presentation/pages/sign_up_page.dart';
 
 part 'navigation_event.dart';
@@ -32,6 +33,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       state.push(MaterialPageRoute(builder: (context) => ForgotPassword()));
     }else if(event is NavigateToSignUpPageEvent) {
       state.push(MaterialPageRoute(builder: (context) => SignUpPage()));
+    }else if(event is HomeToLoginNavigationEvent) {
+      state.push(MaterialPageRoute(builder: (context) => LoginPage()));
     }
   }
 }

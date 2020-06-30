@@ -10,6 +10,12 @@ class LoginToHomeNavigationEvent extends NavigationEvent {
   List<Object> get props => [];
 }
 
+class HomeToLoginNavigationEvent extends NavigationEvent {
+
+  @override
+  List<Object> get props => [];
+}
+
 class NavigateToSignUpPageEvent extends NavigationEvent {
   @override
   List<Object> get props => [];

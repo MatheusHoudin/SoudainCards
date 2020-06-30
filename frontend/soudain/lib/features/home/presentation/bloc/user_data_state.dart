@@ -30,6 +30,11 @@ class UserDataDoesNotExistState extends UserDataState {
   List<Object> get props => [];
 }
 
+class SessionDoesNotExistState extends UserDataState {
+  @override
+  List<Object> get props => [];
+}
+
 class ErrorState extends UserDataState {
   @override
   List<Object> get props => [];

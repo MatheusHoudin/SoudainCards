@@ -92,7 +92,8 @@ Future<void> setup()async {
     dio: sl()
   ));
   sl.registerLazySingleton<UserDataRemoteDataSource>(() => UserDataRemoteDataSourceImpl(
-    dio: sl()
+    dio: sl(),
+    sessionBox: sl()
   ));
   sl.registerLazySingleton<UserDataLocalDataSource>(() => UserDataLocalDataSourceImpl(
     userDataBox: sl()
