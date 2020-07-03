@@ -2,9 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:oktoast/oktoast.dart';
+import 'package:soudain/core/commom_widgets/commom_button.dart';
+import 'package:soudain/core/commom_widgets/loading_card.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/features/home/presentation/bloc/user_data_bloc.dart';
-import 'package:soudain/features/home/presentation/widgets/logo.dart';
+import 'file:///C:/Users/mathe/OneDrive/Documentos/GitHub/SoudainCards/frontend/soudain/lib/core/commom_widgets/deck_format.dart';
 import 'package:soudain/features/home/presentation/widgets/oval_red_ball.dart';
 import 'package:soudain/features/navigation/bloc/navigation_bloc.dart';
 
@@ -17,7 +20,9 @@ class _HeaderState extends State<Header> {
 
   @override
   void initState() {
-    BlocProvider.of<UserDataBloc>(context).add(GetUserDataEvent());
+    BlocProvider.of<UserDataBloc>(context).add(GetUserDataEvent(
+      onError: (message) => showToast(message, position: ToastPosition.bottom, duration: Duration(seconds: 2)),
+    ));
     super.initState();
   }
   @override
@@ -33,7 +38,7 @@ class _HeaderState extends State<Header> {
           children: [
             Expanded(
               flex: 8,
-              child: Logo(
+              child: DeckFormat(
                 centerWidget: OvalRedBall(),
                 cardsMargin: 10,
                 cardBorderRadius: 20,
@@ -57,21 +62,21 @@ class _HeaderState extends State<Header> {
                           if (state is UserDataInitialState) {
                             return Container();
                           }else if(state is LoadingUserDataState) {
-                            return Text('loading');
-                          }else if(state is LoadedUserDataState) {
-                            return UserInfo(state.userDataModel.avatar, state.userDataModel.name);
-                          }else if(state is UserDataDoesNotExistState){
-                            return Text('User does not exist');
-                          }else if(state is SessionDoesNotExistState){
-                            return GestureDetector(
-                              onTap: () => BlocProvider.of<NavigationBloc>(context).add(HomeToLoginNavigationEvent()),
-                              child: Container(
-                                color: Colors.black,
-                                height: 30,
-                                width: 50,
-
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 18
+                              ),
+                              child: LoadingCard(
+                                height: 16,
+                                horizontalMargin: 80,
                               ),
                             );
+                          }else if(state is LoadedUserDataState) {
+                            return UserInfo(state.userDataModel.avatar, state.userDataModel.name);
+                          }else if(state is SessionDoesNotExistState || state is UserDataDoesNotExistState){
+                            return GoToLoginPageWidget();
+                          }else if(state is ErrorState){
+                            return GoToLoginPageWidget();
                           }else{
                             return Container();
                           }
@@ -142,6 +147,22 @@ class _HeaderState extends State<Header> {
           ),
         )
       ],
+    );
+  }
+
+  Widget GoToLoginPageWidget(){
+    return Container(
+      padding: EdgeInsets.symmetric(
+        vertical: 18
+      ),
+      child: CommomButton(
+        buttonColor: positiveButtonColor,
+        buttonText: 'Sign Up',
+        buttonTextColor: Colors.white,
+        buttonTextSize: 20,
+        buttonPadding: 8,
+        buttonFunction: () => BlocProvider.of<NavigationBloc>(context).add(HomeToLoginNavigationEvent()),
+      ),
     );
   }
 }

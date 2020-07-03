@@ -50,7 +50,7 @@ class LoginPage extends StatelessWidget {
     return CommomBaseFormPage(
       headerText: 'Start your Soudain journey',
       headerTextSize: headerTextSize,
-      headerBackArrowFunction: () => null,
+      headerBackArrowFunction: () => BlocProvider.of<NavigationBloc>(context).add(PopEvent()),
       contentWidgets: [
         SizedBox(
           height: 10,

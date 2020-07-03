@@ -6,6 +6,7 @@ class CommomButton extends StatelessWidget {
   final Color buttonColor;
   final Color buttonTextColor;
   final double buttonTextSize;
+  final double buttonPadding;
   final Function buttonFunction;
 
   CommomButton({
@@ -13,7 +14,8 @@ class CommomButton extends StatelessWidget {
     this.buttonFunction,
     this.buttonText,
     this.buttonTextColor,
-    this.buttonTextSize
+    this.buttonTextSize,
+    this.buttonPadding = 12
   });
 
   @override
@@ -26,7 +28,7 @@ class CommomButton extends StatelessWidget {
       ),
       onPressed: () => this.buttonFunction(),
       child: Padding(
-        padding: EdgeInsets.all(12),
+        padding: EdgeInsets.all(buttonPadding),
         child: Text(
           this.buttonText,
           style: GoogleFonts.comfortaa(

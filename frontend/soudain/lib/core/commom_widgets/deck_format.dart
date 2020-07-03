@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Logo extends StatelessWidget {
+class DeckFormat extends StatelessWidget {
   final Widget centerWidget;
   final double cardsMargin;
   final double cardBorderRadius;
@@ -9,7 +9,7 @@ class Logo extends StatelessWidget {
   final Color secondaryColor;
   final Function onPressed;
 
-  Logo({
+  DeckFormat({
     this.centerWidget,
     this.cardsMargin,
     this.cardBorderRadius,

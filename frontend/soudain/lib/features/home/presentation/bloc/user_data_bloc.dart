@@ -29,10 +29,14 @@ class UserDataBloc extends Bloc<UserDataEvent, UserDataState> {
       yield* response.fold(
         (failure) async* {
           if(failure is UserDataDoesNotExistFailure) {
+            print('userdata does not');
             yield UserDataDoesNotExistState();
           }else if(failure is ServerFailure) {
             yield ErrorState();
+            event.onError('There was an error when trying to get your profile data');
+            print('failure');
           }else if(failure is SessionDoesNotExistFailure) {
+            print('session does not exist');
             yield SessionDoesNotExistState();
           }
         },

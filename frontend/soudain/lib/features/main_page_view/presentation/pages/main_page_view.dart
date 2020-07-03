@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:soudain/core/constants/colors.dart';
@@ -5,6 +7,7 @@ import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/features/home/presentation/bloc/user_data_bloc.dart';
 import 'package:soudain/features/home/presentation/pages/home.dart';
 import 'package:soudain/features/main_page_view/presentation/widgets/cards_floating_button.dart';
+import 'package:soudain/features/play/presentation/pages/play_page.dart';
 import 'package:soudain/injection_container.dart';
 
 class MainPageView extends StatefulWidget {
@@ -15,11 +18,17 @@ class MainPageView extends StatefulWidget {
 class _MainPageViewState extends State<MainPageView> {
   bool isFloatingButtonOpen;
   PageController pageController;
+  IconData pageIconData;
+  int currentPage;
+  List<IconData> icons = [Icons.home,Icons.play_arrow,Icons.show_chart];
 
   @override
   void initState() {
     this.isFloatingButtonOpen = false;
-    this.pageController = PageController(initialPage: 0);
+    currentPage = 0;
+    this.pageController = PageController(initialPage: currentPage);
+
+    pageIconData = Icons.home;
     super.initState();
   }
   @override
@@ -58,12 +67,18 @@ class _MainPageViewState extends State<MainPageView> {
       backgroundColor: secondaryColor,
       body: PageView(
         controller: pageController,
+        onPageChanged: (page) {
+          setState(() {
+            currentPage = page;
+            pageIconData = icons[page];
+          });
+        },
         children: [
           BlocProvider(
             create: (BuildContext context) => sl<UserDataBloc>(),
             child: Home(),
           ),
-          Scaffold(body: Center(child: Text('PLAY'),),),
+          PlayPage(),
           Scaffold(body: Center(child: Text('PROGRESS'),),),
         ],
       ),
@@ -80,28 +95,34 @@ class _MainPageViewState extends State<MainPageView> {
                 duration: Duration(seconds: 1),
                 width: isFloatingButtonOpen ? 800 : floatingCardWidth,
                 child: CardsFloatingButton(
-                  icon: Icons.home,
+                  icon: pageIconData,
                   isDeckStackOpen: this.isFloatingButtonOpen,
                   onDeckTap: () {
                     setState(() {
                       this.isFloatingButtonOpen = true;
                     });
                   },
-                  nagivateToHomeFunction: () => this.pageController.animateToPage(
-                    0,
-                    duration: Duration(milliseconds: 500),
-                    curve: pageViewAnimationCurve
-                  ),
-                  nagivateToPlayFunction: () => this.pageController.animateToPage(
-                    1,
-                    duration: Duration(milliseconds: 500),
-                    curve: pageViewAnimationCurve
-                  ),
-                  nagivateToProgressFunction: () => this.pageController.animateToPage(
-                    2,
-                    duration: Duration(milliseconds: 500),
-                    curve: pageViewAnimationCurve
-                  ),
+                  nagivateToHomeFunction: () {
+                    this.pageController.animateToPage(
+                      0,
+                      duration: Duration(milliseconds: 500),
+                      curve: pageViewAnimationCurve
+                    );
+                  },
+                  nagivateToPlayFunction: () {
+                    this.pageController.animateToPage(
+                      1,
+                      duration: Duration(milliseconds: 500),
+                      curve: pageViewAnimationCurve
+                    );
+                  },
+                  nagivateToProgressFunction: () {
+                    this.pageController.animateToPage(
+                      2,
+                      duration: Duration(milliseconds: 500),
+                      curve: pageViewAnimationCurve
+                    );
+                  },
                 ),
               ),
             ),
@@ -128,8 +149,10 @@ class _MainPageViewState extends State<MainPageView> {
         color: Colors.white,
         child: InkWell(
           onTap: (){
-            setState(() {
-              this.isFloatingButtonOpen = false;
+            Future.delayed(Duration(milliseconds: 500), (){
+              setState(() {
+                this.isFloatingButtonOpen = false;
+              });
             });
           },
           child: Padding(

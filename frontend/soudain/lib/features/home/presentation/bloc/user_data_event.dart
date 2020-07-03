@@ -5,6 +5,10 @@ abstract class UserDataEvent extends Equatable {
 }
 
 class GetUserDataEvent extends UserDataEvent {
+  Function onError;
+
+  GetUserDataEvent({this.onError});
+
   @override
   List<Object> get props => [];
 
