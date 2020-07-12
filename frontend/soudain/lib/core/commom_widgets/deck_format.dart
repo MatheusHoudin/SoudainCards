@@ -39,10 +39,9 @@ class DeckFormat extends StatelessWidget {
       ),
       color: color,
       elevation: elevation,
-
       child: onPressed != null ? RawMaterialButton(
         splashColor: Colors.white,
-        onPressed: () => onPressed,
+        onPressed: () => onPressed(),
         child: Center(
           child: showCenterWidget ? centerWidget : Container(),
         ),

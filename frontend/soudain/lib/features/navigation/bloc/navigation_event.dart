@@ -30,3 +30,8 @@ class NavigateToForgotPasswordPageEvent extends NavigationEvent {
   @override
   List<Object> get props => [];
 }
+
+class NavigateToCollectionCreationPageEvent extends NavigationEvent {
+  @override
+  List<Object> get props => [];
+}

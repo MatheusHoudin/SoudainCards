@@ -107,7 +107,7 @@ class ForgotPassword extends StatelessWidget {
       height: iconSize,
       width: iconSize,
       child: Image.asset(
-        'assets/images/lock.png',
+        'assets/images/locker.png',
       ),
     );
   }

@@ -74,10 +74,7 @@ class _MainPageViewState extends State<MainPageView> {
           });
         },
         children: [
-          BlocProvider(
-            create: (BuildContext context) => sl<UserDataBloc>(),
-            child: Home(),
-          ),
+          Home(),
           PlayPage(),
           Scaffold(body: Center(child: Text('PROGRESS'),),),
         ],

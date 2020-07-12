@@ -3,11 +3,13 @@ import 'package:google_fonts/google_fonts.dart';
 
 class TitleContentSection extends StatelessWidget {
   final String title;
+  final double leftPadding;
   final Widget content;
 
   TitleContentSection({
     this.title,
-    this.content
+    this.content,
+    this.leftPadding
   });
 
   @override
@@ -16,7 +18,7 @@ class TitleContentSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(bottom: 14),
+          padding: EdgeInsets.only(bottom: 14, left: leftPadding),
           child: Text(
             this.title,
             style: GoogleFonts.comfortaa(

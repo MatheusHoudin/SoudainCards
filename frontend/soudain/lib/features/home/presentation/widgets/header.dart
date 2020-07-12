@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:soudain/injection_container.dart';
 import 'package:soudain/core/commom_widgets/commom_button.dart';
 import 'package:soudain/core/commom_widgets/loading_card.dart';
+import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/features/home/presentation/bloc/user_data_bloc.dart';
-import 'file:///C:/Users/mathe/OneDrive/Documentos/GitHub/SoudainCards/frontend/soudain/lib/core/commom_widgets/deck_format.dart';
+import 'package:soudain/core/commom_widgets/deck_format.dart';
 import 'package:soudain/features/home/presentation/widgets/oval_red_ball.dart';
 import 'package:soudain/features/navigation/bloc/navigation_bloc.dart';
 
@@ -27,20 +29,141 @@ class _HeaderState extends State<Header> {
   }
   @override
   Widget build(BuildContext context) {
+    double cardBorderRadius = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: false,
+        smallPorcentage: 2,
+        mediumPorcentage: 1.8,
+        largePorcentage: 2
+      ),
+    );
+    double cardPadding = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: true,
+        smallPorcentage: 3,
+        mediumPorcentage: 3,
+        largePorcentage: 3
+      ),
+    );
+    double userDataPadding = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: false,
+        smallPorcentage: 2,
+        mediumPorcentage: 3,
+        largePorcentage: 4
+      ),
+    );
+    double cardsMarging = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: false,
+        smallPorcentage: 2,
+        mediumPorcentage: 2,
+        largePorcentage: 2.5
+      ),
+    );
+    double welcomeTextSize = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: false,
+        smallPorcentage: 4,
+        mediumPorcentage: 4.5,
+        largePorcentage: 3.5
+      ),
+    );
+    double soudainTextSize = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: false,
+        smallPorcentage: 6,
+        mediumPorcentage: 7,
+        largePorcentage: 5.5
+      ),
+    );
+    double signUpPadding = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: true,
+        smallPorcentage: 4,
+        mediumPorcentage: 0.5,
+        largePorcentage: 2.5
+      ),
+    );
+    double loadingCardPadding = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: true,
+        smallPorcentage: 2,
+        mediumPorcentage: 1,
+        largePorcentage: 2
+      ),
+    );
+    double loadingCardHorizontalMargin = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: false,
+        smallPorcentage: 16,
+        mediumPorcentage: 18,
+        largePorcentage: 20
+      ),
+    );
+    double userAvatarWidth = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: false,
+        smallPorcentage: 18,
+        mediumPorcentage: 13,
+        largePorcentage: 20
+      ),
+    );
+    double userNameTextSize = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: true,
+        smallPorcentage: 2,
+        mediumPorcentage: 3,
+        largePorcentage: 2.4
+      ),
+    );
+    double avatarNameSeparatorSize = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: true,
+        smallPorcentage: 2,
+        mediumPorcentage: 0.5,
+        largePorcentage: 1.8
+      ),
+    );
+    double avatarSoudainSeparatorSize = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: true,
+        smallPorcentage: 2,
+        mediumPorcentage: 1,
+        largePorcentage: 1.6
+      ),
+    );
     return Card(
       color: primaryColor,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(4))
+        borderRadius: BorderRadius.all(Radius.circular(cardBorderRadius))
       ),
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 8,
+      child: Row(
+        children: [
+          Expanded(
+            flex: 8,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 20,
+                top: cardPadding,
+                bottom: cardPadding,
+              ),
               child: DeckFormat(
                 centerWidget: OvalRedBall(),
-                cardsMargin: 10,
+                cardsMargin: cardsMarging,
                 cardBorderRadius: 20,
                 cardColor: Colors.white,
                 secondaryColor: Colors.white,
@@ -48,66 +171,72 @@ class _HeaderState extends State<Header> {
                 isLeftMargin: true,
               ),
             ),
-            Expanded(
-              flex: 12,
-              child: Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Column(
-                  children: [
-                    Welcome(),
-                    SizedBox(height: 6,),
-                    Expanded(
-                      child: BlocBuilder<UserDataBloc, UserDataState>(
-                        builder: (context, state) {
-                          if (state is UserDataInitialState) {
-                            return Container();
-                          }else if(state is LoadingUserDataState) {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 18
-                              ),
-                              child: LoadingCard(
-                                height: 16,
-                                horizontalMargin: 80,
-                              ),
-                            );
-                          }else if(state is LoadedUserDataState) {
-                            return UserInfo(state.userDataModel.avatar, state.userDataModel.name);
-                          }else if(state is SessionDoesNotExistState || state is UserDataDoesNotExistState){
-                            return GoToLoginPageWidget();
-                          }else if(state is ErrorState){
-                            return GoToLoginPageWidget();
-                          }else{
-                            return Container();
-                          }
-                        },
-                      ),
-                    )
-                  ],
-                ),
+          ),
+          Expanded(
+            flex: 12,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 10,
+                top: userDataPadding,
+                bottom: userDataPadding,
               ),
-            )
-          ],
-        ),
+              child: Column(
+                children: [
+                  Welcome(
+                    welcomeTextSize,
+                    soudainTextSize
+                  ),
+                  SizedBox(height: avatarSoudainSeparatorSize,),
+                  Expanded(
+                    child: BlocBuilder<UserDataBloc, UserDataState>(
+                      builder: (context, state) {
+                        if (state is UserDataInitialState) {
+                          return Container();
+                        }else if(state is LoadingUserDataState) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: loadingCardPadding
+                            ),
+                            child: LoadingCard(
+                              horizontalMargin: loadingCardHorizontalMargin,
+                            ),
+                          );
+                        }else if(state is LoadedUserDataState) {
+                          return UserInfo(state.userDataModel.avatar, state.userDataModel.name,userAvatarWidth,userNameTextSize,avatarNameSeparatorSize);
+                        }else if(state is SessionDoesNotExistState || state is UserDataDoesNotExistState){
+                          return GoToLoginPageWidget(signUpPadding);
+                        }else if(state is ErrorState){
+                          return GoToLoginPageWidget(signUpPadding);
+                        }else{
+                          return Container();
+                        }
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
 
-  Widget Welcome() {
+  Widget Welcome(double welcomeTextSize, double soudainTextSize) {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
         text: 'WELCOME TO\n',
         style: GoogleFonts.comfortaa(
           color: Colors.white,
-          fontSize: 18
+          fontSize: welcomeTextSize
         ),
         children: [
           TextSpan(
             text: 'SOUDAIN',
             style: GoogleFonts.comfortaa(
                color: Colors.white,
-               fontSize: 26,
+               fontSize: soudainTextSize,
                fontWeight: FontWeight.bold
             )
           )
@@ -116,14 +245,14 @@ class _HeaderState extends State<Header> {
     );
   }
 
-  Widget UserInfo(String image, String name){
+  Widget UserInfo(String image, String name,double avatarWidth,double userNameSize,double avatarNameSeparatorSize){
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
           child: Container(
-            width: 66,
+            width: avatarWidth,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
@@ -134,14 +263,14 @@ class _HeaderState extends State<Header> {
 
           ),
         ),
-        SizedBox(height: 6,),
+        SizedBox(height: avatarNameSeparatorSize,),
         Text(
           name,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
           style: GoogleFonts.comfortaa(
-            fontSize: 18,
+            fontSize: userNameSize,
             color: Colors.white,
             fontWeight: FontWeight.bold
           ),
@@ -150,10 +279,10 @@ class _HeaderState extends State<Header> {
     );
   }
 
-  Widget GoToLoginPageWidget(){
+  Widget GoToLoginPageWidget(double signUpPadding){
     return Container(
       padding: EdgeInsets.symmetric(
-        vertical: 18
+        vertical: signUpPadding
       ),
       child: CommomButton(
         buttonColor: positiveButtonColor,
