@@ -9,6 +9,11 @@ import 'package:soudain/core/hive/session_box.dart';
 import 'package:soudain/core/hive/user_data_box.dart';
 import 'package:soudain/core/network/network_info.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
+import 'package:soudain/features/collection/create/data/datasources/collection_remote_data_source.dart';
+import 'package:soudain/features/collection/create/data/repository/collection_repository_impl.dart';
+import 'package:soudain/features/collection/create/domain/repository/collection_repository.dart';
+import 'package:soudain/features/collection/create/domain/usecases/collection_create_use_case.dart';
+import 'package:soudain/features/collection/create/presentation/bloc/collection_create_bloc.dart';
 import 'package:soudain/features/forgot_password/data/datasources/forgot_password_remote_data_source.dart';
 import 'package:soudain/features/forgot_password/data/repository/forgot_password_repository_impl.dart';
 import 'package:soudain/features/forgot_password/domain/repository/forgot_password_repository.dart';
@@ -50,6 +55,7 @@ Future<void> setup()async {
   sl.registerFactory<SignUpBloc>(() => SignUpBloc(signUpUseCase: sl(), createSessionUseCase: sl()));
   sl.registerFactory<ForgotPasswordBloc>(() => ForgotPasswordBloc(useCase: sl()));
   sl.registerFactory<UserDataBloc>(() => UserDataBloc(useCase: sl()));
+  sl.registerFactory<CollectionCreateBloc>(() => CollectionCreateBloc(useCase: sl()));
 
   sl.registerLazySingleton<CreateSessionUseCase>(() => CreateSessionUseCase(sessionRepository: sl()));
   sl.registerLazySingleton<CreateFacebookSessionUseCase>(() => CreateFacebookSessionUseCase(sessionRepository: sl()));
@@ -57,6 +63,7 @@ Future<void> setup()async {
   sl.registerLazySingleton<SignUpUseCase>(() => SignUpUseCase(signUpRepository: sl()));
   sl.registerLazySingleton<ForgotPasswordUseCase>(() => ForgotPasswordUseCase(repository: sl()));
   sl.registerLazySingleton<UserDataUseCase>(() => UserDataUseCase(userDataRepository: sl()));
+  sl.registerLazySingleton<CollectionCreateUseCase>(() => CollectionCreateUseCase(collectionRepository: sl()));
 
 
   sl.registerLazySingleton<SessionRepository>(() => SessionRepositoryImpl(
@@ -78,6 +85,11 @@ Future<void> setup()async {
     localDataSource: sl(),
     sessionLocalDataSource: sl()
   ));
+  sl.registerLazySingleton<CollectionRepository>(() => CollectionRepositoryImpl(
+    remoteDataSource: sl(),
+    networkInfo: sl(),
+    sessionLocalDataSource: sl()
+  ));
 
   sl.registerLazySingleton<SessionRemoteDataSource>(() => SessionRemoteDataSourceImpl(
     dio: sl()
@@ -97,6 +109,9 @@ Future<void> setup()async {
   ));
   sl.registerLazySingleton<UserDataLocalDataSource>(() => UserDataLocalDataSourceImpl(
     userDataBox: sl()
+  ));
+  sl.registerLazySingleton<CollectionRemoteDataSource>(() => CollectionRemoteDataSourceImpl(
+    client: sl()
   ));
 
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(

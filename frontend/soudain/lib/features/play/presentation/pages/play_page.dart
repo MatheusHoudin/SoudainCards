@@ -48,7 +48,7 @@ class PlayPage extends StatelessWidget {
               ),
               child: DeckFormat(
                 centerWidget: OvalRedBall(
-                  isAddButton: true,
+                  icon: Icons.add,
                 ),
                 cardsMargin: 10,
                 cardBorderRadius: 20,
@@ -137,7 +137,7 @@ class PlayPage extends StatelessWidget {
         ),
         child: DeckFormat(
           centerWidget: OvalRedBall(
-            isAddButton: true,
+            icon: Icons.add,
           ),
           cardsMargin: 10,
           cardBorderRadius: 20,

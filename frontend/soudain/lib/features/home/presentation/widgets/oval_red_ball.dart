@@ -4,9 +4,9 @@ import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/injection_container.dart';
 
 class OvalRedBall extends StatelessWidget {
-  bool isAddButton;
+  final IconData icon;
 
-  OvalRedBall({this.isAddButton = false});
+  OvalRedBall({this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class OvalRedBall extends StatelessWidget {
       child: ClipOval(
         child: Container(
           color: primaryColor,
-          child: isAddButton ? AddButton() : Container(),
+          child: icon != null ? AddButton() : Container(),
         ),
       ),
     );
@@ -33,7 +33,7 @@ class OvalRedBall extends StatelessWidget {
   Widget AddButton() {
     return Center(
       child: Icon(
-        Icons.add,
+        this.icon,
         color: Colors.white,
         size: 40,
       ),

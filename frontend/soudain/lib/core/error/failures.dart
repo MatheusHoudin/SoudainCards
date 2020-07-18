@@ -80,3 +80,13 @@ class GoogleLoginCancelledByUserFailure extends Failure {
   @override
   List<Object> get props => [];
 }
+
+class ImageDoesNotExistFailure extends Failure {
+  @override
+  List<Object> get props => [];
+}
+
+class CollectionAlreadyExistsFailure extends Failure {
+  @override
+  List<Object> get props => [];
+}

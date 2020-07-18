@@ -17,7 +17,6 @@ class CollectionDecksController {
       .then(async (_) => {
         const collectionValue =
           req.params.collection == 'default' ? null : req.params.collection;
-        console.log(collectionValue);
         if (collectionValue) {
           const userHasCollection = await UserCollectionDeck.findOne({
             where: {
@@ -97,14 +96,9 @@ class CollectionDecksController {
   }
   async store(req, res) {
     const schema = Yup.object().shape({
-      title: Yup.string().required('The collection title is required'),
-      description: Yup.string().required(
-        'The collection description is required'
-      ),
+      title: Yup.string('Title must be a string').required('The collection title is required'),
+      description: Yup.string('Description must be a string'),
       collection_image: Yup.number('The collection image must be a number'),
-      subject: Yup.number('The collection subject must be a number').required(
-        'The collection subject is required'
-      ),
     });
 
     schema
@@ -130,25 +124,6 @@ class CollectionDecksController {
             }
           }
 
-          if (req.body.subject) {
-            const subject = await Subject.findOne({
-              where: {
-                id: req.body.subject,
-              },
-            });
-
-            if (!subject) {
-              return res.status(404).json({
-                code: 404,
-                errors: {
-                  field: 'subject',
-                  message: 'The subject you provided does not exist',
-                },
-                message: 'The subject you provided does not exist',
-              });
-            }
-          }
-
           const collectionWithNameAlreadyExists = await CollectionDecks.findOne(
             {
               where: {
@@ -159,9 +134,12 @@ class CollectionDecksController {
           );
 
           if (collectionWithNameAlreadyExists) {
-            return res.status(400).json({
-              code: 400,
-              data: collectionWithNameAlreadyExists,
+            return res.status(409).json({
+              code: 409,
+              error: {
+                field: 'name',
+                message: `A collection with the name ${req.body.title} already exists`,
+              },
               message: `A collection with the name ${req.body.title} already exists`,
             });
           }
@@ -172,7 +150,6 @@ class CollectionDecksController {
             collection_image: req.body.collection_image
               ? req.body.collection_image
               : null,
-            subject: req.body.subject,
             creator: req.userId,
           });
 

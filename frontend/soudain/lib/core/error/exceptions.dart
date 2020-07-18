@@ -39,3 +39,5 @@ class ServerException implements Exception {}
 class FacebookLoginCancelledByUserException implements Exception {}
 
 class GoogleLoginCancelledByUserException implements Exception {}
+class ImageDoesNotExistException implements Exception {}
+class CollectionAlreadyExistsException implements Exception {}

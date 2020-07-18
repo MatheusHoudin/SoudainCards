@@ -69,8 +69,8 @@ class _HeaderState extends State<Header> {
       context: context,
       portraitSizeAdapter: SizeAdapter(
         isHeight: false,
-        smallPorcentage: 4,
-        mediumPorcentage: 4.5,
+        smallPorcentage: 4.5,
+        mediumPorcentage: 4,
         largePorcentage: 3.5
       ),
     );
@@ -78,8 +78,8 @@ class _HeaderState extends State<Header> {
       context: context,
       portraitSizeAdapter: SizeAdapter(
         isHeight: false,
-        smallPorcentage: 6,
-        mediumPorcentage: 7,
+        smallPorcentage: 7,
+        mediumPorcentage: 6,
         largePorcentage: 5.5
       ),
     );
@@ -89,7 +89,7 @@ class _HeaderState extends State<Header> {
         isHeight: true,
         smallPorcentage: 4,
         mediumPorcentage: 0.5,
-        largePorcentage: 2.5
+        largePorcentage: 1.4
       ),
     );
     double loadingCardPadding = sl<DeviceSizeAdapter>().getResponsiveSize(
@@ -134,7 +134,7 @@ class _HeaderState extends State<Header> {
         isHeight: true,
         smallPorcentage: 2,
         mediumPorcentage: 0.5,
-        largePorcentage: 1.8
+        largePorcentage: 0.5
       ),
     );
     double avatarSoudainSeparatorSize = sl<DeviceSizeAdapter>().getResponsiveSize(
@@ -181,37 +181,36 @@ class _HeaderState extends State<Header> {
                 bottom: userDataPadding,
               ),
               child: Column(
+                
                 children: [
                   Welcome(
                     welcomeTextSize,
                     soudainTextSize
                   ),
                   SizedBox(height: avatarSoudainSeparatorSize,),
-                  Expanded(
-                    child: BlocBuilder<UserDataBloc, UserDataState>(
-                      builder: (context, state) {
-                        if (state is UserDataInitialState) {
-                          return Container();
-                        }else if(state is LoadingUserDataState) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: loadingCardPadding
-                            ),
-                            child: LoadingCard(
-                              horizontalMargin: loadingCardHorizontalMargin,
-                            ),
-                          );
-                        }else if(state is LoadedUserDataState) {
-                          return UserInfo(state.userDataModel.avatar, state.userDataModel.name,userAvatarWidth,userNameTextSize,avatarNameSeparatorSize);
-                        }else if(state is SessionDoesNotExistState || state is UserDataDoesNotExistState){
-                          return GoToLoginPageWidget(signUpPadding);
-                        }else if(state is ErrorState){
-                          return GoToLoginPageWidget(signUpPadding);
-                        }else{
-                          return Container();
-                        }
-                      },
-                    ),
+                  BlocBuilder<UserDataBloc, UserDataState>(
+                    builder: (context, state) {
+                      if (state is UserDataInitialState) {
+                        return Container();
+                      }else if(state is LoadingUserDataState) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: loadingCardPadding
+                          ),
+                          child: LoadingCard(
+                            horizontalMargin: loadingCardHorizontalMargin,
+                          ),
+                        );
+                      }else if(state is LoadedUserDataState) {
+                        return Expanded(child: UserInfo(state.userDataModel.avatar, state.userDataModel.name,userAvatarWidth,userNameTextSize,avatarNameSeparatorSize));
+                      }else if(state is SessionDoesNotExistState || state is UserDataDoesNotExistState){
+                        return GoToLoginPageWidget(signUpPadding);
+                      }else if(state is ErrorState){
+                        return GoToLoginPageWidget(signUpPadding);
+                      }else{
+                        return Container();
+                      }
+                    },
                   )
                 ],
               ),

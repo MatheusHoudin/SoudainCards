@@ -9,6 +9,7 @@ class MainTextField extends StatelessWidget {
   final bool obscure;
   final TextInputType textInputType;
   final double textSize;
+  final int maxLines;
 
   final FocusNode focusNode;
 
@@ -22,7 +23,8 @@ class MainTextField extends StatelessWidget {
     this.textSize,
     this.errorMessage,
     this.controller,
-    this.focusNode
+    this.focusNode,
+    this.maxLines = 1
   });
 
   @override
@@ -38,6 +40,7 @@ class MainTextField extends StatelessWidget {
         obscureText: obscure,
         keyboardType: textInputType,
         style: CustomTextStyle(textSize),
+        maxLines: maxLines,
         decoration: InputDecoration(
           errorText: errorMessage,
           prefixIcon: Icon(
