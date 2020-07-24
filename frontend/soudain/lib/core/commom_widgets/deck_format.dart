@@ -42,12 +42,8 @@ class DeckFormat extends StatelessWidget {
       child: onPressed != null ? RawMaterialButton(
         splashColor: Colors.white,
         onPressed: () => onPressed(),
-        child: Center(
-          child: showCenterWidget ? centerWidget : Container(),
-        ),
-      ) : Center(
         child: showCenterWidget ? centerWidget : Container(),
-      ),
+      ) : showCenterWidget ? centerWidget : Container(),
     );
   }
 }

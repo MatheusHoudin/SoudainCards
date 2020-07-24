@@ -17,60 +17,60 @@ class CollectionCreateBloc extends Bloc<CollectionCreateEvent, CollectionCreateS
 
   @override
   CollectionCreateState get initialState => CollectionCreateFormState(
-    isCreatingCollection: true,
-    nameFieldError: null
+      isCreatingCollection: false,
+      nameFieldError: null
   );
 
   @override
   Stream<CollectionCreateState> mapEventToState(
-    CollectionCreateEvent event,
-  ) async* {
+      CollectionCreateEvent event,
+      ) async* {
     if( event is CreateCollectionEvent ) {
       if(event.name == null || event.name.isEmpty) {
         yield CollectionCreateFormState(
-          isCreatingCollection: true,
-          nameFieldError: collectionNameIsNotValid
+            isCreatingCollection: true,
+            nameFieldError: collectionNameIsNotValid
         );
       }else{
         yield CollectionCreateFormState(
-          isCreatingCollection: true,
-          nameFieldError: null
+            isCreatingCollection: true,
+            nameFieldError: null
         );
 
         final response = await useCase(CollectionParams(
-          name: event.name,
-          description: event.description,
-          image: event.image
+            name: event.name,
+            description: event.description,
+            image: event.image
         ));
 
         yield* response.fold(
-          (failure) async* {
-            if(failure is CollectionAlreadyExistsFailure) {
-              yield  CollectionCreateFormState(
-                isCreatingCollection: false,
-                nameFieldError: collectionAlreadyExistsValid
-              );
-            }else if(failure is ImageDoesNotExistFailure) {
-              yield  CollectionCreateFormState(
-                isCreatingCollection: false,
-                nameFieldError: null
-              );
+                (failure) async* {
+              if(failure is CollectionAlreadyExistsFailure) {
+                yield  CollectionCreateFormState(
+                    isCreatingCollection: false,
+                    nameFieldError: collectionAlreadyExistsValid
+                );
+              }else if(failure is ImageDoesNotExistFailure) {
+                yield  CollectionCreateFormState(
+                    isCreatingCollection: false,
+                    nameFieldError: null
+                );
 
-              event.onServerError('There was an error while uploading the collection image');
-            }else{
-              yield  CollectionCreateFormState(
-                isCreatingCollection: false,
-                nameFieldError: null
-              );
-              String message = failure is ServerFailure ? unexpectedServerError : noInternetConnection;
-              event.onServerError(message);
+                event.onServerError('There was an error while uploading the collection image');
+              }else{
+                yield  CollectionCreateFormState(
+                    isCreatingCollection: false,
+                    nameFieldError: null
+                );
+                String message = failure is ServerFailure ? unexpectedServerError : noInternetConnection;
+                event.onServerError(message);
+              }
+
+              event.collectionCreateFormKey.currentState.validate();
+            },
+                (collection) async* {
+              event.onSuccess();
             }
-
-            event.collectionCreateFormKey.currentState.validate();
-          },
-          (collection) async* {
-            event.onSuccess();
-          }
         );
       }
 

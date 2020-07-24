@@ -1,6 +1,7 @@
 const Yup = require('yup');
 const sequelize = require('sequelize')
 const CollectionDecks = require('../models/CollectionDecks');
+const File = require('../models/File');
 const UserCollectionDeck = require('../models/UserCollectionDeck');
 class CollectionController {
   async index(req, res) {
@@ -11,7 +12,13 @@ class CollectionController {
         where: {
           creator: user
         },
-
+        include: [
+          {
+            model: File,
+            as: 'file',
+            attributes: ['url', 'path']
+          },
+        ],
         attributes: {
           include: [
             [
@@ -20,7 +27,7 @@ class CollectionController {
                 where u.user=${user} and u.collection="CollectionDecks".id group by u.collection
               )`),
               'decksCount'
-            ]
+            ],
           ]
         }
       })

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:soudain/core/constants/colors.dart';
 
 class ErrorDialog extends StatelessWidget {
@@ -10,6 +11,9 @@ class ErrorDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10)
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -23,7 +27,7 @@ class ErrorDialog extends StatelessWidget {
             child: Text(
               message,
               textAlign: TextAlign.justify,
-              style: TextStyle(
+              style: GoogleFonts.comfortaa(
                 fontWeight: FontWeight.bold,
               ),
             ),

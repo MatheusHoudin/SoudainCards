@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:soudain/core/commom_widgets/commom_base_form_page.dart';
 import 'package:soudain/core/commom_widgets/commom_button.dart';
 import 'package:soudain/core/commom_widgets/deck_format.dart';
@@ -43,6 +45,15 @@ class _CollectionCreationState extends State<CollectionCreation> {
         largePorcentage: 20
       )
     );
+    double loadingHorizontalMargin = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: false,
+        smallPorcentage: 30,
+        mediumPorcentage: 30,
+        largePorcentage: 4
+      )
+    );
     return CommomBaseFormPage(
       headerText: 'Create your collection',
       headerTextSize: 16,
@@ -53,20 +64,23 @@ class _CollectionCreationState extends State<CollectionCreation> {
         SizedBox(
           height: 20,
         ),
-        CollectionForm()
+        CollectionForm(loadingHorizontalMargin)
       ],
     );
   }
 
-  Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
-
-    setState(() {
-      file = File(pickedFile.path);
-    });
+  Future getImage(ImageSource source) async {
+    final pickedFile = await picker.getImage(source: source);
+    if(pickedFile != null) {
+      setState(() {
+        file = File(pickedFile.path);
+      });
+    }
+    BlocProvider.of<NavigationBloc>(context).add(PopEvent());
   }
 
   Widget Picture(BuildContext context, double addButtomMargin) {
+
     return Container(
       height: MediaQuery.of(context).size.height * 0.18,
       margin: EdgeInsets.only(
@@ -77,28 +91,28 @@ class _CollectionCreationState extends State<CollectionCreation> {
           icon: Icons.photo_camera,
         )
         :
-        Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: 10
-          ),
-          child: ClipOval(
-            child: Image.file(
-              file,
-
-            ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Image.file(
+            file,
+            width: double.infinity,
+            fit: BoxFit.fill,
           ),
         ),
         cardsMargin: 10,
         cardBorderRadius: 20,
         cardColor: Colors.white,
         secondaryColor: Colors.white,
-        onPressed: getImage,
+        onPressed: () => showDialog(
+          context: context,
+          builder: (_) => CameraDialog()
+        ),
         isLeftMargin: true,
       ),
     );
   }
 
-  Widget CollectionForm() {
+  Widget CollectionForm(double loadingHorizontalMargin) {
     return BlocBuilder<CollectionCreateBloc,CollectionCreateState>(
       builder: (context, state) {
         if(state is CollectionCreateFormState) {
@@ -117,18 +131,31 @@ class _CollectionCreationState extends State<CollectionCreation> {
                 ),
                 state.isCreatingCollection ?
                 LoadingCard(
-                  horizontalMargin: 120,
+                  horizontalMargin: loadingHorizontalMargin,
                   height: 60,
                 )
                     :
                 Container(),
+                SizedBox(height: 16,),
                 CreateCollectionButton(
-                  loginFunction: () => BlocProvider.of<CollectionCreateBloc>(context).add(CreateCollectionEvent(
+                  createCollectionFunction: () => BlocProvider.of<CollectionCreateBloc>(context).add(CreateCollectionEvent(
                     name: nameController.text,
                     description: descriptionController.text,
                     image: file != null ? file.path : null,
                     collectionCreateFormKey: formKey,
-                    onSuccess: () => BlocProvider.of<NavigationBloc>(context).add(PopEvent()),
+                    onSuccess: () {
+                      showToast(
+                        'Your collection was successfully created',
+                        duration: Duration(seconds: 3),
+                        position: ToastPosition.bottom,
+                        textPadding: EdgeInsets.all(12),
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14
+                        )
+                      );
+                      BlocProvider.of<NavigationBloc>(context).add(PopEvent());
+                    },
                     onServerError: (message) => showDialog(
                       context: context,
                       builder: (context) {
@@ -173,12 +200,53 @@ class _CollectionCreationState extends State<CollectionCreation> {
     );
   }
 
-  Widget CreateCollectionButton({double textSize, Function loginFunction}) {
+  Widget CreateCollectionButton({double textSize, Function createCollectionFunction}) {
     return CommomButton(
         buttonText: 'Create',
         buttonColor: positiveButtonColor,
         buttonTextColor: Colors.white,
-        buttonFunction: () => loginFunction(),
+        buttonFunction: () => createCollectionFunction(),
         buttonTextSize: textSize);
+  }
+
+  Widget CameraDialog() {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10)
+      ),
+      title: Text(
+        'Collection image',
+        style: GoogleFonts.comfortaa(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      content: Text(
+        'Choose the wanted source',
+        style: GoogleFonts.comfortaa(
+        ),
+      ),
+      actions: <Widget>[
+        FlatButton(
+          onPressed: () => getImage(ImageSource.camera),
+          child: Text(
+            'Camera',
+            style: GoogleFonts.comfortaa(
+              fontWeight: FontWeight.bold,
+                color: secondaryColor
+            ),
+          ),
+        ),
+        FlatButton(
+          onPressed: () => getImage(ImageSource.gallery),
+          child: Text(
+            'Gallery',
+            style: GoogleFonts.comfortaa(
+              fontWeight: FontWeight.bold,
+              color: secondaryColor
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
