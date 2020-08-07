@@ -34,7 +34,7 @@ class CollectionController {
 
       return res.status(200).json({
         code: 200,
-        data: userCollections,
+        data: userCollections.rows,
         message: 'The collections were retrieved successfully'
       })
     } catch (err) {

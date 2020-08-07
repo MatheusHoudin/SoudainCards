@@ -81,7 +81,7 @@ class CollectionDecksController {
 
         return res.status(200).json({
           code: 200,
-          data: userCollectionDecks,
+          data: userCollectionDecks.rows,
           message: 'Retrieved decks',
         });
       })

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class TitleContentSection extends StatelessWidget {
   final String title;
   final double leftPadding;
+
   final Widget content;
 
   TitleContentSection({
@@ -19,19 +20,23 @@ class TitleContentSection extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.only(bottom: 14, left: leftPadding),
-          child: Text(
-            this.title,
-            style: GoogleFonts.comfortaa(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 20
-            ),
-          ),
+          child: Title(),
         ),
         Expanded(
           child: content,
         )
       ],
+    );
+  }
+
+  Widget Title(){
+    return Text(
+      this.title,
+      style: GoogleFonts.comfortaa(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+        fontSize: 20
+      ),
     );
   }
 }

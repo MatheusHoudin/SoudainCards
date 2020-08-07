@@ -38,7 +38,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     }else if(event is HomeToLoginNavigationEvent) {
       state.push(MaterialPageRoute(builder: (context) => LoginPage()));
     }else if(event is NavigateToCollectionCreationPageEvent) {
-      state.push(MaterialPageRoute(builder: (context) => CollectionCreation()));
+      state.push(MaterialPageRoute(builder: (context) => CollectionCreation(updateCollectionsFunction: event.updateCollectionsFunction,)));
     }
   }
 }

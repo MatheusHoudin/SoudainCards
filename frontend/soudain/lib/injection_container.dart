@@ -36,6 +36,12 @@ import 'package:soudain/features/login/domain/usecases/create_facebook_session_u
 import 'package:soudain/features/login/domain/usecases/create_google_session_use_case.dart';
 import 'package:soudain/features/login/domain/usecases/create_session_use_case.dart';
 import 'package:soudain/features/login/presentation/bloc/session_bloc.dart';
+import 'package:soudain/features/play/data/datasource/collection_data_remote_data_source.dart';
+import 'package:soudain/features/play/data/models/collection_data_hive_adapter.dart';
+import 'package:soudain/features/play/data/repository/collection_data_repository_impl.dart';
+import 'package:soudain/features/play/domain/repository/collection_data_repository.dart';
+import 'package:soudain/features/play/domain/usecase/get_collections_data_usecase.dart';
+import 'package:soudain/features/play/presentation/bloc/collection_data_bloc.dart';
 import 'package:soudain/features/signup/data/datasource/signup_remote_datasource.dart';
 import 'package:soudain/features/signup/data/repository/signup_repository_impl.dart';
 import 'package:soudain/features/signup/domain/repository/signup_repository.dart';
@@ -56,6 +62,7 @@ Future<void> setup()async {
   sl.registerFactory<ForgotPasswordBloc>(() => ForgotPasswordBloc(useCase: sl()));
   sl.registerFactory<UserDataBloc>(() => UserDataBloc(useCase: sl()));
   sl.registerFactory<CollectionCreateBloc>(() => CollectionCreateBloc(useCase: sl()));
+  sl.registerFactory<CollectionDataBloc>(() => CollectionDataBloc(useCase: sl()));
 
   sl.registerLazySingleton<CreateSessionUseCase>(() => CreateSessionUseCase(sessionRepository: sl()));
   sl.registerLazySingleton<CreateFacebookSessionUseCase>(() => CreateFacebookSessionUseCase(sessionRepository: sl()));
@@ -64,6 +71,7 @@ Future<void> setup()async {
   sl.registerLazySingleton<ForgotPasswordUseCase>(() => ForgotPasswordUseCase(repository: sl()));
   sl.registerLazySingleton<UserDataUseCase>(() => UserDataUseCase(userDataRepository: sl()));
   sl.registerLazySingleton<CollectionCreateUseCase>(() => CollectionCreateUseCase(collectionRepository: sl()));
+  sl.registerLazySingleton<GetCollectionsDataUsecase>(() => GetCollectionsDataUsecase(repository: sl()));
 
 
   sl.registerLazySingleton<SessionRepository>(() => SessionRepositoryImpl(
@@ -90,6 +98,11 @@ Future<void> setup()async {
     networkInfo: sl(),
     sessionLocalDataSource: sl()
   ));
+  sl.registerLazySingleton<CollectionDataRepository>(() => CollectionDataRepositoryImpl(
+    sessionLocalDataSource: sl(),
+    remoteDataSource: sl(),
+    networkInfo: sl()
+  ));
 
   sl.registerLazySingleton<SessionRemoteDataSource>(() => SessionRemoteDataSourceImpl(
     dio: sl()
@@ -113,6 +126,9 @@ Future<void> setup()async {
   sl.registerLazySingleton<CollectionRemoteDataSource>(() => CollectionRemoteDataSourceImpl(
     client: sl()
   ));
+  sl.registerLazySingleton<CollectionDataRemoteDataSource>(() => CollectionDataRemoteDataSourceImpl(
+    client: sl()
+  ));
 
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(
     DataConnectionChecker()
@@ -129,6 +145,7 @@ Future<void> setup()async {
   Hive.registerAdapter(SessionModelAdapter());
   Hive.registerAdapter(UserModelAdapter());
   Hive.registerAdapter(UserDataModelAdapter());
+  Hive.registerAdapter(CollectionDataAdapter());
 
   final directory = await getApplicationDocumentsDirectory();
   Hive.init(directory.path);

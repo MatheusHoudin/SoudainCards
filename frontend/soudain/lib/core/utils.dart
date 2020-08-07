@@ -1,4 +1,5 @@
 String shortenNumberToString(String quantity) {
+  if(quantity == null) return '0';
   return quantity.length <= 3
       ? quantity
       : (quantity.length == 4

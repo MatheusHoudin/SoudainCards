@@ -32,6 +32,10 @@ class NavigateToForgotPasswordPageEvent extends NavigationEvent {
 }
 
 class NavigateToCollectionCreationPageEvent extends NavigationEvent {
+  final Function updateCollectionsFunction;
+
+  NavigateToCollectionCreationPageEvent({this.updateCollectionsFunction});
+
   @override
   List<Object> get props => [];
 }

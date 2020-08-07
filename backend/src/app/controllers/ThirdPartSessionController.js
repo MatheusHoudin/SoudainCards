@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 const Yup = require('yup');
+const imageDownloader = require('image-downloader')
+const { extname, resolve } = require('path');
 const User = require('../models/User');
 const File = require('../models/File');
 const authConfig = require('../../config/auth');
@@ -103,7 +105,15 @@ class ThirdPartSessionController {
               });
             }
           } else {
+ 
             const user = await User.create(data);
+
+            const options = {
+              url: picture,
+              dest: resolve(__dirname, '..', '..', '..', 'temp', 'uploads')               // will be saved to /path/to/dest/image.jpg
+            }
+             
+            await imageDownloader.image(options);
 
             const file = await File.findOrCreate({
               where: {

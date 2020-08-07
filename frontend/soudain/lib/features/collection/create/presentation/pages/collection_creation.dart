@@ -16,9 +16,14 @@ import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/features/collection/create/presentation/bloc/collection_create_bloc.dart';
 import 'package:soudain/features/home/presentation/widgets/oval_red_ball.dart';
 import 'package:soudain/features/navigation/bloc/navigation_bloc.dart';
+import 'package:soudain/features/play/presentation/bloc/collection_data_bloc.dart';
 import 'package:soudain/injection_container.dart';
 
 class CollectionCreation extends StatefulWidget {
+  final Function updateCollectionsFunction;
+
+  CollectionCreation({this.updateCollectionsFunction});
+
   @override
   _CollectionCreationState createState() => _CollectionCreationState();
 }
@@ -154,6 +159,7 @@ class _CollectionCreationState extends State<CollectionCreation> {
                           fontSize: 14
                         )
                       );
+                      widget.updateCollectionsFunction();
                       BlocProvider.of<NavigationBloc>(context).add(PopEvent());
                     },
                     onServerError: (message) => showDialog(

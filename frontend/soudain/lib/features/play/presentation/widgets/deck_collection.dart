@@ -6,9 +6,14 @@ import 'package:soudain/core/commom_widgets/deck_format.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/core/utils.dart';
+import 'package:soudain/features/play/data/models/collection_data.dart';
 import 'package:soudain/injection_container.dart';
 
 class DeckCollection extends StatelessWidget {
+  final CollectionData collectionData;
+
+  DeckCollection({this.collectionData});
+
   @override
   Widget build(BuildContext context) {
     double collectionPictureMarginTop = sl<DeviceSizeAdapter>().getResponsiveSize(
@@ -74,6 +79,7 @@ class DeckCollection extends StatelessWidget {
   }
 
   Widget Front(BuildContext context,double frontPadding,double collectionDeckNumberWidth,double titleTextSize,double descriptionTextSize) {
+    print(collectionData.decksCount.toString());
     return Container(
       margin: EdgeInsets.only(
         right: 4,
@@ -106,7 +112,7 @@ class DeckCollection extends StatelessWidget {
                   cardBorderRadius: 4,
                   cardsMargin: 4,
                   centerWidget: Text(
-                    shortenNumberToString('4445'),
+                    shortenNumberToString(collectionData.decksCount.toString()),
                     style: GoogleFonts.comfortaa(
                       fontSize: 12,
                       color: Colors.white,
@@ -123,7 +129,7 @@ class DeckCollection extends StatelessWidget {
                 bottom: 4
               ),
               child: Text(
-                'French Voca ddfdsfdsb',
+                collectionData.title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.comfortaa(
@@ -139,7 +145,7 @@ class DeckCollection extends StatelessWidget {
                 right: 6,
               ),
               child: Text(
-                'A collection of decks with image and audio',
+                collectionData.description,
                 maxLines: MediaQuery.of(context).size.height * 0.25 >= 200 ? 3 : 2,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.comfortaa(
@@ -165,6 +171,7 @@ class DeckCollection extends StatelessWidget {
       ),
       alignment: Alignment.topLeft,
       child: Container(
+        padding: EdgeInsets.symmetric(vertical: 3),
         margin: EdgeInsets.only(
           left: 6,
           top: collectionPictureMarginTop
@@ -172,7 +179,8 @@ class DeckCollection extends StatelessWidget {
         height: collectionPictureSize,
         width: collectionPictureSize,
         child: Image.network(
-          'https://www.worldflagshop.com/wp-content/uploads/2017/10/france-500x335.gif'
+          collectionData.imageUrl != null ? collectionData.imageUrl : 'https://www.worldflagshop.com/wp-content/uploads/2017/10/france-500x335.gif',
+          fit: BoxFit.fitWidth,
         ),
       ),
     );
