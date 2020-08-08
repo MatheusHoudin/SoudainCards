@@ -178,9 +178,15 @@ class DeckCollection extends StatelessWidget {
         ),
         height: collectionPictureSize,
         width: collectionPictureSize,
-        child: Image.network(
-          collectionData.imageUrl != null ? collectionData.imageUrl : 'https://www.worldflagshop.com/wp-content/uploads/2017/10/france-500x335.gif',
-          fit: BoxFit.fitWidth,
+        child: Hero(
+          tag: collectionData.id,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: Image.network(
+              collectionData.imageUrl != null ? collectionData.imageUrl : 'https://www.worldflagshop.com/wp-content/uploads/2017/10/france-500x335.gif',
+              fit: BoxFit.fitWidth,
+            ),
+          ),
         ),
       ),
     );

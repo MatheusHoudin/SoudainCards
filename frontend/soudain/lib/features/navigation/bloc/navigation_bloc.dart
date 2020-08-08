@@ -1,5 +1,6 @@
 import 'dart:async';
-
+import 'package:soudain/features/collection_decks/presentation/pages/collection_decks_page.dart';
+import 'package:soudain/features/play/data/models/collection_data.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
@@ -39,6 +40,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       state.push(MaterialPageRoute(builder: (context) => LoginPage()));
     }else if(event is NavigateToCollectionCreationPageEvent) {
       state.push(MaterialPageRoute(builder: (context) => CollectionCreation(updateCollectionsFunction: event.updateCollectionsFunction,)));
+    }else if(event is NavigateToCollectionDecksPageEvent) {
+      state.push(MaterialPageRoute(builder: (context) => CollectionDecksPage(collection: event.collection,)));
     }
   }
 }

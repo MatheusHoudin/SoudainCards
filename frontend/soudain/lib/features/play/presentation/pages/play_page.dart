@@ -13,6 +13,7 @@ import 'package:soudain/features/play/data/models/collection_data.dart';
 import 'package:soudain/features/play/presentation/bloc/collection_data_bloc.dart';
 import 'package:soudain/features/play/presentation/widgets/deck_collection.dart';
 import 'package:soudain/injection_container.dart';
+import 'package:soudain/core/constants/colors.dart';
 
 class PlayPage extends StatefulWidget {
   @override
@@ -44,6 +45,24 @@ class _PlayPageState extends State<PlayPage> {
         smallPorcentage: 40,
         mediumPorcentage: 35,
         largePorcentage: 30
+      )
+    );
+    double loadingCardHorizontalMargin = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: false,
+        smallPorcentage: 36,
+        mediumPorcentage: 40,
+        largePorcentage: 40
+      )
+    );
+    double loadingCardHeight = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+        isHeight: true,
+        smallPorcentage: 15,
+        mediumPorcentage: 13,
+        largePorcentage: 13
       )
     );
 
@@ -130,8 +149,9 @@ class _PlayPageState extends State<PlayPage> {
                       }else if(state is LoadingCollections) {
                         return Center(
                           child: LoadingCard(
-                            height: 80,
-                            horizontalMargin: 100,
+                            height: loadingCardHeight,
+                            horizontalMargin: loadingCardHorizontalMargin,
+                            backColor: primaryColor,
                           ),
                         );
                       }else if(state is CollectionDataError){
@@ -156,7 +176,12 @@ class _PlayPageState extends State<PlayPage> {
     return Container(
       width: MediaQuery.of(context).size.width * 0.4,
       height: MediaQuery.of(context).size.height * 0.25,
-      child: DeckCollection(collectionData: collectionData,),
+      child: GestureDetector(
+        onTap: () => BlocProvider.of<NavigationBloc>(context).add(NavigateToCollectionDecksPageEvent(
+          collection: collectionData
+        )),
+        child: DeckCollection(collectionData: collectionData,),
+      ),
     );
   }
 

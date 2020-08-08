@@ -12,10 +12,7 @@ import 'package:soudain/injection_container.dart';
 class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<CollectionDataBloc>(
-      create: (context) => sl<CollectionDataBloc>(),
-      child: MainPageView(),
-    );
+    return MainPageView();
   }
 
 }

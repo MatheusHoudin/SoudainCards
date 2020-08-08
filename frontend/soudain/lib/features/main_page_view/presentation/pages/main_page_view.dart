@@ -7,6 +7,7 @@ import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/features/home/presentation/bloc/user_data_bloc.dart';
 import 'package:soudain/features/home/presentation/pages/home.dart';
 import 'package:soudain/features/main_page_view/presentation/widgets/cards_floating_button.dart';
+import 'package:soudain/features/play/presentation/bloc/collection_data_bloc.dart';
 import 'package:soudain/features/play/presentation/pages/play_page.dart';
 import 'package:soudain/injection_container.dart';
 
@@ -63,73 +64,76 @@ class _MainPageViewState extends State<MainPageView> {
 
     print(floatingCardHeight);
     Curve pageViewAnimationCurve = Curves.easeIn;
-    return Scaffold(
-      backgroundColor: secondaryColor,
-      body: PageView(
-        controller: pageController,
-        onPageChanged: (page) {
-          setState(() {
-            currentPage = page;
-            pageIconData = icons[page];
-          });
-        },
-        children: [
-          Home(),
-          PlayPage(),
-          Scaffold(body: Center(child: Text('PROGRESS'),),),
-        ],
-      ),
-      floatingActionButton: Container(
-        alignment: Alignment.center,
-        height: floatingCardHeight,
-        margin: EdgeInsets.only(left: 36),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+    return BlocProvider<CollectionDataBloc>(
+      create: (context) => sl<CollectionDataBloc>(),
+      child: Scaffold(
+        backgroundColor: secondaryColor,
+        body: PageView(
+          controller: pageController,
+          onPageChanged: (page) {
+            setState(() {
+              currentPage = page;
+              pageIconData = icons[page];
+            });
+          },
           children: [
-            Expanded(
-              child: AnimatedContainer(
-                alignment: Alignment.center,
-                duration: Duration(seconds: 1),
-                width: isFloatingButtonOpen ? 800 : floatingCardWidth,
-                child: CardsFloatingButton(
-                  icon: pageIconData,
-                  isDeckStackOpen: this.isFloatingButtonOpen,
-                  onDeckTap: () {
-                    setState(() {
-                      this.isFloatingButtonOpen = true;
-                    });
-                  },
-                  nagivateToHomeFunction: () {
-                    this.pageController.animateToPage(
-                      0,
-                      duration: Duration(milliseconds: 500),
-                      curve: pageViewAnimationCurve
-                    );
-                  },
-                  nagivateToPlayFunction: () {
-                    this.pageController.animateToPage(
-                      1,
-                      duration: Duration(milliseconds: 500),
-                      curve: pageViewAnimationCurve
-                    );
-                  },
-                  nagivateToProgressFunction: () {
-                    this.pageController.animateToPage(
-                      2,
-                      duration: Duration(milliseconds: 500),
-                      curve: pageViewAnimationCurve
-                    );
-                  },
+            Home(),
+            PlayPage(),
+            Scaffold(body: Center(child: Text('PROGRESS'),),),
+          ],
+        ),
+        floatingActionButton: Container(
+          alignment: Alignment.center,
+          height: floatingCardHeight,
+          margin: EdgeInsets.only(left: 36),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: AnimatedContainer(
+                  alignment: Alignment.center,
+                  duration: Duration(seconds: 1),
+                  width: isFloatingButtonOpen ? 800 : floatingCardWidth,
+                  child: CardsFloatingButton(
+                    icon: pageIconData,
+                    isDeckStackOpen: this.isFloatingButtonOpen,
+                    onDeckTap: () {
+                      setState(() {
+                        this.isFloatingButtonOpen = true;
+                      });
+                    },
+                    nagivateToHomeFunction: () {
+                      this.pageController.animateToPage(
+                          0,
+                          duration: Duration(milliseconds: 500),
+                          curve: pageViewAnimationCurve
+                      );
+                    },
+                    nagivateToPlayFunction: () {
+                      this.pageController.animateToPage(
+                          1,
+                          duration: Duration(milliseconds: 500),
+                          curve: pageViewAnimationCurve
+                      );
+                    },
+                    nagivateToProgressFunction: () {
+                      this.pageController.animateToPage(
+                          2,
+                          duration: Duration(milliseconds: 500),
+                          curve: pageViewAnimationCurve
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 16,),
-            AnimatedOpacity(
-              opacity: this.isFloatingButtonOpen ? 1.0 : 0.0,
-              duration: Duration(milliseconds: 500),
-              child: CloseButton(closeButtonPadding),
-            )
-          ],
+              SizedBox(height: 16,),
+              AnimatedOpacity(
+                opacity: this.isFloatingButtonOpen ? 1.0 : 0.0,
+                duration: Duration(milliseconds: 500),
+                child: CloseButton(closeButtonPadding),
+              )
+            ],
+          ),
         ),
       ),
     );

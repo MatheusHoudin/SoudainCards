@@ -6,8 +6,9 @@ import 'package:soudain/core/constants/colors.dart';
 class LoadingCard extends StatefulWidget {
   final double horizontalMargin;
   final double height;
+  final Color backColor;
 
-  LoadingCard({this.horizontalMargin, this.height});
+  LoadingCard({this.horizontalMargin, this.height,this.backColor=secondaryColor});
 
   @override
   _LoadingCardState createState() => _LoadingCardState();
@@ -37,7 +38,7 @@ class _LoadingCardState extends State<LoadingCard> {
       key: cardKey,
       flipOnTouch: false,
       front: Side(Colors.white),
-      back: Side(secondaryColor),
+      back: Side(widget.backColor),
     );
   }
 
