@@ -7,6 +7,10 @@ import 'package:soudain/core/utils.dart';
 import 'package:soudain/injection_container.dart';
 
 class StudyDeckFront extends StatelessWidget {
+  final bool hasDecksToStudy;
+
+  StudyDeckFront({this.hasDecksToStudy = true});
+
   @override
   Widget build(BuildContext context) {
     double quantityTextSize = sl<DeviceSizeAdapter>().getResponsiveSize(
@@ -20,7 +24,7 @@ class StudyDeckFront extends StatelessWidget {
     return Column(
       children: [
         Expanded(
-          flex: 8,
+          flex: this.hasDecksToStudy ? 7 : 8,
           child: Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -28,24 +32,59 @@ class StudyDeckFront extends StatelessWidget {
             child: Column(
               children: [
                 Expanded(
-                  flex: 4,
-                  child: DecksQuantitySection(quantityTextSize),
+                  flex: 5,
+                  child: this.hasDecksToStudy ? DecksQuantitySection(quantityTextSize) : DeckContentDetailsSection(quantityTextSize),
                 ),
                 Expanded(
-                  flex: 7,
+                  flex: this.hasDecksToStudy ? 6 : 8,
                   child: DeckImage(),
                 )
               ],
             ),
           ),
         ),
-        Expanded(
+        this.hasDecksToStudy ? Expanded(
           flex: 1,
           child: StudyProgress(context),
+        ) : Container(),
+        Expanded(
+          flex: 4,
+          child: DeckTitle(),
+        )
+      ],
+    );
+  }
+
+  Widget DeckContentDetailsSection(double quantityTextSize) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Expanded(
+          child: DeckDetail(Icons.play_circle_filled, '734', quantityTextSize),
         ),
         Expanded(
-          flex: 3,
-          child: DeckTitle(),
+          child: DeckDetail(Icons.image, '7344', quantityTextSize),
+        ),
+        Expanded(
+          child: DeckDetail(Icons.library_books, '7344', quantityTextSize),
+        ),
+      ],
+    );
+  }
+
+  Widget DeckDetail(IconData iconData, String quantity, double quantityTextSize) {
+    String formattedQuantity = shortenNumberToString(quantity);
+    return Column(
+      children: <Widget>[
+        Icon(
+          iconData,
+          color: secondaryColor,
+        ),
+        Text(
+          formattedQuantity,
+          maxLines: 1,
+          overflow: TextOverflow.clip,
+          style: TextStyle(color: Colors.black, fontSize: quantityTextSize),
         )
       ],
     );
@@ -127,7 +166,7 @@ class StudyDeckFront extends StatelessWidget {
       child: Center(
         child: Text(
           'Chinese culture and id',
-          maxLines: 1,
+          maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: GoogleFonts.comfortaa(color: Colors.black, fontSize: 18),
         ),

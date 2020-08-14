@@ -11,6 +11,7 @@ import 'package:soudain/core/commom_widgets/deck_format.dart';
 import 'package:soudain/core/commom_widgets/error_dialog.dart';
 import 'package:soudain/core/commom_widgets/loading_card.dart';
 import 'package:soudain/core/commom_widgets/main_text_field.dart';
+import 'package:soudain/core/commom_widgets/picture_taking.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/features/collection/create/presentation/bloc/collection_create_bloc.dart';
@@ -39,6 +40,12 @@ class _CollectionCreationState extends State<CollectionCreation> {
 
   TextEditingController descriptionController = TextEditingController();
 
+  Function getImageResult(File takenImage) {
+    print('GET ILE');
+    print(takenImage);
+    this.file = file;
+  }
+
   @override
   Widget build(BuildContext context) {
     double addButtomMargin = sl<DeviceSizeAdapter>().getResponsiveSize(
@@ -65,7 +72,12 @@ class _CollectionCreationState extends State<CollectionCreation> {
       headerBackArrowFunction: () =>
           BlocProvider.of<NavigationBloc>(context).add(PopEvent()),
       contentWidgets: [
-        Picture(context, addButtomMargin),
+        //Picture(context, addButtomMargin),
+        PictureTaking(
+          takeImageFunction: (takenImage) {
+            getImageResult(takenImage);
+          },
+        ),
         SizedBox(
           height: 20,
         ),

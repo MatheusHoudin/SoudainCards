@@ -116,7 +116,7 @@ class CollectionDecksPage extends StatelessWidget {
                           margin: EdgeInsets.only(bottom: 20),
                           height: cardsSectionHeight,
                           child: TitleContentSection(
-                            title: 'Decks to review',
+                            title: 'Collection decks',
                             leftPadding: 0,
                             content: ListView.separated(
                               scrollDirection: Axis.horizontal,
@@ -128,7 +128,9 @@ class CollectionDecksPage extends StatelessWidget {
                                     right: index == 3 ? 10 : 0
                                 ),
                                 child: DeckFormat(
-                                  centerWidget: StudyDeckFront(),
+                                  centerWidget: StudyDeckFront(
+                                    hasDecksToStudy: false,
+                                  ),
                                   cardsMargin: 10,
                                   cardBorderRadius: 20,
                                   cardColor: Colors.white,

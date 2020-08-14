@@ -50,6 +50,8 @@ class HeaderWithTitleAndSubtitle extends StatelessWidget {
               children: <Widget>[
                 Text(
                   this.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.comfortaa(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -59,6 +61,8 @@ class HeaderWithTitleAndSubtitle extends StatelessWidget {
                 Text(
                   this.subtitle,
                   textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.comfortaa(
                     color: Colors.white,
                     fontSize: 16
