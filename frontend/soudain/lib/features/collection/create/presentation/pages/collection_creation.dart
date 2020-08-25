@@ -17,7 +17,6 @@ import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/features/collection/create/presentation/bloc/collection_create_bloc.dart';
 import 'package:soudain/features/home/presentation/widgets/oval_red_ball.dart';
 import 'package:soudain/features/navigation/bloc/navigation_bloc.dart';
-import 'package:soudain/features/play/presentation/bloc/collection_data_bloc.dart';
 import 'package:soudain/injection_container.dart';
 
 class CollectionCreation extends StatefulWidget {
@@ -40,7 +39,7 @@ class _CollectionCreationState extends State<CollectionCreation> {
 
   TextEditingController descriptionController = TextEditingController();
 
-  Function getImageResult(File takenImage) {
+  void getImageResult(File takenImage) {
     print('GET ILE');
     print(takenImage);
     this.file = file;
@@ -48,15 +47,6 @@ class _CollectionCreationState extends State<CollectionCreation> {
 
   @override
   Widget build(BuildContext context) {
-    double addButtomMargin = sl<DeviceSizeAdapter>().getResponsiveSize(
-      context: context,
-      portraitSizeAdapter: SizeAdapter(
-        isHeight: false,
-        smallPorcentage: 20,
-        mediumPorcentage: 20,
-        largePorcentage: 20
-      )
-    );
     double loadingHorizontalMargin = sl<DeviceSizeAdapter>().getResponsiveSize(
       context: context,
       portraitSizeAdapter: SizeAdapter(
@@ -72,7 +62,6 @@ class _CollectionCreationState extends State<CollectionCreation> {
       headerBackArrowFunction: () =>
           BlocProvider.of<NavigationBloc>(context).add(PopEvent()),
       contentWidgets: [
-        //Picture(context, addButtomMargin),
         PictureTaking(
           takeImageFunction: (takenImage) {
             getImageResult(takenImage);
@@ -94,39 +83,6 @@ class _CollectionCreationState extends State<CollectionCreation> {
       });
     }
     BlocProvider.of<NavigationBloc>(context).add(PopEvent());
-  }
-
-  Widget Picture(BuildContext context, double addButtomMargin) {
-
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.18,
-      margin: EdgeInsets.only(
-          left: addButtomMargin, right: addButtomMargin, top: 10),
-      child: DeckFormat(
-        centerWidget: file == null ?
-        OvalRedBall(
-          icon: Icons.photo_camera,
-        )
-        :
-        ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Image.file(
-            file,
-            width: double.infinity,
-            fit: BoxFit.fill,
-          ),
-        ),
-        cardsMargin: 10,
-        cardBorderRadius: 20,
-        cardColor: Colors.white,
-        secondaryColor: Colors.white,
-        onPressed: () => showDialog(
-          context: context,
-          builder: (_) => CameraDialog()
-        ),
-        isLeftMargin: true,
-      ),
-    );
   }
 
   Widget CollectionForm(double loadingHorizontalMargin) {

@@ -40,6 +40,15 @@ class NavigateToCollectionDecksPageEvent extends NavigationEvent {
   List<Object> get props => [];
 }
 
+class NavigateToDeckCreationPageEvent extends NavigationEvent {
+  final CollectionData collection;
+
+  NavigateToDeckCreationPageEvent({this.collection});
+
+  @override
+  List<Object> get props => [];
+}
+
 class NavigateToCollectionCreationPageEvent extends NavigationEvent {
   final Function updateCollectionsFunction;
 

@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:soudain/features/collection_decks/presentation/pages/collection_decks_page.dart';
+import 'file:///C:/Users/mathe/OneDrive/Documentos/GitHub/SoudainCards/frontend/soudain/lib/features/collection_decks/home/presentation/pages/collection_decks_page.dart';
+import 'package:soudain/features/collection_decks/create/presentation/pages/decks_creation_page.dart';
 import 'package:soudain/features/play/data/models/collection_data.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -42,6 +43,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       state.push(MaterialPageRoute(builder: (context) => CollectionCreation(updateCollectionsFunction: event.updateCollectionsFunction,)));
     }else if(event is NavigateToCollectionDecksPageEvent) {
       state.push(MaterialPageRoute(builder: (context) => CollectionDecksPage(collection: event.collection,)));
+    }else if(event is NavigateToDeckCreationPageEvent) {
+      state.push(MaterialPageRoute(builder: (context) => DecksCreationPage(collectionData: event.collection,)));
     }
   }
 }

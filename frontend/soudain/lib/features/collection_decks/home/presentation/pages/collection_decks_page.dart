@@ -77,7 +77,9 @@ class CollectionDecksPage extends StatelessWidget {
                             cardBorderRadius: 20,
                             cardColor: Colors.white,
                             secondaryColor: Colors.white,
-                            onPressed: () => null,
+                            onPressed: () => BlocProvider.of<NavigationBloc>(context).add(NavigateToDeckCreationPageEvent(
+                              collection: this.collection
+                            )),
                             isLeftMargin: true,
                           ),
                         ),
