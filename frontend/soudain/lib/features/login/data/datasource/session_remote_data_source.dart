@@ -77,7 +77,13 @@ class SessionRemoteDataSourceImpl extends SessionRemoteDataSource {
             'picture': jsonMap['picture']['data']['url'],
             'isFacebook': true
           });
-
+print({
+  'id': jsonMap['id'],
+  'email': jsonMap['email'],
+  'name': jsonMap['name'],
+  'picture': jsonMap['picture']['data']['url'],
+  'isFacebook': true
+});
 
           return SessionModel.fromJson(response.data['data']);
         } on DioError catch (e) {

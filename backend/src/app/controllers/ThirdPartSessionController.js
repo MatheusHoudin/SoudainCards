@@ -110,15 +110,15 @@ class ThirdPartSessionController {
 
             const options = {
               url: picture,
-              dest: resolve(__dirname, '..', '..', '..', 'temp', 'uploads')               // will be saved to /path/to/dest/image.jpg
+              dest: resolve(__dirname, '..', '..', '..', 'temp', 'uploads', `${id.toString()}.jpeg`)               // will be saved to /path/to/dest/image.jpg
             }
              
-            await imageDownloader.image(options);
-
+            const r = await imageDownloader.image(options);
+            console.log(r);
             const file = await File.findOrCreate({
               where: {
                 name: id.toString(),
-                path: picture,
+                path: `${id.toString()}.jpeg`,
               },
               defaults: {
                 type: 'image/jpeg',

@@ -37,7 +37,7 @@ class UserController {
                 email: user.email,
                 avatar_id: user.avatar_id,
                 avatar: user.avatar_id ? {
-                  url: user.avatar.path.includes('http') ? user.avatar.path : user.avatar.url,
+                  url: user.avatar.url,
                   path: user.avatar.path
                 } : null
               },
@@ -47,7 +47,7 @@ class UserController {
             return res.status(404).json({
               code: 404,
               data: null,
-              message: 'The user was retrieved successfully',
+              message: 'The user does nto exist',
             });
           }
         } catch (e) {

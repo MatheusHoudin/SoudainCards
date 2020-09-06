@@ -23,6 +23,11 @@ class LoadedCollections extends CollectionDataState {
   List<Object> get props => [this.collections];
 }
 
+class ThereAreNoCollections extends CollectionDataState {
+  @override
+  List<Object> get props => [];
+}
+
 class CollectionDataError extends CollectionDataState {
   final String message;
 

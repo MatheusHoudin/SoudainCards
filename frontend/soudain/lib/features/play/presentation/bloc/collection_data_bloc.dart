@@ -43,9 +43,13 @@ class CollectionDataBloc extends Bloc<CollectionDataEvent, CollectionDataState> 
         },
         (result) async* {
           print(result);
-          yield LoadedCollections(
-            collections: result
-          );
+          if(result.length > 0) {
+            yield LoadedCollections(
+                collections: result
+            );
+          }else{
+            yield ThereAreNoCollections();
+          }
         }
       );
     }

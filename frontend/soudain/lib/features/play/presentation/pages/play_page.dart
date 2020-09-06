@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:soudain/core/commom_widgets/commom_button.dart';
 import 'package:soudain/core/commom_widgets/deck_format.dart';
 import 'package:soudain/core/commom_widgets/loading_card.dart';
+import 'package:soudain/core/commom_widgets/main_section_error.dart';
 import 'package:soudain/core/commom_widgets/study_deck_front.dart';
 import 'package:soudain/core/commom_widgets/title_content_section.dart';
 import 'package:soudain/core/constants/colors.dart';
@@ -154,9 +156,12 @@ class _PlayPageState extends State<PlayPage> {
                             backColor: primaryColor,
                           ),
                         );
+                      }else if(state is ThereAreNoCollections) {
+                        return ThereAreNoCollectionsSection();
                       }else if(state is CollectionDataError){
-                        return Center(
-                          child: Text(state.message),
+                        return MainSectionError(
+                          message: state.message,
+                          imageAsset: 'assets/images/bug_fixing.png',
                         );
                       }else{
                         return Container();
@@ -169,6 +174,30 @@ class _PlayPageState extends State<PlayPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget ThereAreNoCollectionsSection() {
+    return Column(
+      children: <Widget>[
+        MainSectionError(
+          message: 'You have not created any collections yet, let\'s get started.',
+          imageAsset: 'assets/images/studying.png',
+        ),
+        CreateCollectionButton(textSize: 14)
+      ],
+    );
+  }
+
+  Widget CreateCollectionButton({double textSize}) {
+    return CommomButton(
+      buttonText: 'Create Collection',
+      buttonColor: positiveButtonColor,
+      buttonTextColor: Colors.white,
+      buttonFunction: () => BlocProvider.of<NavigationBloc>(context).add(NavigateToCollectionCreationPageEvent(
+          updateCollectionsFunction: () => BlocProvider.of<CollectionDataBloc>(context).add(GetCollectionsData())
+      )),
+      buttonTextSize: textSize
     );
   }
 

@@ -37,6 +37,7 @@ class CollectionCreateBloc extends Bloc<CollectionCreateEvent, CollectionCreateS
             nameFieldError: null
         );
 
+        print('BLOC: ${event.image}');
         final response = await useCase(CollectionParams(
             name: event.name,
             description: event.description,

@@ -17,6 +17,7 @@ class CollectionRemoteDataSourceImpl extends CollectionRemoteDataSource {
   Future<Collection> save(Collection collection, String token) async {
     try {
       var fileId;
+      print(collection.image);
       if (collection.image != null) {
         FormData formData = new FormData.fromMap({
           "file": await MultipartFile.fromFile(collection.image,
@@ -28,7 +29,6 @@ class CollectionRemoteDataSourceImpl extends CollectionRemoteDataSource {
             'Authorization': token
           }
         ));
-
         fileId = fileResponse.data['data']['id'];
       }
 

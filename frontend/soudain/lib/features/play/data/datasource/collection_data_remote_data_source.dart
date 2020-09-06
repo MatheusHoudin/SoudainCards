@@ -21,7 +21,6 @@ class CollectionDataRemoteDataSourceImpl extends CollectionDataRemoteDataSource 
           }
         )
       );
-print(collectionsResult.data['data']);
       return (collectionsResult.data['data'] as List).map((e) => CollectionData.fromJson(e)).toList();
     } on DioError {
       throw ServerException();

@@ -42,7 +42,7 @@ class _CollectionCreationState extends State<CollectionCreation> {
   void getImageResult(File takenImage) {
     print('GET ILE');
     print(takenImage);
-    this.file = file;
+    this.file = takenImage;
   }
 
   @override
@@ -73,16 +73,6 @@ class _CollectionCreationState extends State<CollectionCreation> {
         CollectionForm(loadingHorizontalMargin)
       ],
     );
-  }
-
-  Future getImage(ImageSource source) async {
-    final pickedFile = await picker.getImage(source: source);
-    if(pickedFile != null) {
-      setState(() {
-        file = File(pickedFile.path);
-      });
-    }
-    BlocProvider.of<NavigationBloc>(context).add(PopEvent());
   }
 
   Widget CollectionForm(double loadingHorizontalMargin) {
@@ -181,46 +171,5 @@ class _CollectionCreationState extends State<CollectionCreation> {
         buttonTextColor: Colors.white,
         buttonFunction: () => createCollectionFunction(),
         buttonTextSize: textSize);
-  }
-
-  Widget CameraDialog() {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10)
-      ),
-      title: Text(
-        'Collection image',
-        style: GoogleFonts.comfortaa(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      content: Text(
-        'Choose the wanted source',
-        style: GoogleFonts.comfortaa(
-        ),
-      ),
-      actions: <Widget>[
-        FlatButton(
-          onPressed: () => getImage(ImageSource.camera),
-          child: Text(
-            'Camera',
-            style: GoogleFonts.comfortaa(
-              fontWeight: FontWeight.bold,
-                color: secondaryColor
-            ),
-          ),
-        ),
-        FlatButton(
-          onPressed: () => getImage(ImageSource.gallery),
-          child: Text(
-            'Gallery',
-            style: GoogleFonts.comfortaa(
-              fontWeight: FontWeight.bold,
-              color: secondaryColor
-            ),
-          ),
-        ),
-      ],
-    );
   }
 }
