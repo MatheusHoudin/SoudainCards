@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:soudain/core/constants/colors.dart';
-import 'package:soudain/features/home/presentation/widgets/header.dart';
 import 'package:soudain/features/home/presentation/bloc/user_data_bloc.dart';
+import 'package:soudain/features/home/presentation/widgets/header.dart';
 import 'package:soudain/injection_container.dart';
 
-class Home extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _HomeState extends State<Home> {
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(

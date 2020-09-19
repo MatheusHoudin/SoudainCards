@@ -13,22 +13,23 @@ import 'package:soudain/core/commom_widgets/loading_card.dart';
 import 'package:soudain/core/commom_widgets/main_text_field.dart';
 import 'package:soudain/core/commom_widgets/picture_taking.dart';
 import 'package:soudain/core/constants/colors.dart';
+import 'package:soudain/core/constants/texts.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/features/collection/create/presentation/bloc/collection_create_bloc.dart';
 import 'package:soudain/features/home/presentation/widgets/oval_red_ball.dart';
 import 'package:soudain/features/navigation/bloc/navigation_bloc.dart';
 import 'package:soudain/injection_container.dart';
 
-class CollectionCreation extends StatefulWidget {
+class CreateCollectionPage extends StatefulWidget {
   final Function updateCollectionsFunction;
 
-  CollectionCreation({this.updateCollectionsFunction});
+  CreateCollectionPage({this.updateCollectionsFunction});
 
   @override
-  _CollectionCreationState createState() => _CollectionCreationState();
+  _CreateCollectionPageState createState() => _CreateCollectionPageState();
 }
 
-class _CollectionCreationState extends State<CollectionCreation> {
+class _CreateCollectionPageState extends State<CreateCollectionPage> {
   final formKey = GlobalKey<FormState>();
 
   File file;
@@ -40,8 +41,6 @@ class _CollectionCreationState extends State<CollectionCreation> {
   TextEditingController descriptionController = TextEditingController();
 
   void getImageResult(File takenImage) {
-    print('GET ILE');
-    print(takenImage);
     this.file = takenImage;
   }
 
@@ -57,7 +56,7 @@ class _CollectionCreationState extends State<CollectionCreation> {
       )
     );
     return CommomBaseFormPage(
-      headerText: 'Create your collection',
+      headerText: createYourCollection,
       headerTextSize: 16,
       headerBackArrowFunction: () =>
           BlocProvider.of<NavigationBloc>(context).add(PopEvent()),
@@ -108,7 +107,7 @@ class _CollectionCreationState extends State<CollectionCreation> {
                     collectionCreateFormKey: formKey,
                     onSuccess: () {
                       showToast(
-                        'Your collection was successfully created',
+                        collectionCreatedSuccessfully,
                         duration: Duration(seconds: 3),
                         position: ToastPosition.bottom,
                         textPadding: EdgeInsets.all(12),
@@ -141,7 +140,7 @@ class _CollectionCreationState extends State<CollectionCreation> {
 
   Widget Email(double textSize, String error) {
     return MainTextField(
-      hint: 'Title',
+      hint: title,
       iconData: Icons.info,
       textInputType: TextInputType.text,
       textSize: textSize,
@@ -153,7 +152,7 @@ class _CollectionCreationState extends State<CollectionCreation> {
 
   Widget Description(double textSize, String error) {
     return MainTextField(
-      hint: 'Description',
+      hint: description,
       iconData: Icons.description,
       textInputType: TextInputType.multiline,
       textSize: textSize,
@@ -166,7 +165,7 @@ class _CollectionCreationState extends State<CollectionCreation> {
 
   Widget CreateCollectionButton({double textSize, Function createCollectionFunction}) {
     return CommomButton(
-        buttonText: 'Create',
+        buttonText: create,
         buttonColor: positiveButtonColor,
         buttonTextColor: Colors.white,
         buttonFunction: () => createCollectionFunction(),

@@ -10,22 +10,22 @@ import 'package:soudain/features/login/domain/usecases/create_session_use_case.d
 import 'package:soudain/features/signup/domain/usecase/sign_up_usecase.dart';
 
 part 'sign_up_event.dart';
+
 part 'sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   final SignUpUseCase signUpUseCase;
   final CreateSessionUseCase createSessionUseCase;
 
-  SignUpBloc({this.signUpUseCase,this.createSessionUseCase});
+  SignUpBloc({this.signUpUseCase, this.createSessionUseCase});
 
   @override
   SignUpState get initialState => SignUpFormState(
-    emailError: null,
-    nameError: null,
-    passwordConfirmationError: null,
-    passwordError: null,
-    isCreatingAccount: false
-  );
+      emailError: null,
+      nameError: null,
+      passwordConfirmationError: null,
+      passwordError: null,
+      isCreatingAccount: false);
 
   @override
   Stream<SignUpState> mapEventToState(
@@ -35,81 +35,78 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       bool nameIsValid = validateName(event.name);
       bool emailIsValid = validateEmail(event.email);
       bool passwordIsValid = validatePassword(event.password);
-      bool passwordMatches = comparePasswords(event.password,event.passwordConfirmation);
+      bool passwordMatches =
+          comparePasswords(event.password, event.passwordConfirmation);
 
-      bool fieldsAreValid = nameIsValid && emailIsValid && passwordIsValid && passwordMatches;
+      bool fieldsAreValid =
+          nameIsValid && emailIsValid && passwordIsValid && passwordMatches;
 
-      if(fieldsAreValid) {
+      if (fieldsAreValid) {
         yield SignUpFormState(
-          emailError: null,
-          nameError: null,
-          passwordConfirmationError: null,
-          passwordError: null,
-          isCreatingAccount: true
-        );
+            emailError: null,
+            nameError: null,
+            passwordConfirmationError: null,
+            passwordError: null,
+            isCreatingAccount: true);
 
         final result = await signUpUseCase(SignUpParams(
-          email: event.email,
-          password: event.password,
-          name: event.name,
-          passwordConfirmation: event.passwordConfirmation
-        ));
+            email: event.email,
+            password: event.password,
+            name: event.name,
+            passwordConfirmation: event.passwordConfirmation));
 
-        yield* result.fold(
-          (failure) async* {
-            if(failure is EmailAlreadyRegisteredFailure){
-              yield SignUpFormState(
+        yield* result.fold((failure) async* {
+          if (failure is EmailAlreadyRegisteredFailure) {
+            yield SignUpFormState(
                 emailError: emailAlreadyRegistered,
                 passwordConfirmationError: null,
                 passwordError: null,
                 nameError: null,
-                isCreatingAccount: false
-              );
-            }else{
-              yield SignUpFormState(
+                isCreatingAccount: false);
+          } else {
+            yield SignUpFormState(
                 emailError: null,
                 passwordConfirmationError: null,
                 passwordError: null,
                 nameError: null,
-                isCreatingAccount: false
-              );
-              String message = failure is ServerFailure ? unexpectedServerError : noInternetConnection;
-              event.onServerError(message);
-            }
-            event.signUpFormKey.currentState.validate();
-          },
-          (userModel) async* {
-            await createSessionUseCase(CreateSessionParams(
-              email: event.email,
-              password: event.password
-            ));
-            event.onSuccess();
+                isCreatingAccount: false);
+            String message = failure is ServerFailure
+                ? unexpectedServerError
+                : noInternetConnection;
+            event.onServerError(message);
           }
-        );
-      }else{
+          event.signUpFormKey.currentState.validate();
+        }, (userModel) async* {
+          await createSessionUseCase(CreateSessionParams(
+              email: event.email, password: event.password));
+          event.onSuccess();
+        });
+      } else {
         yield SignUpFormState(
-          nameError: nameIsValid ? null : nameIsNotValid,
-          passwordError: passwordIsValid ? null : passwordIsNotValid,
-          emailError: emailIsValid ? null : emailIsNotValid,
-          passwordConfirmationError: passwordMatches ? null : passwordDoesNotMatchConfirmationPassword,
-          isCreatingAccount: false
-        );
+            nameError: nameIsValid ? null : nameIsNotValid,
+            passwordError: passwordIsValid ? null : passwordIsNotValid,
+            emailError: emailIsValid ? null : emailIsNotValid,
+            passwordConfirmationError: passwordMatches
+                ? null
+                : passwordDoesNotMatchConfirmationPassword,
+            isCreatingAccount: false);
         event.signUpFormKey.currentState.validate();
       }
-    }else if(event is ValidateFieldsOnFocusLostEvent) {
+    } else if (event is ValidateFieldsOnFocusLostEvent) {
       bool nameIsValid = validateName(event.name);
       bool emailIsValid = validateEmail(event.email);
       bool passwordIsValid = validatePassword(event.password);
-      bool passwordMatches = comparePasswords(event.password,event.passwordConfirmation);
+      bool passwordMatches =
+          comparePasswords(event.password, event.passwordConfirmation);
 
       print(event.email);
       yield SignUpFormState(
-        nameError: nameIsValid ? null : nameIsNotValid,
-        passwordError: passwordIsValid ? null : passwordIsNotValid,
-        emailError: emailIsValid ? null : emailIsNotValid,
-        passwordConfirmationError: passwordMatches ? null : passwordDoesNotMatchConfirmationPassword,
-        isCreatingAccount: false
-      );
+          nameError: nameIsValid ? null : nameIsNotValid,
+          passwordError: passwordIsValid ? null : passwordIsNotValid,
+          emailError: emailIsValid ? null : emailIsNotValid,
+          passwordConfirmationError:
+              passwordMatches ? null : passwordDoesNotMatchConfirmationPassword,
+          isCreatingAccount: false);
       event.signUpFormKey.currentState.validate();
     }
   }

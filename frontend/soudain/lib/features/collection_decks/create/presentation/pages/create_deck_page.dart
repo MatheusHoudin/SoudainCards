@@ -9,21 +9,22 @@ import 'package:soudain/core/commom_widgets/commom_button.dart';
 import 'package:soudain/core/commom_widgets/main_text_field.dart';
 import 'package:soudain/core/commom_widgets/picture_taking.dart';
 import 'package:soudain/core/constants/colors.dart';
+import 'package:soudain/core/constants/texts.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/features/navigation/bloc/navigation_bloc.dart';
 import 'package:soudain/features/play/data/models/collection_data.dart';
 import 'package:soudain/injection_container.dart';
 
-class DecksCreationPage extends StatefulWidget {
+class CreateDeckPage extends StatefulWidget {
   CollectionData collectionData;
 
-  DecksCreationPage({this.collectionData});
+  CreateDeckPage({this.collectionData});
 
   @override
-  _DecksCreationPageState createState() => _DecksCreationPageState();
+  _CreateDeckPageState createState() => _CreateDeckPageState();
 }
 
-class _DecksCreationPageState extends State<DecksCreationPage> {
+class _CreateDeckPageState extends State<CreateDeckPage> {
   TextEditingController titleController = TextEditingController();
   String pickedSubject = 'French';
   File file;
@@ -55,7 +56,7 @@ class _DecksCreationPageState extends State<DecksCreationPage> {
       )
     );
     return CommomBaseFormPage(
-      headerText: 'Create your Deck',
+      headerText: createYourDeck,
       headerTextSize: 16,
       headerBackArrowFunction: () =>
           BlocProvider.of<NavigationBloc>(context).add(PopEvent()),
@@ -93,7 +94,7 @@ class _DecksCreationPageState extends State<DecksCreationPage> {
 
   Widget Title(double textSize, String error) {
     return MainTextField(
-      hint: 'Title',
+      hint: title,
       iconData: Icons.info,
       textInputType: TextInputType.text,
       textSize: textSize,
@@ -142,7 +143,7 @@ class _DecksCreationPageState extends State<DecksCreationPage> {
 
   Widget CreateDeckButton({double textSize, Function createCollectionFunction}) {
     return CommomButton(
-      buttonText: 'Create',
+      buttonText: create,
       buttonColor: positiveButtonColor,
       buttonTextColor: Colors.white,
       buttonFunction: () => createCollectionFunction(),

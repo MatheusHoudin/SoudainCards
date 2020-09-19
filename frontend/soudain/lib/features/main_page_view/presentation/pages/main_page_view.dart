@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
-import 'package:soudain/features/home/presentation/bloc/user_data_bloc.dart';
-import 'package:soudain/features/home/presentation/pages/home.dart';
+import 'package:soudain/features/home/presentation/pages/home_page.dart';
 import 'package:soudain/features/main_page_view/presentation/widgets/cards_floating_button.dart';
 import 'package:soudain/features/play/presentation/bloc/collection_data_bloc.dart';
 import 'package:soudain/features/play/presentation/pages/play_page.dart';
@@ -21,7 +20,7 @@ class _MainPageViewState extends State<MainPageView> {
   PageController pageController;
   IconData pageIconData;
   int currentPage;
-  List<IconData> icons = [Icons.home,Icons.play_arrow,Icons.show_chart];
+  List<IconData> icons = [Icons.home, Icons.play_arrow, Icons.show_chart];
 
   @override
   void initState() {
@@ -32,37 +31,31 @@ class _MainPageViewState extends State<MainPageView> {
     pageIconData = Icons.home;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     double floatingCardHeight = sl<DeviceSizeAdapter>().getResponsiveSize(
-      context: context,
-      portraitSizeAdapter: SizeAdapter(
-        isHeight: true,
-        smallPorcentage: 80,
-        mediumPorcentage: 18,
-        largePorcentage: 16
-      )
-    );
+        context: context,
+        portraitSizeAdapter: SizeAdapter(
+            isHeight: true,
+            smallPorcentage: 80,
+            mediumPorcentage: 18,
+            largePorcentage: 16));
     double floatingCardWidth = sl<DeviceSizeAdapter>().getResponsiveSize(
-      context: context,
-      portraitSizeAdapter: SizeAdapter(
-        isHeight: false,
-        smallPorcentage: 20,
-        mediumPorcentage: 20,
-        largePorcentage: 18
-      )
-    );
+        context: context,
+        portraitSizeAdapter: SizeAdapter(
+            isHeight: false,
+            smallPorcentage: 20,
+            mediumPorcentage: 20,
+            largePorcentage: 18));
     double closeButtonPadding = sl<DeviceSizeAdapter>().getResponsiveSize(
-      context: context,
-      portraitSizeAdapter: SizeAdapter(
-        isHeight: false,
-        smallPorcentage: 0.5,
-        mediumPorcentage: 1,
-        largePorcentage: 2
-      )
-    );
+        context: context,
+        portraitSizeAdapter: SizeAdapter(
+            isHeight: false,
+            smallPorcentage: 0.5,
+            mediumPorcentage: 1,
+            largePorcentage: 2));
 
-    print(floatingCardHeight);
     Curve pageViewAnimationCurve = Curves.easeIn;
     return BlocProvider<CollectionDataBloc>(
       create: (context) => sl<CollectionDataBloc>(),
@@ -77,9 +70,13 @@ class _MainPageViewState extends State<MainPageView> {
             });
           },
           children: [
-            Home(),
+            HomePage(),
             PlayPage(),
-            Scaffold(body: Center(child: Text('PROGRESS'),),),
+            Scaffold(
+              body: Center(
+                child: Text('PROGRESS'),
+              ),
+            ),
           ],
         ),
         floatingActionButton: Container(
@@ -103,30 +100,26 @@ class _MainPageViewState extends State<MainPageView> {
                       });
                     },
                     nagivateToHomeFunction: () {
-                      this.pageController.animateToPage(
-                          0,
+                      this.pageController.animateToPage(0,
                           duration: Duration(milliseconds: 500),
-                          curve: pageViewAnimationCurve
-                      );
+                          curve: pageViewAnimationCurve);
                     },
                     nagivateToPlayFunction: () {
-                      this.pageController.animateToPage(
-                          1,
+                      this.pageController.animateToPage(1,
                           duration: Duration(milliseconds: 500),
-                          curve: pageViewAnimationCurve
-                      );
+                          curve: pageViewAnimationCurve);
                     },
                     nagivateToProgressFunction: () {
-                      this.pageController.animateToPage(
-                          2,
+                      this.pageController.animateToPage(2,
                           duration: Duration(milliseconds: 500),
-                          curve: pageViewAnimationCurve
-                      );
+                          curve: pageViewAnimationCurve);
                     },
                   ),
                 ),
               ),
-              SizedBox(height: 16,),
+              SizedBox(
+                height: 16,
+              ),
               AnimatedOpacity(
                 opacity: this.isFloatingButtonOpen ? 1.0 : 0.0,
                 duration: Duration(milliseconds: 500),
@@ -142,15 +135,13 @@ class _MainPageViewState extends State<MainPageView> {
   Widget CloseButton(double buttonPadding) {
     return Container(
       alignment: Alignment.center,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle
-      ),
+      decoration: BoxDecoration(shape: BoxShape.circle),
       child: Material(
         shape: CircleBorder(),
         color: Colors.white,
         child: InkWell(
-          onTap: (){
-            Future.delayed(Duration(milliseconds: 500), (){
+          onTap: () {
+            Future.delayed(Duration(milliseconds: 500), () {
               setState(() {
                 this.isFloatingButtonOpen = false;
               });

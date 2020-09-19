@@ -5,7 +5,9 @@ import 'package:soudain/features/login/data/model/session/session_model.dart';
 
 abstract class SessionLocalDataSource {
   Future<void> cacheSession(SessionModel sessionModel);
+
   Future<SessionModel> getCachedSession();
+
   Future<void> deleteCachedSession();
 }
 
@@ -27,11 +29,10 @@ class SessionLocalDataSourceImpl extends SessionLocalDataSource {
   @override
   Future<SessionModel> getCachedSession() {
     SessionModel cachedSession = sessionBox.box.get(session);
-    if(cachedSession != null) {
+    if (cachedSession != null) {
       return Future.value(cachedSession);
-    }else{
+    } else {
       throw SessionDoesNotExistException();
     }
   }
-
 }

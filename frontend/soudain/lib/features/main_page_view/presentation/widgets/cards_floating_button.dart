@@ -11,22 +11,20 @@ class CardsFloatingButton extends StatefulWidget {
   final Function nagivateToPlayFunction;
   final Function nagivateToProgressFunction;
 
-
-  CardsFloatingButton(
-      {this.icon,
-      this.onDeckTap,
-      this.nagivateToHomeFunction,
-      this.nagivateToPlayFunction,
-      this.nagivateToProgressFunction,
-      this.isDeckStackOpen,
-      });
+  CardsFloatingButton({
+    this.icon,
+    this.onDeckTap,
+    this.nagivateToHomeFunction,
+    this.nagivateToPlayFunction,
+    this.nagivateToProgressFunction,
+    this.isDeckStackOpen,
+  });
 
   @override
   _CardsFloatingButtonState createState() => _CardsFloatingButtonState();
 }
 
 class _CardsFloatingButtonState extends State<CardsFloatingButton> {
-
   @override
   Widget build(BuildContext context) {
     double iconSize = sl<DeviceSizeAdapter>().getResponsiveSize(
@@ -54,8 +52,9 @@ class _CardsFloatingButtonState extends State<CardsFloatingButton> {
               0,
               8,
               iconSize,
-              () =>
-                  widget.isDeckStackOpen ? widget.nagivateToProgressFunction() : widget.onDeckTap(),
+              () => widget.isDeckStackOpen
+                  ? widget.nagivateToProgressFunction()
+                  : widget.onDeckTap(),
               Icons.show_chart),
         ),
         Align(
@@ -64,7 +63,9 @@ class _CardsFloatingButtonState extends State<CardsFloatingButton> {
               widget.isDeckStackOpen ? 0 : cardRightMargin,
               8,
               iconSize,
-              () => widget.isDeckStackOpen ? widget.nagivateToPlayFunction() : widget.onDeckTap(),
+              () => widget.isDeckStackOpen
+                  ? widget.nagivateToPlayFunction()
+                  : widget.onDeckTap(),
               Icons.play_arrow),
         ),
         Align(
@@ -73,7 +74,9 @@ class _CardsFloatingButtonState extends State<CardsFloatingButton> {
               widget.isDeckStackOpen ? 0 : cardRightMargin * 2,
               8,
               iconSize,
-              () => widget.isDeckStackOpen ? widget.nagivateToHomeFunction() : widget.onDeckTap(),
+              () => widget.isDeckStackOpen
+                  ? widget.nagivateToHomeFunction()
+                  : widget.onDeckTap(),
               widget.isDeckStackOpen ? Icons.home : widget.icon),
         ),
       ],

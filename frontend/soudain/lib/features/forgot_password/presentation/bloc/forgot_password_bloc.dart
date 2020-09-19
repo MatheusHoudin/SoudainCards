@@ -6,22 +6,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:soudain/core/constants/texts.dart';
 import 'package:soudain/core/error/failures.dart';
 import 'package:soudain/core/validation/validation.dart';
-import 'package:soudain/features/forgot_password/data/model/forgot_password_confirmation_model.dart';
 import 'package:soudain/features/forgot_password/domain/usecase/forgot_password_use_case.dart';
 
 part 'forgot_password_event.dart';
+
 part 'forgot_password_state.dart';
 
-class ForgotPasswordBloc extends Bloc<ForgotPasswordEvent, ForgotPasswordState> {
+class ForgotPasswordBloc
+    extends Bloc<ForgotPasswordEvent, ForgotPasswordState> {
   final ForgotPasswordUseCase useCase;
 
   ForgotPasswordBloc({this.useCase});
 
   @override
   ForgotPasswordState get initialState => ForgotPasswordFormState(
-    emailError: null,
-    isRequestingPasswordReset: false
-  );
+      emailError: null, isRequestingPasswordReset: false);
 
   @override
   Stream<ForgotPasswordState> mapEventToState(
@@ -33,41 +32,32 @@ class ForgotPasswordBloc extends Bloc<ForgotPasswordEvent, ForgotPasswordState> 
       if (emailIsValid) {
         event.forgotPasswordFormKey.currentState.validate();
         yield ForgotPasswordFormState(
-          emailError: null,
-          isRequestingPasswordReset: true
-        );
+            emailError: null, isRequestingPasswordReset: true);
 
         final result = await useCase(ForgotPasswordParams(email: event.email));
 
-        yield* result.fold(
-          (failure) async* {
-            if (failure is EmailNotRegisteredFailure) {
-              yield ForgotPasswordFormState(
-                  emailError: emailIsNotRegistered,
-                  isRequestingPasswordReset: false
-              );
-            }else{
-              yield ForgotPasswordFormState(
-                  emailError: null,
-                  isRequestingPasswordReset: false
-              );
-              String message = failure is ServerFailure ? unexpectedServerError : noInternetConnection;
-              event.onServerError(message);
-            }
-          },
-          (passwordResetConfirmation) async* {
+        yield* result.fold((failure) async* {
+          if (failure is EmailNotRegisteredFailure) {
             yield ForgotPasswordFormState(
-                emailError: null,
-                isRequestingPasswordReset: false
-            );
-            event.onSuccess('Your password reset request was successful, we\'ve sent you an email with the instructions on how to proceed');
+                emailError: emailIsNotRegistered,
+                isRequestingPasswordReset: false);
+          } else {
+            yield ForgotPasswordFormState(
+                emailError: null, isRequestingPasswordReset: false);
+            String message = failure is ServerFailure
+                ? unexpectedServerError
+                : noInternetConnection;
+            event.onServerError(message);
           }
-        );
-      }else{
+        }, (passwordResetConfirmation) async* {
+          yield ForgotPasswordFormState(
+              emailError: null, isRequestingPasswordReset: false);
+          event.onSuccess(
+              passwordResetSuccessfullInfo);
+        });
+      } else {
         yield ForgotPasswordFormState(
-          emailError: emailIsNotValid,
-          isRequestingPasswordReset: false
-        );
+            emailError: emailIsNotValid, isRequestingPasswordReset: false);
 
         event.forgotPasswordFormKey.currentState.validate();
       }

@@ -6,6 +6,7 @@ import 'package:soudain/core/commom_widgets/error_dialog.dart';
 import 'package:soudain/core/commom_widgets/loading_card.dart';
 import 'package:soudain/core/commom_widgets/main_text_field.dart';
 import 'package:soudain/core/constants/colors.dart';
+import 'package:soudain/core/constants/texts.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/features/navigation/bloc/navigation_bloc.dart';
 import 'package:soudain/features/signup/presentation/bloc/sign_up_bloc.dart';
@@ -19,14 +20,13 @@ class SignUpForm extends StatefulWidget {
   final String passwordConfirmationFieldError;
   final bool isCreatingAccount;
 
-  SignUpForm({
-    this.textSize,
-    this.isCreatingAccount,
-    this.passwordFieldError,
-    this.emailFieldError,
-    this.nameFieldError,
-    this.passwordConfirmationFieldError
-  });
+  SignUpForm(
+      {this.textSize,
+      this.isCreatingAccount,
+      this.passwordFieldError,
+      this.emailFieldError,
+      this.nameFieldError,
+      this.passwordConfirmationFieldError});
 
   @override
   _SignUpFormState createState() => _SignUpFormState();
@@ -37,7 +37,8 @@ class _SignUpFormState extends State<SignUpForm> {
   final TextEditingController nameController = new TextEditingController();
   final TextEditingController emailController = new TextEditingController();
   final TextEditingController passwordController = new TextEditingController();
-  final TextEditingController passwordConfirmationController = new TextEditingController();
+  final TextEditingController passwordConfirmationController =
+      new TextEditingController();
 
   FocusNode nameFocusNode = FocusNode();
   FocusNode emailFocusNode = FocusNode();
@@ -48,8 +49,7 @@ class _SignUpFormState extends State<SignUpForm> {
   void initState() {
     super.initState();
     Function focusFunction = (FocusNode focusNode) {
-
-      if(!focusNode.hasFocus) {
+      if (!focusNode.hasFocus) {
         BlocProvider.of<SignUpBloc>(context).add(ValidateFieldsOnFocusLostEvent(
           email: emailController.text,
           password: passwordController.text,
@@ -62,7 +62,8 @@ class _SignUpFormState extends State<SignUpForm> {
     nameFocusNode.addListener(() => focusFunction(nameFocusNode));
     emailFocusNode.addListener(() => focusFunction(emailFocusNode));
     passwordFocusNode.addListener(() => focusFunction(passwordFocusNode));
-    passwordConfirmationFocusNode.addListener(() => focusFunction(passwordConfirmationFocusNode));
+    passwordConfirmationFocusNode
+        .addListener(() => focusFunction(passwordConfirmationFocusNode));
   }
 
   @override
@@ -76,94 +77,89 @@ class _SignUpFormState extends State<SignUpForm> {
 
   @override
   Widget build(BuildContext context) {
-    double loadingCardHorizontalMargin = sl<DeviceSizeAdapter>().getResponsiveSize(
-        context: context,
-        portraitSizeAdapter: SizeAdapter(
-            isHeight: false,
-            smallPorcentage: 32,
-            mediumPorcentage: 32,
-            largePorcentage: 30
-        ),
-        landscapeSizeAdapter: SizeAdapter(
-            isHeight: false,
-            smallPorcentage: 25,
-            mediumPorcentage: 28,
-            largePorcentage: 24
-        )
-    );
+    double loadingCardHorizontalMargin = sl<DeviceSizeAdapter>()
+        .getResponsiveSize(
+            context: context,
+            portraitSizeAdapter: SizeAdapter(
+                isHeight: false,
+                smallPorcentage: 32,
+                mediumPorcentage: 32,
+                largePorcentage: 30),
+            landscapeSizeAdapter: SizeAdapter(
+                isHeight: false,
+                smallPorcentage: 25,
+                mediumPorcentage: 28,
+                largePorcentage: 24));
     double loadingCardHeight = sl<DeviceSizeAdapter>().getResponsiveSize(
         context: context,
         portraitSizeAdapter: SizeAdapter(
             isHeight: true,
             smallPorcentage: 6,
             mediumPorcentage: 8,
-            largePorcentage: 8
-        ),
+            largePorcentage: 8),
         landscapeSizeAdapter: SizeAdapter(
             isHeight: true,
             smallPorcentage: 16,
             mediumPorcentage: 8,
-            largePorcentage: 8
-        )
-    );
+            largePorcentage: 8));
     return Form(
       key: formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Name(widget.textSize,widget.nameFieldError),
+          Name(widget.textSize, widget.nameFieldError),
           SizedBox(
             height: 20,
           ),
-          Email(widget.textSize,widget.emailFieldError),
+          Email(widget.textSize, widget.emailFieldError),
           SizedBox(
             height: 20,
           ),
-          Password(widget.textSize,widget.passwordFieldError),
+          Password(widget.textSize, widget.passwordFieldError),
           SizedBox(
             height: 20,
           ),
-          PasswordConfirmation(widget.textSize,widget.passwordConfirmationFieldError),
+          PasswordConfirmation(
+              widget.textSize, widget.passwordConfirmationFieldError),
           SizedBox(
             height: 20,
           ),
-          widget.isCreatingAccount ?
-          LoadingCard(
-            horizontalMargin: loadingCardHorizontalMargin,
-            height: loadingCardHeight,
-          )
-              :
-          Container(),
+          widget.isCreatingAccount
+              ? LoadingCard(
+                  horizontalMargin: loadingCardHorizontalMargin,
+                  height: loadingCardHeight,
+                )
+              : Container(),
           SizedBox(
             height: 20,
           ),
           SignUpButton(
-            textSize: widget.textSize,
-            function: () {
-              BlocProvider.of<SignUpBloc>(context).add(CreateAccountEvent(
-                  email: emailController.text,
-                  password: passwordController.text,
-                  name: nameController.text,
-                  passwordConfirmation: passwordConfirmationController.text,
-                  signUpFormKey: formKey,
-                  onSuccess: () => BlocProvider.of<NavigationBloc>(context).add(LoginToHomeNavigationEvent()),
-                  onServerError: (message) => showDialog(
-                      context: context,
-                      builder: (context) {
-                        return ErrorDialog(message: message,);
-                      }
-                  )
-              ));
-            }
-          ),
+              textSize: widget.textSize,
+              function: () {
+                BlocProvider.of<SignUpBloc>(context).add(CreateAccountEvent(
+                    email: emailController.text,
+                    password: passwordController.text,
+                    name: nameController.text,
+                    passwordConfirmation: passwordConfirmationController.text,
+                    signUpFormKey: formKey,
+                    onSuccess: () => BlocProvider.of<NavigationBloc>(context)
+                        .add(LoginToHomeNavigationEvent()),
+                    onServerError: (message) => showDialog(
+                        context: context,
+                        builder: (context) {
+                          return ErrorDialog(
+                            message: message,
+                          );
+                        })));
+              }),
         ],
       ),
     );
   }
 
-  Widget Name(double textSize, String error){
+  Widget Name(double textSize, String error) {
     return MainTextField(
-      hint: 'Name',
+      hint: name,
       iconData: Icons.person,
       textSize: textSize,
       controller: nameController,
@@ -172,9 +168,9 @@ class _SignUpFormState extends State<SignUpForm> {
     );
   }
 
-  Widget Email(double textSize, String error){
+  Widget Email(double textSize, String error) {
     return MainTextField(
-      hint: 'Email',
+      hint: email,
       iconData: Icons.email,
       textInputType: TextInputType.emailAddress,
       textSize: textSize,
@@ -184,9 +180,9 @@ class _SignUpFormState extends State<SignUpForm> {
     );
   }
 
-  Widget Password(double textSize, String error){
+  Widget Password(double textSize, String error) {
     return MainTextField(
-      hint: 'Password',
+      hint: password,
       iconData: Icons.lock,
       obscure: true,
       textSize: textSize,
@@ -196,9 +192,9 @@ class _SignUpFormState extends State<SignUpForm> {
     );
   }
 
-  Widget PasswordConfirmation(double textSize, String error){
+  Widget PasswordConfirmation(double textSize, String error) {
     return MainTextField(
-      hint: 'Password Confirmation',
+      hint: passwordConfirmation,
       iconData: Icons.lock,
       obscure: true,
       textSize: textSize,
@@ -208,9 +204,9 @@ class _SignUpFormState extends State<SignUpForm> {
     );
   }
 
-  Widget SignUpButton({double textSize, Function function}){
+  Widget SignUpButton({double textSize, Function function}) {
     return CommomButton(
-      buttonText: 'Sign Up',
+      buttonText: signUp,
       buttonColor: secondaryColor,
       buttonTextColor: Colors.white,
       buttonFunction: () => function(),

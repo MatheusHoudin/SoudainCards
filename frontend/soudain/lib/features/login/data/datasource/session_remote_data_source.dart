@@ -9,7 +9,9 @@ import 'package:soudain/features/login/data/model/session/session_model.dart';
 
 abstract class SessionRemoteDataSource {
   Future<SessionModel> createSession({String email, String password});
+
   Future<SessionModel> createFacebookSession();
+
   Future<SessionModel> createGoogleSession();
 }
 
@@ -17,10 +19,7 @@ class SessionRemoteDataSourceImpl extends SessionRemoteDataSource {
   final Dio dio;
   final FacebookLogin facebookLogin;
 
-  SessionRemoteDataSourceImpl({
-    this.dio,
-    this.facebookLogin
-  });
+  SessionRemoteDataSourceImpl({this.dio, this.facebookLogin});
 
   @override
   Future<SessionModel> createSession({String email, String password}) async {
@@ -34,8 +33,6 @@ class SessionRemoteDataSourceImpl extends SessionRemoteDataSource {
         throw ServerException();
       }
     } on DioError catch (e) {
-      print('response');
-      print(e.response);
       if (e.response != null) {
         if (e.response.statusCode == 401) {
           if (e.response.data['data']['email'] != null) {
@@ -69,7 +66,8 @@ class SessionRemoteDataSourceImpl extends SessionRemoteDataSource {
           final facebookResponse = await dio.get(
               'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email,picture.width(800).height(800)&access_token=$token');
 
-          final Map<String, dynamic> jsonMap = json.decode(facebookResponse.data);
+          final Map<String, dynamic> jsonMap =
+              json.decode(facebookResponse.data);
           final response = await dio.post('sessions/thirdpart', data: {
             'id': jsonMap['id'],
             'email': jsonMap['email'],
@@ -77,17 +75,9 @@ class SessionRemoteDataSourceImpl extends SessionRemoteDataSource {
             'picture': jsonMap['picture']['data']['url'],
             'isFacebook': true
           });
-print({
-  'id': jsonMap['id'],
-  'email': jsonMap['email'],
-  'name': jsonMap['name'],
-  'picture': jsonMap['picture']['data']['url'],
-  'isFacebook': true
-});
 
           return SessionModel.fromJson(response.data['data']);
         } on DioError catch (e) {
-          print('DIO ERROR');
           if (e.response != null) {
             if (e.response.statusCode == 400) {
               throw SessionRequestMalformedException(
@@ -116,16 +106,14 @@ print({
   @override
   Future<SessionModel> createGoogleSession() async {
     GoogleSignIn googleSignIn = GoogleSignIn(
-      scopes: [
-        'profile',
-        'https://www.googleapis.com/auth/userinfo.profile'
-      ],
+      scopes: ['profile', 'https://www.googleapis.com/auth/userinfo.profile'],
     );
 
     GoogleSignInAccount account = await googleSignIn.signIn();
-    if(account != null) {
+    if (account != null) {
       try {
-        final resizedProfileImageUrl = account.photoUrl.replaceFirst('s96-c', 's800-c');
+        final resizedProfileImageUrl =
+            account.photoUrl.replaceFirst('s96-c', 's800-c');
         final response = await dio.post('sessions/thirdpart', data: {
           'id': account.id,
           'email': account.email,
@@ -133,7 +121,6 @@ print({
           'picture': resizedProfileImageUrl,
           'isFacebook': false
         });
-
 
         print(response.data['data']);
         return SessionModel.fromJson(response.data['data']);
@@ -155,7 +142,7 @@ print({
       } on Exception {
         throw ServerException();
       }
-    }else{
+    } else {
       throw GoogleLoginCancelledByUserException();
     }
   }

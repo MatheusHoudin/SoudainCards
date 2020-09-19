@@ -7,6 +7,7 @@ import 'package:soudain/core/commom_widgets/error_dialog.dart';
 import 'package:soudain/core/commom_widgets/loading_card.dart';
 import 'package:soudain/core/commom_widgets/main_text_field.dart';
 import 'package:soudain/core/constants/colors.dart';
+import 'package:soudain/core/constants/texts.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/features/forgot_password/presentation/bloc/forgot_password_bloc.dart';
 import 'package:soudain/injection_container.dart';
@@ -101,7 +102,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
 
   Widget Email(double textSize){
     return MainTextField(
-      hint: 'Email',
+      hint: email,
       iconData: Icons.email,
       textInputType: TextInputType.emailAddress,
       textSize: textSize,
@@ -113,7 +114,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
   Widget ResetPasswordButton(double textSize, BuildContext context){
 
     return CommomButton(
-      buttonText: 'Reset password',
+      buttonText: resetPassword,
       buttonTextSize: textSize,
       buttonTextColor: Colors.black,
       buttonFunction: () => BlocProvider.of<ForgotPasswordBloc>(context).add(RequestPasswordResetEvent(

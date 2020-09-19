@@ -6,6 +6,7 @@ import 'package:soudain/core/commom_widgets/header_with_title_and_subtitle.dart'
 import 'package:soudain/core/commom_widgets/study_deck_front.dart';
 import 'package:soudain/core/commom_widgets/title_content_section.dart';
 import 'package:soudain/core/constants/colors.dart';
+import 'package:soudain/core/constants/texts.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/features/home/presentation/widgets/oval_red_ball.dart';
 import 'package:soudain/features/navigation/bloc/navigation_bloc.dart';
@@ -13,9 +14,9 @@ import 'package:soudain/features/play/data/models/collection_data.dart';
 import 'package:soudain/injection_container.dart';
 
 class CollectionDecksPage extends StatelessWidget {
-  final CollectionData collection;
+  final CollectionData collectionData;
 
-  CollectionDecksPage({this.collection});
+  CollectionDecksPage({this.collectionData});
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +45,8 @@ class CollectionDecksPage extends StatelessWidget {
           child: Column(
             children: <Widget>[
               HeaderWithTitleAndSubtitle(
-                title: collection.title,
-                subtitle: 'Collection',
+                title: collectionData.title,
+                subtitle: collection,
                 backFunction: () => BlocProvider.of<NavigationBloc>(context).add(PopEvent()),
               ),
               Expanded(
@@ -78,7 +79,7 @@ class CollectionDecksPage extends StatelessWidget {
                             cardColor: Colors.white,
                             secondaryColor: Colors.white,
                             onPressed: () => BlocProvider.of<NavigationBloc>(context).add(NavigateToDeckCreationPageEvent(
-                              collection: this.collection
+                              collection: this.collectionData
                             )),
                             isLeftMargin: true,
                           ),
@@ -88,7 +89,7 @@ class CollectionDecksPage extends StatelessWidget {
                           padding: EdgeInsets.only(left: 10),
                           height: cardsSectionHeight,
                           child: TitleContentSection(
-                            title: 'Decks to review',
+                            title: decksToReviewCollectionDecksPage,
                             leftPadding: 0,
                             content: ListView.separated(
                               scrollDirection: Axis.horizontal,
@@ -118,7 +119,7 @@ class CollectionDecksPage extends StatelessWidget {
                           margin: EdgeInsets.only(bottom: 20),
                           height: cardsSectionHeight,
                           child: TitleContentSection(
-                            title: 'Collection decks',
+                            title: collectionDecks,
                             leftPadding: 0,
                             content: ListView.separated(
                               scrollDirection: Axis.horizontal,
@@ -172,9 +173,9 @@ class CollectionDecksPage extends StatelessWidget {
             ),
             elevation: 4,
             child: Hero(
-              tag: collection.id,
+              tag: collectionData.id,
               child: Image.network(
-                collection.imageUrl,
+                collectionData.imageUrl,
                 fit: BoxFit.cover,
               ),
             ),
@@ -183,7 +184,7 @@ class CollectionDecksPage extends StatelessWidget {
         Expanded(
           flex: 8,
           child: Text(
-            collection.description,
+            collectionData.description,
             textAlign: TextAlign.justify,
             maxLines: 8,
             overflow: TextOverflow.ellipsis,

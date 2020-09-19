@@ -57,7 +57,7 @@ class CollectionCreateBloc extends Bloc<CollectionCreateEvent, CollectionCreateS
                     nameFieldError: null
                 );
 
-                event.onServerError('There was an error while uploading the collection image');
+                event.onServerError(collectionImageUploadError);
               }else{
                 yield  CollectionCreateFormState(
                     isCreatingCollection: false,

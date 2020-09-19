@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:soudain/core/constants/texts.dart';
 import 'package:soudain/core/error/failures.dart';
 import 'package:soudain/features/home/data/model/user_data_model.dart';
 import 'package:soudain/features/home/domain/usecase/user_data_use_case.dart';
 
 part 'user_data_event.dart';
+
 part 'user_data_state.dart';
 
 class UserDataBloc extends Bloc<UserDataEvent, UserDataState> {
@@ -26,24 +28,19 @@ class UserDataBloc extends Bloc<UserDataEvent, UserDataState> {
 
       final response = await useCase(UserDataParams());
 
-      yield* response.fold(
-        (failure) async* {
-          if(failure is UserDataDoesNotExistFailure) {
-            print('userdata does not');
-            yield UserDataDoesNotExistState();
-          }else if(failure is ServerFailure) {
-            yield ErrorState();
-            event.onError('There was an error when trying to get your profile data');
-            print('failure');
-          }else if(failure is SessionDoesNotExistFailure) {
-            print('session does not exist');
-            yield SessionDoesNotExistState();
-          }
-        },
-        (userDataModel) async* {
-          yield LoadedUserDataState(userDataModel: userDataModel);
+      yield* response.fold((failure) async* {
+        if (failure is UserDataDoesNotExistFailure) {
+          yield UserDataDoesNotExistState();
+        } else if (failure is ServerFailure) {
+          yield ErrorState();
+          event.onError(
+              getProfileDataError);
+        } else if (failure is SessionDoesNotExistFailure) {
+          yield SessionDoesNotExistState();
         }
-      );
+      }, (userDataModel) async* {
+        yield LoadedUserDataState(userDataModel: userDataModel);
+      });
     }
   }
 }

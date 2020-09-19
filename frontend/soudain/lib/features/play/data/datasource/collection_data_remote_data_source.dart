@@ -6,7 +6,8 @@ abstract class CollectionDataRemoteDataSource {
   Future<List<CollectionData>> getCollections(String token);
 }
 
-class CollectionDataRemoteDataSourceImpl extends CollectionDataRemoteDataSource {
+class CollectionDataRemoteDataSourceImpl
+    extends CollectionDataRemoteDataSource {
   final Dio client;
 
   CollectionDataRemoteDataSourceImpl({this.client});
@@ -15,16 +16,12 @@ class CollectionDataRemoteDataSourceImpl extends CollectionDataRemoteDataSource 
   Future<List<CollectionData>> getCollections(String token) async {
     try {
       final collectionsResult = await client.get('/user/collection',
-        options: Options(
-          headers: {
-            'Authorization': token
-          }
-        )
-      );
-      return (collectionsResult.data['data'] as List).map((e) => CollectionData.fromJson(e)).toList();
+          options: Options(headers: {'Authorization': token}));
+      return (collectionsResult.data['data'] as List)
+          .map((e) => CollectionData.fromJson(e))
+          .toList();
     } on DioError {
       throw ServerException();
     }
   }
-
 }
