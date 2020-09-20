@@ -21,22 +21,26 @@ class CollectionDecksPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double addButtomMargin = sl<DeviceSizeAdapter>().getResponsiveSize(
-      context: context,
-      portraitSizeAdapter: SizeAdapter(
-        isHeight: false,
-        smallPorcentage: 30,
-        mediumPorcentage: 30,
-        largePorcentage: 10
-      )
-    );
+        context: context,
+        portraitSizeAdapter: SizeAdapter(
+            isHeight: false,
+            smallPorcentage: 30,
+            mediumPorcentage: 30,
+            largePorcentage: 10));
     double cardsSectionHeight = sl<DeviceSizeAdapter>().getResponsiveSize(
+        context: context,
+        portraitSizeAdapter: SizeAdapter(
+            isHeight: true,
+            smallPorcentage: 40,
+            mediumPorcentage: 35,
+            largePorcentage: 30));
+    double clipOvalPadding = sl<DeviceSizeAdapter>().getResponsiveSize(
       context: context,
       portraitSizeAdapter: SizeAdapter(
-        isHeight: true,
-        smallPorcentage: 40,
-        mediumPorcentage: 35,
-        largePorcentage: 30
-      )
+          isHeight: false,
+          smallPorcentage: 8,
+          mediumPorcentage: 6,
+          largePorcentage: 7),
     );
     return SafeArea(
       child: Scaffold(
@@ -47,15 +51,12 @@ class CollectionDecksPage extends StatelessWidget {
               HeaderWithTitleAndSubtitle(
                 title: collectionData.title,
                 subtitle: collection,
-                backFunction: () => BlocProvider.of<NavigationBloc>(context).add(PopEvent()),
+                backFunction: () =>
+                    BlocProvider.of<NavigationBloc>(context).add(PopEvent()),
               ),
               Expanded(
                 child: Container(
-                  margin: EdgeInsets.only(
-                    left: 10,
-                    right: 10,
-                    top: 4
-                  ),
+                  margin: EdgeInsets.only(left: 10, right: 10, top: 4),
                   child: SingleChildScrollView(
                     child: Column(
                       children: <Widget>[
@@ -66,25 +67,28 @@ class CollectionDecksPage extends StatelessWidget {
                         Container(
                           height: MediaQuery.of(context).size.height * 0.14,
                           margin: EdgeInsets.only(
-                            left: addButtomMargin,
-                            right: addButtomMargin,
-                            top: 10
-                          ),
+                              left: addButtomMargin,
+                              right: addButtomMargin,
+                              top: 10),
                           child: DeckFormat(
                             centerWidget: OvalRedBall(
                               icon: Icons.add,
+                              clipOvalPadding: clipOvalPadding,
                             ),
                             cardsMargin: 10,
                             cardBorderRadius: 20,
                             cardColor: Colors.white,
                             secondaryColor: Colors.white,
-                            onPressed: () => BlocProvider.of<NavigationBloc>(context).add(NavigateToDeckCreationPageEvent(
-                              collection: this.collectionData
-                            )),
+                            onPressed: () =>
+                                BlocProvider.of<NavigationBloc>(context).add(
+                                    NavigateToDeckCreationPageEvent(
+                                        collection: this.collectionData)),
                             isLeftMargin: true,
                           ),
                         ),
-                        SizedBox(height: 20,),
+                        SizedBox(
+                          height: 20,
+                        ),
                         Container(
                           padding: EdgeInsets.only(left: 10),
                           height: cardsSectionHeight,
@@ -94,12 +98,13 @@ class CollectionDecksPage extends StatelessWidget {
                             content: ListView.separated(
                               scrollDirection: Axis.horizontal,
                               itemCount: 4,
-                              separatorBuilder: (_,i) => SizedBox(width: 20,),
-                              itemBuilder: (_,index) => Container(
+                              separatorBuilder: (_, i) => SizedBox(
+                                width: 20,
+                              ),
+                              itemBuilder: (_, index) => Container(
                                 width: MediaQuery.of(context).size.width * 0.45,
-                                margin: EdgeInsets.only(
-                                    right: index == 3 ? 10 : 0
-                                ),
+                                margin:
+                                    EdgeInsets.only(right: index == 3 ? 10 : 0),
                                 child: DeckFormat(
                                   centerWidget: StudyDeckFront(),
                                   cardsMargin: 10,
@@ -113,7 +118,9 @@ class CollectionDecksPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(height: 20,),
+                        SizedBox(
+                          height: 20,
+                        ),
                         Container(
                           padding: EdgeInsets.only(left: 10),
                           margin: EdgeInsets.only(bottom: 20),
@@ -124,12 +131,13 @@ class CollectionDecksPage extends StatelessWidget {
                             content: ListView.separated(
                               scrollDirection: Axis.horizontal,
                               itemCount: 4,
-                              separatorBuilder: (_,i) => SizedBox(width: 20,),
-                              itemBuilder: (_,index) => Container(
+                              separatorBuilder: (_, i) => SizedBox(
+                                width: 20,
+                              ),
+                              itemBuilder: (_, index) => Container(
                                 width: MediaQuery.of(context).size.width * 0.45,
-                                margin: EdgeInsets.only(
-                                    right: index == 3 ? 10 : 0
-                                ),
+                                margin:
+                                    EdgeInsets.only(right: index == 3 ? 10 : 0),
                                 child: DeckFormat(
                                   centerWidget: StudyDeckFront(
                                     hasDecksToStudy: false,
@@ -163,14 +171,9 @@ class CollectionDecksPage extends StatelessWidget {
         Expanded(
           flex: 6,
           child: Card(
-            margin: EdgeInsets.only(
-              right: 10,
-              top: 20,
-              bottom: 20
-            ),
+            margin: EdgeInsets.only(right: 10, top: 20, bottom: 20),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20))
-            ),
+                borderRadius: BorderRadius.all(Radius.circular(20))),
             elevation: 4,
             child: Hero(
               tag: collectionData.id,
@@ -189,14 +192,10 @@ class CollectionDecksPage extends StatelessWidget {
             maxLines: 8,
             overflow: TextOverflow.ellipsis,
             style: GoogleFonts.comfortaa(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white
-            ),
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
           ),
         )
       ],
     );
   }
-
 }

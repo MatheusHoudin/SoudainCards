@@ -139,6 +139,7 @@ Future<void> setup()async {
     connectTimeout: 10000
   );
   Dio dio = Dio(baseOptions);
+  //TODO Create an interceptor to fetch the user authentication token and use it
 
   sl.registerLazySingleton<Dio>(() => dio);
 

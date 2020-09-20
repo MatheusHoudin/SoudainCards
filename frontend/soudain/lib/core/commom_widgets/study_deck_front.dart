@@ -14,13 +14,12 @@ class StudyDeckFront extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double quantityTextSize = sl<DeviceSizeAdapter>().getResponsiveSize(
-      context: context,
-      portraitSizeAdapter: SizeAdapter(
-        isHeight: false,
-        smallPorcentage: 3.5,
-        mediumPorcentage: 3.5,
-        largePorcentage: 30)
-    );
+        context: context,
+        portraitSizeAdapter: SizeAdapter(
+            isHeight: false,
+            smallPorcentage: 3.5,
+            mediumPorcentage: 3.5,
+            largePorcentage: 30));
     return Column(
       children: [
         Expanded(
@@ -33,20 +32,24 @@ class StudyDeckFront extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 5,
-                  child: this.hasDecksToStudy ? DecksQuantitySection(quantityTextSize) : DeckContentDetailsSection(quantityTextSize),
+                  child: this.hasDecksToStudy
+                      ? DecksQuantitySection(quantityTextSize)
+                      : DeckContentDetailsSection(quantityTextSize),
                 ),
                 Expanded(
-                  flex: this.hasDecksToStudy ? 6 : 8,
+                  flex: 6,
                   child: DeckImage(),
                 )
               ],
             ),
           ),
         ),
-        this.hasDecksToStudy ? Expanded(
-          flex: 1,
-          child: StudyProgress(context),
-        ) : Container(),
+        this.hasDecksToStudy
+            ? Expanded(
+                flex: 1,
+                child: StudyProgress(context),
+              )
+            : Container(),
         Expanded(
           flex: 4,
           child: DeckTitle(),
@@ -72,7 +75,8 @@ class StudyDeckFront extends StatelessWidget {
     );
   }
 
-  Widget DeckDetail(IconData iconData, String quantity, double quantityTextSize) {
+  Widget DeckDetail(
+      IconData iconData, String quantity, double quantityTextSize) {
     String formattedQuantity = shortenNumberToString(quantity);
     return Column(
       children: <Widget>[
@@ -160,9 +164,7 @@ class StudyDeckFront extends StatelessWidget {
 
   Widget DeckTitle() {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 6
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 6),
       child: Center(
         child: Text(
           'Chinese culture and id',

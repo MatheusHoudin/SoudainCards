@@ -25,6 +25,6 @@ class DeckCreationResult extends Equatable {
     );
   }
   @override
-  List<Object> get props => [];
+  List<Object> get props => [id,collection,deck,imported,user];
 
 }

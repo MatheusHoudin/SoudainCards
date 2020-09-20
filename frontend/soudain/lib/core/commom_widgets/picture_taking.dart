@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,8 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:soudain/core/commom_widgets/deck_format.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
-import 'dart:io';
-
 import 'package:soudain/features/home/presentation/widgets/oval_red_ball.dart';
 import 'package:soudain/features/navigation/bloc/navigation_bloc.dart';
 import 'package:soudain/injection_container.dart';
@@ -28,40 +28,44 @@ class _PictureTakingState extends State<PictureTaking> {
   @override
   Widget build(BuildContext context) {
     double addButtomMargin = sl<DeviceSizeAdapter>().getResponsiveSize(
+        context: context,
+        portraitSizeAdapter: SizeAdapter(
+            isHeight: false,
+            smallPorcentage: 20,
+            mediumPorcentage: 20,
+            largePorcentage: 20));
+    double clipOvalPadding = sl<DeviceSizeAdapter>().getResponsiveSize(
       context: context,
       portraitSizeAdapter: SizeAdapter(
-        isHeight: false,
-        smallPorcentage: 20,
-        mediumPorcentage: 20,
-        largePorcentage: 20
-      )
+          isHeight: false,
+          smallPorcentage: 8,
+          mediumPorcentage: 8,
+          largePorcentage: 7),
     );
     return Container(
       height: MediaQuery.of(context).size.height * 0.18,
       margin: EdgeInsets.only(
           left: addButtomMargin, right: addButtomMargin, top: 10),
       child: DeckFormat(
-        centerWidget: file == null ?
-        OvalRedBall(
-          icon: Icons.photo_camera,
-        )
-            :
-        ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Image.file(
-            file,
-            width: double.infinity,
-            fit: BoxFit.fill,
-          ),
-        ),
+        centerWidget: file == null
+            ? OvalRedBall(
+                clipOvalPadding: clipOvalPadding,
+                icon: Icons.photo_camera,
+              )
+            : ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.file(
+                  file,
+                  width: double.infinity,
+                  fit: BoxFit.fill,
+                ),
+              ),
         cardsMargin: 10,
         cardBorderRadius: 20,
         cardColor: Colors.white,
         secondaryColor: Colors.white,
-        onPressed: () => showDialog(
-            context: context,
-            builder: (_) => CameraDialog()
-        ),
+        onPressed: () =>
+            showDialog(context: context, builder: (_) => CameraDialog()),
         isLeftMargin: true,
       ),
     );
@@ -69,9 +73,7 @@ class _PictureTakingState extends State<PictureTaking> {
 
   Widget CameraDialog() {
     return AlertDialog(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10)
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       title: Text(
         'Collection image',
         style: GoogleFonts.comfortaa(
@@ -80,8 +82,7 @@ class _PictureTakingState extends State<PictureTaking> {
       ),
       content: Text(
         'Choose the wanted source',
-        style: GoogleFonts.comfortaa(
-        ),
+        style: GoogleFonts.comfortaa(),
       ),
       actions: <Widget>[
         FlatButton(
@@ -89,9 +90,7 @@ class _PictureTakingState extends State<PictureTaking> {
           child: Text(
             'Camera',
             style: GoogleFonts.comfortaa(
-                fontWeight: FontWeight.bold,
-                color: secondaryColor
-            ),
+                fontWeight: FontWeight.bold, color: secondaryColor),
           ),
         ),
         FlatButton(
@@ -99,9 +98,7 @@ class _PictureTakingState extends State<PictureTaking> {
           child: Text(
             'Gallery',
             style: GoogleFonts.comfortaa(
-                fontWeight: FontWeight.bold,
-                color: secondaryColor
-            ),
+                fontWeight: FontWeight.bold, color: secondaryColor),
           ),
         ),
       ],
@@ -110,7 +107,7 @@ class _PictureTakingState extends State<PictureTaking> {
 
   Future getImage(ImageSource source) async {
     final pickedFile = await picker.getImage(source: source);
-    if(pickedFile != null) {
+    if (pickedFile != null) {
       setState(() {
         file = File(pickedFile.path);
         print(pickedFile.path);

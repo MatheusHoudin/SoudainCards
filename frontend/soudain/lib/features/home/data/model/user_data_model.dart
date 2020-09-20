@@ -17,7 +17,6 @@ class UserDataModel extends Equatable{
   });
 
   factory UserDataModel.fromJson(Map<String,dynamic> jsonMap) {
-    print(jsonMap['avatar']);
     return UserDataModel(
       name: jsonMap['name'],
       email: jsonMap['email'],

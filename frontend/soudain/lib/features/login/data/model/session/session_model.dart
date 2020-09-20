@@ -14,6 +14,8 @@ class SessionModel extends Equatable{
     this.token
   });
 
+  String get getToken => token;
+
   factory SessionModel.fromJson(Map<String, dynamic> jsonMap) {
     print(jsonMap);
     return SessionModel(

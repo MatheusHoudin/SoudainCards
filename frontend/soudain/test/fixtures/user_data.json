@@ -1,5 +1,7 @@
 {
   "name": "name",
   "email": "email",
-  "avatar": "avatar"
+  "avatar": {
+    "url": "avatar"
+  }
 }

@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:soudain/core/commom_widgets/commom_button.dart';
 import 'package:soudain/core/commom_widgets/deck_format.dart';
 import 'package:soudain/core/commom_widgets/loading_card.dart';
 import 'package:soudain/core/constants/colors.dart';
 import 'package:soudain/core/constants/texts.dart';
-import 'package:oktoast/oktoast.dart';
 import 'package:soudain/core/responsiveness/device_size_adapter.dart';
 import 'package:soudain/features/home/presentation/bloc/user_data_bloc.dart';
 import 'package:soudain/features/home/presentation/widgets/oval_red_ball.dart';
@@ -137,6 +137,14 @@ class _HeaderState extends State<Header> {
           mediumPorcentage: 1,
           largePorcentage: 1.6),
     );
+    double clipOvalPadding = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+          isHeight: false,
+          smallPorcentage: 8,
+          mediumPorcentage: 8,
+          largePorcentage: 7),
+    );
     return Card(
       color: primaryColor,
       shape: RoundedRectangleBorder(
@@ -152,7 +160,9 @@ class _HeaderState extends State<Header> {
                 bottom: cardPadding,
               ),
               child: DeckFormat(
-                centerWidget: OvalRedBall(),
+                centerWidget: OvalRedBall(
+                  clipOvalPadding: clipOvalPadding,
+                ),
                 cardsMargin: cardsMarging,
                 cardBorderRadius: 20,
                 cardColor: Colors.white,

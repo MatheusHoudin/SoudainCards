@@ -60,7 +60,14 @@ class _PlayPageState extends State<PlayPage> {
             smallPorcentage: 15,
             mediumPorcentage: 13,
             largePorcentage: 13));
-
+    double clipOvalPadding = sl<DeviceSizeAdapter>().getResponsiveSize(
+      context: context,
+      portraitSizeAdapter: SizeAdapter(
+          isHeight: false,
+          smallPorcentage: 8,
+          mediumPorcentage: 8,
+          largePorcentage: 7),
+    );
     return SafeArea(
       child: Container(
         color: secondaryColor,
@@ -74,6 +81,7 @@ class _PlayPageState extends State<PlayPage> {
               child: DeckFormat(
                 centerWidget: OvalRedBall(
                   icon: Icons.add,
+                  clipOvalPadding: clipOvalPadding,
                 ),
                 cardsMargin: 10,
                 cardBorderRadius: 20,
@@ -206,26 +214,6 @@ class _PlayPageState extends State<PlayPage> {
             NavigateToCollectionDecksPageEvent(collection: collectionData)),
         child: DeckCollection(
           collectionData: collectionData,
-        ),
-      ),
-    );
-  }
-
-  Widget AddButton() {
-    return Expanded(
-      flex: 2,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 130, vertical: 10),
-        child: DeckFormat(
-          centerWidget: OvalRedBall(
-            icon: Icons.add,
-          ),
-          cardsMargin: 10,
-          cardBorderRadius: 20,
-          cardColor: Colors.white,
-          secondaryColor: Colors.white,
-          onPressed: null,
-          isLeftMargin: true,
         ),
       ),
     );
